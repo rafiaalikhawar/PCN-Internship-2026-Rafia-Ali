@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "weather-intelligence-kg"
+version = "0.1.0"
+description = "Task 2 Weather Intelligence Knowledge Graph scaffold for the PCN Research Internship Assessment 2026."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [
+  { name = "PCN Research Internship Assessment Candidate" }
+]
+dependencies = [
+  "requests>=2.31,<3",
+  "pandas>=2.2,<3",
+  "numpy>=1.26,<3",
+  "networkx>=3.2,<4",
+  "pyvis>=0.3,<0.4",
+  "folium>=0.16,<1",
+  "PyYAML>=6.0,<7",
+  "matplotlib>=3.8,<4",
+  "pytest>=8.0,<9",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0,<9",
+]
+
+[project.scripts]
+weather-kg = "weather_kg.main:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

@@ -1,0 +1,57 @@
+# Python environments
+.venv/
+venv/
+env/
+
+# Python cache/build artifacts
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+build/
+dist/
+
+# Test and coverage artifacts
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# IDE/editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# macOS files
+.DS_Store
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.log
+
+# Generated data and large outputs
+data/cache/*
+data/interim/*
+data/processed/*
+outputs/figures/*
+outputs/graph/*
+outputs/maps/*
+outputs/queries/*
+outputs/validation/*
+
+# Keep reproducible directory placeholders
+!data/cache/.gitkeep
+!data/interim/.gitkeep
+!data/processed/.gitkeep
+!outputs/figures/.gitkeep
+!outputs/graph/.gitkeep
+!outputs/maps/.gitkeep
+!outputs/queries/.gitkeep
+!outputs/validation/.gitkeep

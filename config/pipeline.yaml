@@ -1,0 +1,35 @@
+project:
+  name: weather-intelligence-kg
+  selected_task: Task 2 - Weather Intelligence Knowledge Graph
+  phase: "Phase 1 - Project Scaffold"
+
+date_range:
+  start_date: "2023-01-01"
+  end_date: "2023-12-31"
+
+data_source:
+  name: Open-Meteo Historical Weather API
+  provider: Open-Meteo
+  base_url: https://archive-api.open-meteo.com/v1/archive
+  requires_api_key: false
+  variables:
+    daily:
+      - precipitation_sum
+      - temperature_2m_max
+      - temperature_2m_min
+      - temperature_2m_mean
+      - wind_speed_10m_max
+      - wind_gusts_10m_max
+      - weather_code
+
+paths:
+  locations: config/locations.yaml
+  event_thresholds: config/event_thresholds.yaml
+  raw_cache: data/cache
+  interim: data/interim
+  processed: data/processed
+  outputs: outputs
+
+runtime:
+  offline_mode: false
+  log_level: INFO

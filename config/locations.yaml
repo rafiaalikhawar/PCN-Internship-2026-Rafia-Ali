@@ -1,0 +1,248 @@
+locations:
+  - location_id: pk_islamabad
+    name: Islamabad
+    country: Pakistan
+    country_code: PK
+    latitude: 33.6844
+    longitude: 73.0479
+    location_kind: city
+    admin_region: Islamabad Capital Territory
+    corridor: indus_core
+    aliases:
+      - Islamabad Capital Territory
+      - ICT
+  - location_id: pk_lahore
+    name: Lahore
+    country: Pakistan
+    country_code: PK
+    latitude: 31.5204
+    longitude: 74.3587
+    location_kind: city
+    admin_region: Punjab
+    corridor: eastern_monsoon
+    aliases:
+      - Lahore District
+  - location_id: pk_karachi
+    name: Karachi
+    country: Pakistan
+    country_code: PK
+    latitude: 24.8607
+    longitude: 67.0011
+    location_kind: city
+    admin_region: Sindh
+    corridor: arabian_sea_coast
+    aliases:
+      - Karachi Division
+  - location_id: pk_peshawar
+    name: Peshawar
+    country: Pakistan
+    country_code: PK
+    latitude: 34.0151
+    longitude: 71.5249
+    location_kind: city
+    admin_region: Khyber Pakhtunkhwa
+    corridor: upstream_kabul
+    aliases:
+      - Peshawar District
+  - location_id: pk_quetta
+    name: Quetta
+    country: Pakistan
+    country_code: PK
+    latitude: 30.1798
+    longitude: 66.9750
+    location_kind: city
+    admin_region: Balochistan
+    corridor: western_disturbance
+    aliases:
+      - Quetta District
+  - location_id: pk_multan
+    name: Multan
+    country: Pakistan
+    country_code: PK
+    latitude: 30.1575
+    longitude: 71.5249
+    location_kind: city
+    admin_region: Punjab
+    corridor: indus_core
+    aliases:
+      - Multan District
+  - location_id: pk_gilgit
+    name: Gilgit
+    country: Pakistan
+    country_code: PK
+    latitude: 35.9208
+    longitude: 74.3141
+    location_kind: city
+    admin_region: Gilgit-Baltistan
+    corridor: upper_indus
+    aliases:
+      - Gilgit District
+  - location_id: pk_sukkur
+    name: Sukkur
+    country: Pakistan
+    country_code: PK
+    latitude: 27.7052
+    longitude: 68.8574
+    location_kind: city
+    admin_region: Sindh
+    corridor: indus_core
+    aliases:
+      - Sukkur District
+  - location_id: in_srinagar
+    name: Srinagar
+    country: India
+    country_code: IN
+    latitude: 34.0837
+    longitude: 74.7973
+    location_kind: city
+    admin_region: Jammu and Kashmir
+    corridor: upper_indus
+    aliases:
+      - Srinagar District
+  - location_id: in_amritsar
+    name: Amritsar
+    country: India
+    country_code: IN
+    latitude: 31.6340
+    longitude: 74.8723
+    location_kind: city
+    admin_region: Punjab
+    corridor: eastern_monsoon
+    aliases:
+      - Amritsar District
+  - location_id: in_new_delhi
+    name: New Delhi
+    country: India
+    country_code: IN
+    latitude: 28.6139
+    longitude: 77.2090
+    location_kind: city
+    admin_region: Delhi
+    corridor: eastern_monsoon
+    aliases:
+      - Delhi
+      - National Capital Territory of Delhi
+  - location_id: in_jaipur
+    name: Jaipur
+    country: India
+    country_code: IN
+    latitude: 26.9124
+    longitude: 75.7873
+    location_kind: city
+    admin_region: Rajasthan
+    corridor: eastern_monsoon
+    aliases:
+      - Jaipur District
+  - location_id: af_kabul
+    name: Kabul
+    country: Afghanistan
+    country_code: AF
+    latitude: 34.5553
+    longitude: 69.2075
+    location_kind: city
+    admin_region: Kabul
+    corridor: upstream_kabul
+    aliases:
+      - Kabul Province
+  - location_id: af_herat
+    name: Herat
+    country: Afghanistan
+    country_code: AF
+    latitude: 34.3529
+    longitude: 62.2040
+    location_kind: city
+    admin_region: Herat
+    corridor: western_disturbance
+    aliases:
+      - Herat Province
+  - location_id: af_kandahar
+    name: Kandahar
+    country: Afghanistan
+    country_code: AF
+    latitude: 31.6289
+    longitude: 65.7372
+    location_kind: city
+    admin_region: Kandahar
+    corridor: western_disturbance
+    aliases:
+      - Kandahar Province
+  - location_id: af_jalalabad
+    name: Jalalabad
+    country: Afghanistan
+    country_code: AF
+    latitude: 34.4342
+    longitude: 70.4478
+    location_kind: city
+    admin_region: Nangarhar
+    corridor: upstream_kabul
+    aliases:
+      - Nangarhar
+  - location_id: ir_zahedan
+    name: Zahedan
+    country: Iran
+    country_code: IR
+    latitude: 29.4963
+    longitude: 60.8629
+    location_kind: city
+    admin_region: Sistan and Baluchestan
+    corridor: western_disturbance
+    aliases:
+      - Zahedan County
+  - location_id: ir_mashhad
+    name: Mashhad
+    country: Iran
+    country_code: IR
+    latitude: 36.2605
+    longitude: 59.6168
+    location_kind: city
+    admin_region: Razavi Khorasan
+    corridor: western_disturbance
+    aliases:
+      - Mashhad County
+  - location_id: ir_kerman
+    name: Kerman
+    country: Iran
+    country_code: IR
+    latitude: 30.2839
+    longitude: 57.0834
+    location_kind: city
+    admin_region: Kerman
+    corridor: western_disturbance
+    aliases:
+      - Kerman County
+  - location_id: cn_kashgar
+    name: Kashgar
+    country: China
+    country_code: CN
+    latitude: 39.4704
+    longitude: 75.9898
+    location_kind: city
+    admin_region: Xinjiang
+    corridor: western_china
+    aliases:
+      - Kashi
+      - Kashgar Prefecture
+  - location_id: cn_hotan
+    name: Hotan
+    country: China
+    country_code: CN
+    latitude: 37.1107
+    longitude: 79.9253
+    location_kind: city
+    admin_region: Xinjiang
+    corridor: western_china
+    aliases:
+      - Hetian
+      - Hotan Prefecture
+  - location_id: cn_urumqi
+    name: Urumqi
+    country: China
+    country_code: CN
+    latitude: 43.8256
+    longitude: 87.6168
+    location_kind: city
+    admin_region: Xinjiang
+    corridor: western_china
+    aliases:
+      - Urumchi
+      - Urumqi City

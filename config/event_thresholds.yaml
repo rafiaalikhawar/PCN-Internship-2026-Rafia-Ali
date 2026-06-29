@@ -1,0 +1,32 @@
+threshold_method:
+  description: Phase 1 configuration only. Event detection is implemented in later phases.
+  percentile_by_location_and_season: true
+  season_field: meteorological_season
+
+event_thresholds:
+  rainfall_event:
+    precipitation_percentile: 0.90
+    minimum_precipitation_mm: 5.0
+  temperature_event:
+    high_temperature_percentile: 0.90
+    low_temperature_percentile: 0.10
+  heatwave:
+    high_temperature_percentile: 0.90
+    minimum_consecutive_days: 3
+  drought_indicator:
+    rolling_window_days: 30
+    precipitation_percentile: 0.20
+  wind_event:
+    wind_speed_percentile: 0.90
+  storm_event:
+    precipitation_percentile: 0.85
+    wind_speed_percentile: 0.85
+  inferred_flood_risk:
+    precipitation_percentile: 0.95
+    rolling_window_days: 3
+
+cross_border:
+  upstream_lag_days:
+    minimum: 1
+    maximum: 10
+  caveat: UPSTREAM_OF links are candidate precursor associations, not proof of causation.
