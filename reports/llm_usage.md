@@ -25,3 +25,11 @@ This document records LLM assistance for the PCN Research Internship Assessment 
 - How used: Codex generated and edited code for HTTP 429 handling according to the focused rate-limit fix request.
 - Purpose: handle Open-Meteo 429 rate-limit responses with `Retry-After` support, fallback waiting, bounded retries, and configurable delay between uncached live requests.
 - Extent of reliance: implementation assistance for collector hardening and tests only. No normalization redesign, event detection, graph construction, analytical findings, or later-phase functionality was generated.
+
+## Phase 4 - Weather Event Detection
+
+- Tool used: OpenAI Codex.
+- Where used: event detection module, event threshold configuration, CLI command, synthetic tests, Phase 4 hardening tests, README update, and this disclosure entry.
+- How used: Codex generated and edited code for location-month percentile thresholds, event grouping, deterministic event IDs, event exports, threshold exports, summary output, storm traceability, rolling-window provenance, and bounded severity percentiles according to the Phase 4 requests.
+- Purpose: implement reproducible detection of rainfall, temperature, heatwave, wind, storm-candidate, meteorological drought-indicator, and inferred flood-risk candidate events from normalized daily weather data.
+- Extent of reliance: implementation assistance for event detection code and tests. No knowledge graph construction, cross-border relationships, analytical queries, visualizations, final report findings, or causal claims were generated.

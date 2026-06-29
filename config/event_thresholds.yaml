@@ -1,29 +1,35 @@
 threshold_method:
-  description: Phase 1 configuration only. Event detection is implemented in later phases.
-  percentile_by_location_and_season: true
-  season_field: meteorological_season
+  description: Location-month percentile thresholds for Phase 4 weather event detection.
+  percentile_by_location_and_month: true
+  minimum_samples_per_location_month: 30
 
 event_thresholds:
   rainfall_event:
-    precipitation_percentile: 0.90
-    minimum_precipitation_mm: 5.0
+    precipitation_percentile: 0.95
+    minimum_precipitation_mm: 10.0
   temperature_event:
-    high_temperature_percentile: 0.90
+    high_temperature_percentile: 0.95
     low_temperature_percentile: 0.10
   heatwave:
     high_temperature_percentile: 0.90
+    minimum_temperature_c: 30.0
     minimum_consecutive_days: 3
   drought_indicator:
     rolling_window_days: 30
-    precipitation_percentile: 0.20
+    rolling_precipitation_percentile: 0.10
+    minimum_consecutive_days: 10
   wind_event:
-    wind_speed_percentile: 0.90
+    wind_speed_percentile: 0.95
   storm_event:
-    precipitation_percentile: 0.85
-    wind_speed_percentile: 0.85
-  inferred_flood_risk:
     precipitation_percentile: 0.95
+    wind_speed_percentile: 0.95
+    overlap_window_days: 1
+    caveat: Derived storm candidate based on overlapping rainfall and wind extremes; not a confirmed storm report.
+  inferred_flood_risk:
     rolling_window_days: 3
+    rolling_precipitation_percentile: 0.99
+    status: inferred_candidate
+    caveat: Inferred flood-risk candidate based only on multi-day rainfall; not a confirmed flood.
 
 cross_border:
   upstream_lag_days:

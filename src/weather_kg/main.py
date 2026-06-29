@@ -9,6 +9,7 @@ from pathlib import Path
 
 from weather_kg import __version__
 from weather_kg.config import ConfigError, validate_config
+from weather_kg.events import EventDetectionError, detect_weather_events
 from weather_kg.logging_config import configure_logging
 from weather_kg.normalize import NormalizationError, normalize_daily_weather
 from weather_kg.open_meteo import CollectionError, collect_open_meteo
@@ -57,6 +58,23 @@ def build_parser() -> argparse.ArgumentParser:
     )
     _add_date_location_args(normalize_parser)
     normalize_parser.set_defaults(func=_normalize_command)
+
+    detect_parser = subparsers.add_parser(
+        "detect-events",
+        help="Detect weather events from normalized daily weather data.",
+        description="Detect Phase 4 weather events and write event CSV/JSON plus threshold and summary outputs.",
+    )
+    detect_parser.add_argument(
+        "--input",
+        default="data/processed/daily_weather.csv",
+        help="Path to normalized daily weather CSV",
+    )
+    detect_parser.add_argument(
+        "--thresholds",
+        default="config/event_thresholds.yaml",
+        help="Path to event threshold configuration",
+    )
+    detect_parser.set_defaults(func=_detect_events_command)
 
     validate_parser = subparsers.add_parser(
         "validate-config",
@@ -144,6 +162,26 @@ def _normalize_command(args: argparse.Namespace) -> int:
     print(f"Duplicate records: {result.duplicate_count}")
     print(f"Daily CSV: {result.daily_weather_csv}")
     print(f"Coverage report: {result.coverage_json}")
+    return 0
+
+
+def _detect_events_command(args: argparse.Namespace) -> int:
+    try:
+        result = detect_weather_events(
+            input_csv=Path(args.input),
+            thresholds_config=Path(args.thresholds),
+        )
+    except (EventDetectionError, ConfigError) as exc:
+        LOGGER.error("%s", exc)
+        print(str(exc))
+        return 1
+
+    print("Weather event detection complete.")
+    print(f"Events: {result.event_count}")
+    print(f"Events CSV: {result.events_csv}")
+    print(f"Events JSON: {result.events_json}")
+    print(f"Thresholds CSV: {result.thresholds_csv}")
+    print(f"Summary JSON: {result.summary_json}")
     return 0
 
 

@@ -10,7 +10,7 @@ This repository is intentionally scoped to Task 2 only. Task 1 and Task 3 are no
 
 ## Current Implementation Status
 
-Current phase: Phases 2-3 - Open-Meteo collection, raw caching, and daily normalization.
+Current phase: Phase 4 - weather event detection from normalized daily data.
 
 Implemented:
 
@@ -24,18 +24,18 @@ Implemented:
 - cache reuse, refresh mode, and cache-only mode
 - daily weather-data normalization
 - data coverage report generation
+- weather event detection for rainfall, temperature, heatwave, wind, storm candidates, meteorological drought indicators, and inferred flood-risk candidates
 - mocked unit tests for collection, cache, and normalization behavior
 - documentation skeletons
 
 Not implemented yet:
 
-- weather event detection
 - knowledge graph construction
 - analytical queries
 - graph/map visualizations
 - generated graph statistics or findings
 
-No graph statistics, event counts, analytical findings, screenshots, or graph completion claims are included at this stage.
+No graph statistics, analytical findings, screenshots, or graph completion claims are included at this stage.
 
 ## Planned Architecture
 
@@ -72,6 +72,7 @@ python -m weather_kg --help
 python -m weather_kg run --help
 python -m weather_kg collect --help
 python -m weather_kg normalize --help
+python -m weather_kg detect-events --help
 python -m weather_kg validate-config
 pytest -q
 ```
@@ -85,7 +86,7 @@ make validate-config
 make test
 ```
 
-The `run` command currently reports that later pipeline phases are not implemented yet. It does not collect data or generate graph outputs in Phase 1.
+The combined `run` command is not wired yet. Use `collect`, `normalize`, and `detect-events` for the implemented phases.
 
 ## Data Collection
 
@@ -183,6 +184,41 @@ The normalized CSV preserves missing weather observations as missing values. It 
 
 The normalized output keeps configured location coordinates (`latitude`, `longitude`) separate from Open-Meteo returned grid metadata (`api_latitude`, `api_longitude`, `api_elevation_m`). It also preserves `weather_code` when the raw response provides it and includes `iso_week_year` alongside `epidemiological_week` for year-boundary clarity.
 
+## Event Detection
+
+Detect weather events from the normalized daily dataset with:
+
+```bash
+python -m weather_kg detect-events
+```
+
+The command reads `data/processed/daily_weather.csv` by default and writes:
+
+```text
+data/processed/weather_events.csv
+data/processed/weather_events.json
+data/processed/event_thresholds.csv
+data/processed/event_detection_summary.json
+```
+
+Event thresholds are configured in `config/event_thresholds.yaml` and calculated separately by location, calendar month, and weather variable. Missing observations are excluded from threshold calculations and are not replaced with zero.
+
+Implemented event outputs:
+
+- rainfall events
+- temperature events with `extreme_heat` and `extreme_cold` subtypes
+- heatwaves with both relative and absolute-temperature rules
+- wind events
+- derived storm candidates constructed only from detected Rainfall and Wind events at the same location within the configured short window
+- meteorological drought indicators
+- inferred flood-risk candidates labelled with `status = inferred_candidate`
+
+Storm records include `related_rainfall_event_id` and `related_wind_event_id` for traceability. Flood and drought records include `lookback_days`, `critical_window_start`, `critical_window_end`, and `critical_rolling_precipitation_mm` to disclose the rolling precipitation window used for the representative value.
+
+`severity_score_raw` preserves the trace calculation used by the detector. `severity_percentile` is a bounded 0-1 ranking within each detected event type and subtype; it is not an official disaster-severity scale.
+
+Storm, drought, and flood-risk records are derived candidates or indicators, not confirmed disaster reports.
+
 ## Small Live Smoke Test
 
 This smoke test uses two configured locations and seven days of real Open-Meteo data:
@@ -246,6 +282,7 @@ The default test suite does not require internet access; API behavior is mocked 
 |   |-- __main__.py
 |   |-- cache.py
 |   |-- config.py
+|   |-- events.py
 |   |-- logging_config.py
 |   |-- main.py
 |   |-- models.py

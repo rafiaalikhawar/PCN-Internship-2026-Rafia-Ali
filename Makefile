@@ -1,4 +1,4 @@
-.PHONY: help install test validate-config collect normalize
+.PHONY: help install test validate-config collect normalize detect-events
 
 help:
 	@echo "Available commands:"
@@ -7,6 +7,7 @@ help:
 	@echo "  make validate-config  Validate configuration files"
 	@echo "  make collect          Collect Open-Meteo data using configured defaults"
 	@echo "  make normalize        Normalize cached Open-Meteo data"
+	@echo "  make detect-events    Detect weather events from normalized data"
 	@echo "  make help             Show this help message"
 
 install:
@@ -23,3 +24,6 @@ collect:
 
 normalize:
 	python3 -m weather_kg normalize
+
+detect-events:
+	python3 -m weather_kg detect-events

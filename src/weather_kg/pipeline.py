@@ -20,8 +20,8 @@ def run_pipeline() -> PipelineStatus:
         implemented=False,
         message=(
             "The combined run command is not wired yet. Use `weather_kg collect` "
-            "and `weather_kg normalize` for the implemented collection and daily "
-            "normalization phases. Event detection, graph construction, analytics, "
-            "and visualization are not implemented yet."
+            "`weather_kg normalize`, and `weather_kg detect-events` for the "
+            "implemented collection, normalization, and event detection phases. "
+            "Graph construction, analytics, and visualization are not implemented yet."
         ),
     )
