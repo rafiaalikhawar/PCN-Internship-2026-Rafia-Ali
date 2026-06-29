@@ -1,0 +1,176 @@
+{
+  "caveats": {
+    "climate_trends": "Observed pattern within the 2021-2025 dataset only; this is not long-term climate attribution.",
+    "cooccurrence": "Co-occurring event patterns are temporal/location associations in the generated graph and do not prove causation.",
+    "cross_border": "Cross-border precursor lags use UPSTREAM_OF candidate relationships only; these are not proven causation or forecasts."
+  },
+  "configuration_used": {
+    "caveats": {
+      "climate_trends": "Observed pattern within the 2021-2025 dataset only; this is not long-term climate attribution.",
+      "cooccurrence": "Co-occurring event patterns are temporal/location associations in the generated graph and do not prove causation.",
+      "cross_border": "Cross-border precursor lags use UPSTREAM_OF candidate relationships only; these are not proven causation or forecasts."
+    },
+    "climate_indicator_trends": {
+      "end_year": 2025,
+      "flat_slope_tolerance": 0.05,
+      "minimum_years": 4,
+      "start_year": 2021
+    },
+    "cooccurrence": {
+      "maximum_gap_days": 2
+    },
+    "exposure_score": {
+      "caveat": "This weather-event exposure score is not an official vulnerability index and does not represent complete social, economic, or disaster vulnerability.",
+      "weights": {
+        "diversity": 0.25,
+        "frequency": 0.25,
+        "recurrence": 0.25,
+        "severity": 0.25
+      }
+    }
+  },
+  "generation_timestamp": "2026-06-29T21:42:48Z",
+  "graph_node_count": 12503,
+  "graph_relationship_count": 45187,
+  "input_graph_path": "data/graph/weather_knowledge_graph.graphml",
+  "output_row_counts": {
+    "climate_indicator_annual_values": 765,
+    "climate_indicator_trends": 153,
+    "cooccurring_patterns": 21,
+    "cross_border_lag_summary": 375,
+    "cross_border_precursor_edges": 1879,
+    "highest_rainfall": 20,
+    "multi_event_locations": 22,
+    "pakistan_weather_exposure_ranking": 8,
+    "weather_exposure_ranking": 22
+  },
+  "top_results": {
+    "climate_indicator_annual_values": {
+      "annual_value": 4.0,
+      "caveat": "Observed pattern within the 2021-2025 dataset only; this is not long-term climate attribution.",
+      "country": "Afghanistan",
+      "event_type": "Drought",
+      "indicator_name": "annual_event_count",
+      "location_id": "af_herat",
+      "value_source": "Climate Indicator node",
+      "year": 2021
+    },
+    "climate_indicator_trends": {
+      "absolute_change": 21.0,
+      "available_years": 5,
+      "caveat": "Observed pattern within the 2021-2025 dataset only; this is not long-term climate attribution.",
+      "country": "Pakistan",
+      "direction": "increasing",
+      "event_type": "Wind",
+      "final_year": 2025,
+      "final_year_value": 22.0,
+      "first_year": 2021,
+      "first_year_value": 1.0,
+      "indicator_name": "annual_event_count",
+      "linear_slope": 6.8,
+      "location_id": "pk_gilgit"
+    },
+    "cooccurring_patterns": {
+      "algorithmically_related_pair_count": 0,
+      "caveat": "Co-occurring event patterns are temporal/location associations in the generated graph and do not prove causation.",
+      "distinct_country_count": 5,
+      "distinct_location_count": 22,
+      "event_type_pair": "Temperature + Wind",
+      "example_event_ids": "temperature_6edd9c45d0f5|wind_d10d1ae0c754",
+      "includes_algorithmic_derivation": false,
+      "median_gap_days": 1.0,
+      "total_pair_count": 978
+    },
+    "cross_border_lag_summary": {
+      "caveat": "This UPSTREAM_OF relationship is a temporal/geographic candidate association, not proven causation or a weather forecast.",
+      "earliest_example": "temperature_0ad10c777f9e",
+      "event_type_mapping": "Temperature->Temperature",
+      "latest_example": "temperature_ead5ab1cf419",
+      "maximum_lag_days": 10,
+      "mean_lag_days": 4.090909,
+      "median_lag_days": 3.0,
+      "minimum_lag_days": 1,
+      "relationship_count": 55,
+      "source_country": "Afghanistan",
+      "source_location": "af_kabul",
+      "target_pakistani_location": "pk_peshawar"
+    },
+    "cross_border_precursor_edges": {
+      "caveat": "This UPSTREAM_OF relationship is a temporal/geographic candidate association, not proven causation or a weather forecast.",
+      "confidence": 0.5,
+      "event_type_mapping": "Heatwave->Heatwave",
+      "evidence_type": "corridor_temporal_candidate",
+      "inference_status": "candidate_precursor",
+      "lag_days": 1,
+      "method": "conservative corridor-based neighbouring-country precursor candidate to Pakistan event",
+      "source_country": "Afghanistan",
+      "source_event_id": "heatwave_fa9a0f27fabf",
+      "source_location": "af_herat",
+      "target_event_id": "heatwave_7a553c970906",
+      "target_pakistani_location": "pk_islamabad"
+    },
+    "highest_rainfall": {
+      "caveat": "Derived rainfall event from Open-Meteo daily precipitation; not an impact report.",
+      "country": "Pakistan",
+      "end_date": "2022-07-25",
+      "event_id": "rainfall_66e7259b7d86",
+      "location_id": "pk_karachi",
+      "location_name": "Karachi",
+      "maximum_daily_precipitation_mm": 162.3,
+      "percentile_threshold": 18.749999999999993,
+      "rank": 1,
+      "severity_percentile": 0.998615,
+      "start_date": "2022-07-24",
+      "status": "derived",
+      "total_precipitation_mm": 224.4
+    },
+    "multi_event_locations": {
+      "country": "Pakistan",
+      "distinct_event_type_count": 7,
+      "event_types": "Drought|Flood|Heatwave|Rainfall|Storm|Temperature|Wind",
+      "events_by_type": "{\"Drought\": 11, \"Flood\": 16, \"Heatwave\": 18, \"Rainfall\": 69, \"Storm\": 18, \"Temperature\": 142, \"Wind\": 84}",
+      "location_id": "pk_islamabad",
+      "location_kind": "city",
+      "location_name": "Islamabad",
+      "maximum_severity_percentile": 0.990826,
+      "mean_severity_percentile": 0.487603,
+      "total_event_count": 358,
+      "years_with_detected_events": "2021|2022|2023|2024|2025"
+    },
+    "pakistan_weather_exposure_ranking": {
+      "active_year_list": "2021|2022|2023|2024|2025",
+      "active_years": 5,
+      "country": "Pakistan",
+      "distinct_event_types": 7,
+      "diversity_component": 1.0,
+      "event_types": "Drought|Flood|Heatwave|Rainfall|Storm|Temperature|Wind",
+      "exposure_score": 0.871901,
+      "frequency_component": 1.0,
+      "location_id": "pk_islamabad",
+      "location_name": "Islamabad",
+      "methodology_caveat": "This weather-event exposure score is not an official vulnerability index and does not represent complete social, economic, or disaster vulnerability.",
+      "overall_rank": 1,
+      "pakistan_rank": 1,
+      "recurrence_component": 1.0,
+      "severity_component": 0.487603,
+      "total_events": 358
+    },
+    "weather_exposure_ranking": {
+      "active_year_list": "2021|2022|2023|2024|2025",
+      "active_years": 5,
+      "country": "Pakistan",
+      "distinct_event_types": 7,
+      "diversity_component": 1.0,
+      "event_types": "Drought|Flood|Heatwave|Rainfall|Storm|Temperature|Wind",
+      "exposure_score": 0.871901,
+      "frequency_component": 1.0,
+      "location_id": "pk_islamabad",
+      "location_name": "Islamabad",
+      "methodology_caveat": "This weather-event exposure score is not an official vulnerability index and does not represent complete social, economic, or disaster vulnerability.",
+      "overall_rank": 1,
+      "recurrence_component": 1.0,
+      "severity_component": 0.487603,
+      "total_events": 358
+    }
+  }
+}

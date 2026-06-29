@@ -41,3 +41,11 @@ This document records LLM assistance for the PCN Research Internship Assessment 
 - How used: Codex generated and edited code for deterministic graph nodes, relationship construction, conservative `CAUSED` derivation edges, `UPSTREAM_OF` candidate edges, CSV/JSON/GraphML exports, and graph validation tests according to the Phase 5 request.
 - Purpose: construct a reproducible local weather intelligence knowledge graph from the verified normalized weather and event outputs.
 - Extent of reliance: implementation assistance for graph construction code and tests. No analytical query answers, PyVis visualization, Folium map, final report findings, screenshots, or uncaveated causal claims were generated.
+
+## Phase 6 - Analytical Queries
+
+- Tool used: OpenAI Codex.
+- Where used: analysis rules configuration, analytical query module, CLI command, offline analysis tests, README update, and this disclosure entry.
+- How used: Codex generated and edited code for the six required graph-based analytical outputs, deterministic CSV/JSON exports, summary metadata, and validation checks according to the Phase 6 request.
+- Purpose: produce reproducible analytical query outputs from the generated weather knowledge graph.
+- Extent of reliance: implementation assistance for analysis code and tests. No PyVis visualization, Folium map, dashboard, final report conclusions, screenshots, or unsupported causal/forecast claims were generated.

@@ -8,6 +8,7 @@ import logging
 from pathlib import Path
 
 from weather_kg import __version__
+from weather_kg.analysis import AnalysisError, run_analysis
 from weather_kg.config import ConfigError, validate_config
 from weather_kg.events import EventDetectionError, detect_weather_events
 from weather_kg.graph import GraphBuildError, build_weather_knowledge_graph
@@ -108,6 +109,34 @@ def build_parser() -> argparse.ArgumentParser:
         help="Directory for graph outputs",
     )
     graph_parser.set_defaults(func=_build_graph_command)
+
+    analyze_parser = subparsers.add_parser(
+        "analyze",
+        help="Run the six required analytical queries over the generated graph.",
+        description="Run Phase 6 analytical queries from graph CSV exports and write reproducible analysis outputs.",
+    )
+    analyze_parser.add_argument("--nodes", default="data/graph/nodes.csv", help="Path to graph nodes CSV")
+    analyze_parser.add_argument(
+        "--relationships",
+        default="data/graph/relationships.csv",
+        help="Path to graph relationships CSV",
+    )
+    analyze_parser.add_argument(
+        "--graph-summary",
+        default="data/graph/graph_summary.json",
+        help="Path to graph summary JSON",
+    )
+    analyze_parser.add_argument(
+        "--rules",
+        default="config/analysis_rules.yaml",
+        help="Path to analysis rules YAML",
+    )
+    analyze_parser.add_argument(
+        "--output-dir",
+        default="data/analysis",
+        help="Directory for analysis outputs",
+    )
+    analyze_parser.set_defaults(func=_analyze_command)
 
     validate_parser = subparsers.add_parser(
         "validate-config",
@@ -240,6 +269,27 @@ def _build_graph_command(args: argparse.Namespace) -> int:
     print(f"Graph JSON: {result.graph_json}")
     print(f"GraphML: {result.graphml}")
     print(f"Summary JSON: {result.summary_json}")
+    return 0
+
+
+def _analyze_command(args: argparse.Namespace) -> int:
+    try:
+        result = run_analysis(
+            nodes_csv=Path(args.nodes),
+            relationships_csv=Path(args.relationships),
+            graph_summary_json=Path(args.graph_summary),
+            rules_path=Path(args.rules),
+            output_dir=Path(args.output_dir),
+        )
+    except (AnalysisError, ConfigError) as exc:
+        LOGGER.error("%s", exc)
+        print(str(exc))
+        return 1
+
+    print("Weather graph analysis complete.")
+    for key, count in sorted(result.row_counts.items()):
+        print(f"{key}: {count}")
+    print(f"Analysis summary: {result.summary_json}")
     return 0
 
 

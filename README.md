@@ -10,7 +10,7 @@ This repository is intentionally scoped to Task 2 only. Task 1 and Task 3 are no
 
 ## Current Implementation Status
 
-Current phase: Phase 5 - NetworkX knowledge graph construction from detected weather events.
+Current phase: Phase 6 - analytical queries over the generated weather knowledge graph.
 
 Implemented:
 
@@ -27,17 +27,17 @@ Implemented:
 - weather event detection for rainfall, temperature, heatwave, wind, storm candidates, meteorological drought indicators, and inferred flood-risk candidates
 - NetworkX directed multigraph construction with required Task 2 node and relationship types
 - graph exports to node CSV, relationship CSV, JSON, GraphML, and summary JSON
+- six required analytical query outputs generated from the graph exports
 - mocked unit tests for collection, cache, and normalization behavior
 - documentation skeletons
 
 Not implemented yet:
 
-- analytical queries
 - PyVis graph visualization
 - Folium map visualization
-- generated analytical findings
+- final report findings and demo-video link
 
-No analytical findings, screenshots, or visualization completion claims are included at this stage.
+No screenshots, visualization completion claims, or final report conclusions are included at this stage.
 
 ## Planned Architecture
 
@@ -76,6 +76,7 @@ python -m weather_kg collect --help
 python -m weather_kg normalize --help
 python -m weather_kg detect-events --help
 python -m weather_kg build-graph --help
+python -m weather_kg analyze --help
 python -m weather_kg validate-config
 pytest -q
 ```
@@ -88,9 +89,10 @@ make install
 make validate-config
 make test
 make build-graph
+make analyze
 ```
 
-The combined `run` command is not wired yet. Use `collect`, `normalize`, `detect-events`, and `build-graph` for the implemented phases.
+The combined `run` command is not wired yet. Use `collect`, `normalize`, `detect-events`, `build-graph`, and `analyze` for the implemented phases.
 
 ## Data Collection
 
@@ -253,6 +255,40 @@ data/graph/graph_summary.json
 Entity resolution uses stable IDs: event nodes keep the original `event_id`, locations use configured `location_id`, countries use deterministic country IDs, date nodes use ISO-date IDs, time windows use date-range IDs, and climate indicators use deterministic annual indicator dimensions. The graph is a directed multigraph so multiple relationship types may connect the same pair of nodes.
 
 `CAUSED` edges are used only for explicit algorithmic derivation of Storm candidates from their related Rainfall and Wind events. These edges include caveats and do not claim real-world meteorological causation. `UPSTREAM_OF` edges are conservative cross-border candidate precursor associations from neighbouring-country events to Pakistani events using configured corridor, event-type, and lag rules.
+
+## Analytical Queries
+
+Run the six required analytical queries from the generated graph exports with:
+
+```bash
+python -m weather_kg analyze
+```
+
+The command reads:
+
+```text
+data/graph/nodes.csv
+data/graph/relationships.csv
+data/graph/graph_summary.json
+config/analysis_rules.yaml
+```
+
+It writes:
+
+```text
+data/analysis/highest_rainfall.csv
+data/analysis/multi_event_locations.csv
+data/analysis/cooccurring_patterns.csv
+data/analysis/climate_indicator_trends.csv
+data/analysis/climate_indicator_annual_values.csv
+data/analysis/weather_exposure_ranking.csv
+data/analysis/pakistan_weather_exposure_ranking.csv
+data/analysis/cross_border_precursor_edges.csv
+data/analysis/cross_border_lag_summary.csv
+data/analysis/analysis_summary.json
+```
+
+The analysis uses graph-derived event nodes, `OCCURRED_IN` location links, Climate Indicator nodes, and existing `UPSTREAM_OF` relationships. Co-occurrence and cross-border outputs are candidate temporal/geographic associations only and do not prove causation or provide forecasts. The exposure ranking is a transparent weather-event exposure score, not an official vulnerability index.
 
 ## Small Live Smoke Test
 

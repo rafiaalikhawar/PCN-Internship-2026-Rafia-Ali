@@ -1,0 +1,21 @@
+cooccurrence:
+  maximum_gap_days: 2
+
+climate_indicator_trends:
+  start_year: 2021
+  end_year: 2025
+  minimum_years: 4
+  flat_slope_tolerance: 0.05
+
+exposure_score:
+  caveat: This weather-event exposure score is not an official vulnerability index and does not represent complete social, economic, or disaster vulnerability.
+  weights:
+    frequency: 0.25
+    diversity: 0.25
+    severity: 0.25
+    recurrence: 0.25
+
+caveats:
+  cooccurrence: Co-occurring event patterns are temporal/location associations in the generated graph and do not prove causation.
+  climate_trends: Observed pattern within the 2021-2025 dataset only; this is not long-term climate attribution.
+  cross_border: Cross-border precursor lags use UPSTREAM_OF candidate relationships only; these are not proven causation or forecasts.

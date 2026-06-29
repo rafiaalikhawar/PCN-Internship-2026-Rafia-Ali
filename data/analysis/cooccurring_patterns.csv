@@ -1,0 +1,22 @@
+event_type_pair,total_pair_count,distinct_location_count,distinct_country_count,median_gap_days,algorithmically_related_pair_count,example_event_ids,includes_algorithmic_derivation,caveat
+Temperature + Wind,978,22,5,1.0,0,temperature_6edd9c45d0f5|wind_d10d1ae0c754,False,Co-occurring event patterns are temporal/location associations in the generated graph and do not prove causation.
+Drought + Temperature,719,22,5,0.0,0,drought_aa3d21542051|temperature_975cc64730b2,False,Co-occurring event patterns are temporal/location associations in the generated graph and do not prove causation.
+Heatwave + Temperature,503,22,5,0.0,0,heatwave_340bff813014|temperature_fa9044788342,False,Co-occurring event patterns are temporal/location associations in the generated graph and do not prove causation.
+Rainfall + Temperature,395,22,5,1.0,0,rainfall_0c66cc592872|temperature_015bf5dadc6d,False,Co-occurring event patterns are temporal/location associations in the generated graph and do not prove causation.
+Drought + Wind,345,22,5,0.0,0,drought_aa3d21542051|wind_942084c4f1b7,False,Co-occurring event patterns are temporal/location associations in the generated graph and do not prove causation.
+Flood + Rainfall,232,22,5,0.0,0,rainfall_e19e48c82f1e|flood_7e99fdee2c30,False,Co-occurring event patterns are temporal/location associations in the generated graph and do not prove causation.
+Rainfall + Wind,224,22,5,0.0,0,wind_55fc5106e81d|rainfall_0c66cc592872,False,Co-occurring event patterns are temporal/location associations in the generated graph and do not prove causation.
+Flood + Temperature,194,22,5,0.5,0,temperature_e1821891beeb|flood_f268a37645b0,False,Co-occurring event patterns are temporal/location associations in the generated graph and do not prove causation.
+Storm + Wind,186,21,5,0.0,166,storm_844292d46868|wind_55fc5106e81d,True,Co-occurring event patterns are temporal/location associations in the generated graph and do not prove causation.
+Rainfall + Storm,182,21,5,0.0,166,storm_844292d46868|rainfall_0c66cc592872,True,Co-occurring event patterns are temporal/location associations in the generated graph and do not prove causation.
+Heatwave + Wind,174,22,5,0.0,0,heatwave_340bff813014|wind_a12106a8a6a8,False,Co-occurring event patterns are temporal/location associations in the generated graph and do not prove causation.
+Drought + Heatwave,145,21,5,0.0,0,drought_f01f8df0ca48|heatwave_fa9a0f27fabf,False,Co-occurring event patterns are temporal/location associations in the generated graph and do not prove causation.
+Flood + Wind,115,22,5,1.0,0,wind_6ea2308bf4c6|flood_7e99fdee2c30,False,Co-occurring event patterns are temporal/location associations in the generated graph and do not prove causation.
+Storm + Temperature,96,21,5,1.0,0,storm_844292d46868|temperature_015bf5dadc6d,False,Co-occurring event patterns are temporal/location associations in the generated graph and do not prove causation.
+Flood + Storm,68,20,5,0.0,0,storm_217873531c78|flood_7e99fdee2c30,False,Co-occurring event patterns are temporal/location associations in the generated graph and do not prove causation.
+Drought + Rainfall,28,15,5,1.0,0,drought_e7a72c897e2d|rainfall_0c66cc592872,False,Co-occurring event patterns are temporal/location associations in the generated graph and do not prove causation.
+Drought + Flood,16,14,4,2.0,0,drought_dbbb64b9a5ef|flood_b25261c83254,False,Co-occurring event patterns are temporal/location associations in the generated graph and do not prove causation.
+Drought + Storm,12,8,4,1.0,0,drought_e7a72c897e2d|storm_844292d46868,False,Co-occurring event patterns are temporal/location associations in the generated graph and do not prove causation.
+Heatwave + Rainfall,8,4,3,1.0,0,heatwave_46d32b6f50a7|rainfall_155b80050b29,False,Co-occurring event patterns are temporal/location associations in the generated graph and do not prove causation.
+Flood + Heatwave,6,6,3,1.5,0,flood_b25261c83254|heatwave_2d50ad53c10c,False,Co-occurring event patterns are temporal/location associations in the generated graph and do not prove causation.
+Heatwave + Storm,4,4,2,1.5,0,heatwave_9be54eedc16e|storm_fdecc066139d,False,Co-occurring event patterns are temporal/location associations in the generated graph and do not prove causation.

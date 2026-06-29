@@ -1,0 +1,21 @@
+rank,event_id,location_id,location_name,country,start_date,end_date,maximum_daily_precipitation_mm,total_precipitation_mm,percentile_threshold,severity_percentile,status,caveat
+1,rainfall_66e7259b7d86,pk_karachi,Karachi,Pakistan,2022-07-24,2022-07-25,162.3,224.4,18.749999999999993,0.998615,derived,Derived rainfall event from Open-Meteo daily precipitation; not an impact report.
+2,rainfall_e9c1f567f635,in_new_delhi,New Delhi,India,2021-07-19,2021-07-20,122.7,150.0,26.929999999999996,0.98615,derived,Derived rainfall event from Open-Meteo daily precipitation; not an impact report.
+3,rainfall_204ddca78282,in_new_delhi,New Delhi,India,2024-07-31,2024-08-01,116.0,150.7,26.929999999999996,0.981994,derived,Derived rainfall event from Open-Meteo daily precipitation; not an impact report.
+4,rainfall_c70ee6ba8c19,pk_sukkur,Sukkur,Pakistan,2024-08-17,2024-08-18,112.0,142.8,22.13999999999997,0.990305,derived,Derived rainfall event from Open-Meteo daily precipitation; not an impact report.
+5,rainfall_af424c9a76c8,in_amritsar,Amritsar,India,2021-07-28,2021-07-28,104.9,104.9,31.579999999999956,0.937673,derived,Derived rainfall event from Open-Meteo daily precipitation; not an impact report.
+6,rainfall_83d24c9ad6c2,in_new_delhi,New Delhi,India,2024-09-12,2024-09-13,100.8,155.5,29.33999999999992,0.947368,derived,Derived rainfall event from Open-Meteo daily precipitation; not an impact report.
+7,rainfall_ee24eb34d71b,in_new_delhi,New Delhi,India,2021-05-19,2021-05-20,98.7,130.2,5.4,1.0,derived,Derived rainfall event from Open-Meteo daily precipitation; not an impact report.
+8,rainfall_da6fa4bf7019,in_amritsar,Amritsar,India,2025-08-25,2025-08-27,96.0,202.2,27.949999999999992,0.945983,derived,Derived rainfall event from Open-Meteo daily precipitation; not an impact report.
+9,rainfall_df0b89509620,pk_lahore,Lahore,Pakistan,2024-07-31,2024-08-01,93.9,120.3,26.489999999999995,0.952909,derived,Derived rainfall event from Open-Meteo daily precipitation; not an impact report.
+10,rainfall_1df34872ad0f,pk_karachi,Karachi,Pakistan,2022-08-10,2022-08-12,82.7,137.5,25.789999999999996,0.927978,derived,Derived rainfall event from Open-Meteo daily precipitation; not an impact report.
+11,rainfall_758cd5239b66,in_srinagar,Srinagar,India,2025-02-10,2025-02-11,82.2,108.1,25.9,0.926593,derived,Derived rainfall event from Open-Meteo daily precipitation; not an impact report.
+12,rainfall_87823f064f15,pk_gilgit,Gilgit,Pakistan,2022-06-21,2022-06-22,81.0,121.7,30.98999999999983,0.872576,derived,Derived rainfall event from Open-Meteo daily precipitation; not an impact report.
+13,rainfall_3c62b8419b83,in_srinagar,Srinagar,India,2024-03-02,2024-03-02,80.4,80.4,23.9,0.939058,derived,Derived rainfall event from Open-Meteo daily precipitation; not an impact report.
+14,rainfall_632033cca28e,pk_gilgit,Gilgit,Pakistan,2022-05-04,2022-05-04,79.1,79.1,23.50999999999997,0.940443,derived,Derived rainfall event from Open-Meteo daily precipitation; not an impact report.
+15,rainfall_eb6786c47939,in_jaipur,Jaipur,India,2021-07-30,2021-07-31,78.8,123.5,28.33,0.893352,derived,Derived rainfall event from Open-Meteo daily precipitation; not an impact report.
+16,rainfall_d71d003f162d,pk_gilgit,Gilgit,Pakistan,2025-08-15,2025-08-15,78.7,78.7,21.239999999999988,0.963989,derived,Derived rainfall event from Open-Meteo daily precipitation; not an impact report.
+17,rainfall_abaef8fea9b2,af_jalalabad,Jalalabad,Afghanistan,2022-08-20,2022-08-21,70.9,98.1,18.13999999999995,0.968144,derived,Derived rainfall event from Open-Meteo daily precipitation; not an impact report.
+18,rainfall_b87ae06ddeec,pk_gilgit,Gilgit,Pakistan,2023-01-23,2023-01-25,69.1,155.1,29.46999999999988,0.83518,derived,Derived rainfall event from Open-Meteo daily precipitation; not an impact report.
+19,rainfall_db7078efa75c,pk_islamabad,Islamabad,Pakistan,2025-07-16,2025-07-17,68.2,123.2,29.80999999999987,0.81856,derived,Derived rainfall event from Open-Meteo daily precipitation; not an impact report.
+20,rainfall_80f55fbd4819,pk_islamabad,Islamabad,Pakistan,2021-09-08,2021-09-08,67.1,67.1,16.694999999999986,0.972299,derived,Derived rainfall event from Open-Meteo daily precipitation; not an impact report.
