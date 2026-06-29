@@ -1,4 +1,4 @@
-.PHONY: help install test validate-config collect normalize detect-events build-graph analyze
+.PHONY: help install test validate-config collect normalize detect-events build-graph analyze dashboard
 
 help:
 	@echo "Available commands:"
@@ -10,6 +10,7 @@ help:
 	@echo "  make detect-events    Detect weather events from normalized data"
 	@echo "  make build-graph      Build NetworkX graph outputs from detected events"
 	@echo "  make analyze          Run analytical queries from graph outputs"
+	@echo "  make dashboard        Launch the Streamlit research dashboard"
 	@echo "  make help             Show this help message"
 
 install:
@@ -35,3 +36,6 @@ build-graph:
 
 analyze:
 	python3 -m weather_kg analyze
+
+dashboard:
+	streamlit run app.py

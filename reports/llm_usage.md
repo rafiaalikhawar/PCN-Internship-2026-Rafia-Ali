@@ -49,3 +49,11 @@ This document records LLM assistance for the PCN Research Internship Assessment 
 - How used: Codex generated and edited code for the six required graph-based analytical outputs, deterministic CSV/JSON exports, summary metadata, and validation checks according to the Phase 6 request.
 - Purpose: produce reproducible analytical query outputs from the generated weather knowledge graph.
 - Extent of reliance: implementation assistance for analysis code and tests. No PyVis visualization, Folium map, dashboard, final report conclusions, screenshots, or unsupported causal/forecast claims were generated.
+
+## Phase 7 - Streamlit Dashboard and Local Visualizations
+
+- Tool used: OpenAI Codex.
+- Where used: Streamlit dashboard, Folium map helper, bounded PyVis graph explorer helper, dashboard tests, README update, dependency metadata, and this disclosure entry.
+- How used: Codex generated and edited code for a local file-driven research dashboard that reads existing generated outputs and preserves methodological caveats.
+- Purpose: provide local visualization and inspection of verified pipeline outputs without external APIs, authentication, databases, Docker, or paid services.
+- Extent of reliance: implementation assistance for dashboard code and tests. No final report conclusions, demo recording, screenshots, external data, chatbot, causal claims, or forecast claims were generated.

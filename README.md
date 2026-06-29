@@ -10,7 +10,7 @@ This repository is intentionally scoped to Task 2 only. Task 1 and Task 3 are no
 
 ## Current Implementation Status
 
-Current phase: Phase 6 - analytical queries over the generated weather knowledge graph.
+Current phase: Phase 7 - local Streamlit research dashboard and bounded visual exploration.
 
 Implemented:
 
@@ -28,16 +28,17 @@ Implemented:
 - NetworkX directed multigraph construction with required Task 2 node and relationship types
 - graph exports to node CSV, relationship CSV, JSON, GraphML, and summary JSON
 - six required analytical query outputs generated from the graph exports
+- local Streamlit dashboard over generated outputs
+- Folium map of the 22 configured locations
+- bounded PyVis knowledge-graph explorer
 - mocked unit tests for collection, cache, and normalization behavior
 - documentation skeletons
 
 Not implemented yet:
 
-- PyVis graph visualization
-- Folium map visualization
 - final report findings and demo-video link
 
-No screenshots, visualization completion claims, or final report conclusions are included at this stage.
+No final report conclusions or demo-video link are included at this stage.
 
 ## Planned Architecture
 
@@ -90,9 +91,10 @@ make validate-config
 make test
 make build-graph
 make analyze
+make dashboard
 ```
 
-The combined `run` command is not wired yet. Use `collect`, `normalize`, `detect-events`, `build-graph`, and `analyze` for the implemented phases.
+The combined `run` command is not wired yet. Use `collect`, `normalize`, `detect-events`, `build-graph`, `analyze`, and the dashboard command for the implemented phases.
 
 ## Data Collection
 
@@ -289,6 +291,44 @@ data/analysis/analysis_summary.json
 ```
 
 The analysis uses graph-derived event nodes, `OCCURRED_IN` location links, Climate Indicator nodes, and existing `UPSTREAM_OF` relationships. Co-occurrence and cross-border outputs are candidate temporal/geographic associations only and do not prove causation or provide forecasts. The exposure ranking is a transparent weather-event exposure score, not an official vulnerability index.
+
+## Streamlit Research Dashboard
+
+Launch the local dashboard with:
+
+```bash
+streamlit run app.py
+```
+
+or:
+
+```bash
+make dashboard
+```
+
+The dashboard reads existing generated outputs only. It does not call external APIs, use a database, require Docker, or require authentication.
+
+Dashboard sections:
+
+- Overview metrics from generated JSON summaries
+- highest rainfall filters and ranked table
+- multi-event configured-location chart and table
+- co-occurring event-pattern chart and algorithmic-association flag
+- climate-indicator annual values and trend caveat
+- weather-event exposure ranking with all score components
+- cross-border candidate relationship filters and lag summaries
+- Folium map of all 22 configured locations
+- bounded PyVis graph explorer with node and relationship controls
+
+Screenshot placeholders for final documentation:
+
+```text
+outputs/figures/dashboard_overview_placeholder.png
+outputs/figures/dashboard_map_placeholder.png
+outputs/figures/dashboard_graph_explorer_placeholder.png
+```
+
+The dashboard preserves the same caveats as the generated outputs. Cross-border views are labelled candidate temporal/geographic associations, not proven causation and not forecasts. The exposure page uses the phrase "weather-event exposure score" and does not present the ranking as an official vulnerability index.
 
 ## Small Live Smoke Test
 
