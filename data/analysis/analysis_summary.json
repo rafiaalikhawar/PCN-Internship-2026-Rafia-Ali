@@ -29,7 +29,7 @@
       }
     }
   },
-  "generation_timestamp": "2026-06-29T21:42:48Z",
+  "generation_timestamp": "2026-06-29T21:49:47Z",
   "graph_node_count": 12503,
   "graph_relationship_count": 45187,
   "input_graph_path": "data/graph/weather_knowledge_graph.graphml",
