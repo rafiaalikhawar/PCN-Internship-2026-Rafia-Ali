@@ -23,6 +23,15 @@ def test_run_help(capsys) -> None:
     assert "Run the Weather Intelligence KG pipeline" in captured.out
 
 
+def test_build_graph_help(capsys) -> None:
+    with pytest.raises(SystemExit) as exc_info:
+        main(["build-graph", "--help"])
+    captured = capsys.readouterr()
+
+    assert exc_info.value.code == 0
+    assert "Build Phase 5 graph nodes" in captured.out
+
+
 def test_validate_config_command_success(capsys) -> None:
     exit_code = main(["validate-config"])
     captured = capsys.readouterr()

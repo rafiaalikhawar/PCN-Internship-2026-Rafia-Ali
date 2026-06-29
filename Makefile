@@ -1,4 +1,4 @@
-.PHONY: help install test validate-config collect normalize detect-events
+.PHONY: help install test validate-config collect normalize detect-events build-graph
 
 help:
 	@echo "Available commands:"
@@ -8,6 +8,7 @@ help:
 	@echo "  make collect          Collect Open-Meteo data using configured defaults"
 	@echo "  make normalize        Normalize cached Open-Meteo data"
 	@echo "  make detect-events    Detect weather events from normalized data"
+	@echo "  make build-graph      Build NetworkX graph outputs from detected events"
 	@echo "  make help             Show this help message"
 
 install:
@@ -27,3 +28,6 @@ normalize:
 
 detect-events:
 	python3 -m weather_kg detect-events
+
+build-graph:
+	python3 -m weather_kg build-graph

@@ -10,7 +10,7 @@ This repository is intentionally scoped to Task 2 only. Task 1 and Task 3 are no
 
 ## Current Implementation Status
 
-Current phase: Phase 4 - weather event detection from normalized daily data.
+Current phase: Phase 5 - NetworkX knowledge graph construction from detected weather events.
 
 Implemented:
 
@@ -25,17 +25,19 @@ Implemented:
 - daily weather-data normalization
 - data coverage report generation
 - weather event detection for rainfall, temperature, heatwave, wind, storm candidates, meteorological drought indicators, and inferred flood-risk candidates
+- NetworkX directed multigraph construction with required Task 2 node and relationship types
+- graph exports to node CSV, relationship CSV, JSON, GraphML, and summary JSON
 - mocked unit tests for collection, cache, and normalization behavior
 - documentation skeletons
 
 Not implemented yet:
 
-- knowledge graph construction
 - analytical queries
-- graph/map visualizations
-- generated graph statistics or findings
+- PyVis graph visualization
+- Folium map visualization
+- generated analytical findings
 
-No graph statistics, analytical findings, screenshots, or graph completion claims are included at this stage.
+No analytical findings, screenshots, or visualization completion claims are included at this stage.
 
 ## Planned Architecture
 
@@ -73,6 +75,7 @@ python -m weather_kg run --help
 python -m weather_kg collect --help
 python -m weather_kg normalize --help
 python -m weather_kg detect-events --help
+python -m weather_kg build-graph --help
 python -m weather_kg validate-config
 pytest -q
 ```
@@ -84,9 +87,10 @@ make help
 make install
 make validate-config
 make test
+make build-graph
 ```
 
-The combined `run` command is not wired yet. Use `collect`, `normalize`, and `detect-events` for the implemented phases.
+The combined `run` command is not wired yet. Use `collect`, `normalize`, `detect-events`, and `build-graph` for the implemented phases.
 
 ## Data Collection
 
@@ -218,6 +222,37 @@ Storm records include `related_rainfall_event_id` and `related_wind_event_id` fo
 `severity_score_raw` preserves the trace calculation used by the detector. `severity_percentile` is a bounded 0-1 ranking within each detected event type and subtype; it is not an official disaster-severity scale.
 
 Storm, drought, and flood-risk records are derived candidates or indicators, not confirmed disaster reports.
+
+## Knowledge Graph Construction
+
+Build the local NetworkX graph from the existing normalized and event outputs with:
+
+```bash
+python -m weather_kg build-graph
+```
+
+The command reads:
+
+```text
+data/processed/weather_events.csv
+data/processed/daily_weather.csv
+config/locations.yaml
+config/graph_rules.yaml
+```
+
+It writes:
+
+```text
+data/graph/nodes.csv
+data/graph/relationships.csv
+data/graph/weather_knowledge_graph.json
+data/graph/weather_knowledge_graph.graphml
+data/graph/graph_summary.json
+```
+
+Entity resolution uses stable IDs: event nodes keep the original `event_id`, locations use configured `location_id`, countries use deterministic country IDs, date nodes use ISO-date IDs, time windows use date-range IDs, and climate indicators use deterministic annual indicator dimensions. The graph is a directed multigraph so multiple relationship types may connect the same pair of nodes.
+
+`CAUSED` edges are used only for explicit algorithmic derivation of Storm candidates from their related Rainfall and Wind events. These edges include caveats and do not claim real-world meteorological causation. `UPSTREAM_OF` edges are conservative cross-border candidate precursor associations from neighbouring-country events to Pakistani events using configured corridor, event-type, and lag rules.
 
 ## Small Live Smoke Test
 

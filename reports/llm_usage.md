@@ -33,3 +33,11 @@ This document records LLM assistance for the PCN Research Internship Assessment 
 - How used: Codex generated and edited code for location-month percentile thresholds, event grouping, deterministic event IDs, event exports, threshold exports, summary output, storm traceability, rolling-window provenance, and bounded severity percentiles according to the Phase 4 requests.
 - Purpose: implement reproducible detection of rainfall, temperature, heatwave, wind, storm-candidate, meteorological drought-indicator, and inferred flood-risk candidate events from normalized daily weather data.
 - Extent of reliance: implementation assistance for event detection code and tests. No knowledge graph construction, cross-border relationships, analytical queries, visualizations, final report findings, or causal claims were generated.
+
+## Phase 5 - Knowledge Graph Construction
+
+- Tool used: OpenAI Codex.
+- Where used: NetworkX graph builder, graph rules configuration, CLI command, graph export code, offline graph tests, README update, and this disclosure entry.
+- How used: Codex generated and edited code for deterministic graph nodes, relationship construction, conservative `CAUSED` derivation edges, `UPSTREAM_OF` candidate edges, CSV/JSON/GraphML exports, and graph validation tests according to the Phase 5 request.
+- Purpose: construct a reproducible local weather intelligence knowledge graph from the verified normalized weather and event outputs.
+- Extent of reliance: implementation assistance for graph construction code and tests. No analytical query answers, PyVis visualization, Folium map, final report findings, screenshots, or uncaveated causal claims were generated.

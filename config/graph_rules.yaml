@@ -1,0 +1,54 @@
+temporal_relationships:
+  max_lag_days: 14
+  method: nearest following event at the same location and event type within the configured lag window
+  caveat: Temporal ordering does not prove causation.
+
+upstream_candidates:
+  max_lag_days: 10
+  method: conservative corridor-based neighbouring-country precursor candidate to Pakistan event
+  evidence_type: corridor_temporal_candidate
+  inference_status: candidate_precursor
+  caveat: This UPSTREAM_OF relationship is a temporal/geographic candidate association, not proven causation or a weather forecast.
+  event_type_compatibility:
+    Rainfall:
+      - Rainfall
+      - Storm
+      - Flood
+    Storm:
+      - Rainfall
+      - Storm
+      - Flood
+    Flood:
+      - Flood
+    Wind:
+      - Wind
+      - Storm
+    Temperature:
+      - Temperature
+      - Heatwave
+    Heatwave:
+      - Temperature
+      - Heatwave
+    Drought:
+      - Drought
+  corridor_pairs:
+    - source_corridor: upper_indus
+      target_corridors:
+        - upper_indus
+        - indus_core
+    - source_corridor: upstream_kabul
+      target_corridors:
+        - upstream_kabul
+        - indus_core
+    - source_corridor: eastern_monsoon
+      target_corridors:
+        - eastern_monsoon
+        - indus_core
+    - source_corridor: western_disturbance
+      target_corridors:
+        - western_disturbance
+        - indus_core
+    - source_corridor: western_china
+      target_corridors:
+        - upper_indus
+        - indus_core

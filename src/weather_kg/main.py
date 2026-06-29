@@ -10,6 +10,7 @@ from pathlib import Path
 from weather_kg import __version__
 from weather_kg.config import ConfigError, validate_config
 from weather_kg.events import EventDetectionError, detect_weather_events
+from weather_kg.graph import GraphBuildError, build_weather_knowledge_graph
 from weather_kg.logging_config import configure_logging
 from weather_kg.normalize import NormalizationError, normalize_daily_weather
 from weather_kg.open_meteo import CollectionError, collect_open_meteo
@@ -75,6 +76,38 @@ def build_parser() -> argparse.ArgumentParser:
         help="Path to event threshold configuration",
     )
     detect_parser.set_defaults(func=_detect_events_command)
+
+    graph_parser = subparsers.add_parser(
+        "build-graph",
+        help="Build the NetworkX weather knowledge graph from detected events.",
+        description="Build Phase 5 graph nodes, relationships, JSON, GraphML, and summary outputs without API collection.",
+    )
+    graph_parser.add_argument(
+        "--events",
+        default="data/processed/weather_events.csv",
+        help="Path to detected weather events CSV",
+    )
+    graph_parser.add_argument(
+        "--daily",
+        default="data/processed/daily_weather.csv",
+        help="Path to normalized daily weather CSV",
+    )
+    graph_parser.add_argument(
+        "--locations",
+        default="config/locations.yaml",
+        help="Path to configured location registry",
+    )
+    graph_parser.add_argument(
+        "--rules",
+        default="config/graph_rules.yaml",
+        help="Path to graph construction rules YAML",
+    )
+    graph_parser.add_argument(
+        "--output-dir",
+        default="data/graph",
+        help="Directory for graph outputs",
+    )
+    graph_parser.set_defaults(func=_build_graph_command)
 
     validate_parser = subparsers.add_parser(
         "validate-config",
@@ -181,6 +214,31 @@ def _detect_events_command(args: argparse.Namespace) -> int:
     print(f"Events CSV: {result.events_csv}")
     print(f"Events JSON: {result.events_json}")
     print(f"Thresholds CSV: {result.thresholds_csv}")
+    print(f"Summary JSON: {result.summary_json}")
+    return 0
+
+
+def _build_graph_command(args: argparse.Namespace) -> int:
+    try:
+        result = build_weather_knowledge_graph(
+            events_csv=Path(args.events),
+            daily_weather_csv=Path(args.daily),
+            locations_path=Path(args.locations),
+            graph_rules_path=Path(args.rules),
+            output_dir=Path(args.output_dir),
+        )
+    except (GraphBuildError, ConfigError) as exc:
+        LOGGER.error("%s", exc)
+        print(str(exc))
+        return 1
+
+    print("Weather knowledge graph construction complete.")
+    print(f"Nodes: {result.node_count}")
+    print(f"Relationships: {result.relationship_count}")
+    print(f"Nodes CSV: {result.nodes_csv}")
+    print(f"Relationships CSV: {result.relationships_csv}")
+    print(f"Graph JSON: {result.graph_json}")
+    print(f"GraphML: {result.graphml}")
     print(f"Summary JSON: {result.summary_json}")
     return 0
 

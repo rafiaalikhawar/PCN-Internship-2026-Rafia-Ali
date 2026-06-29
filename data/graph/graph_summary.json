@@ -1,0 +1,77 @@
+{
+  "countries_represented": [
+    "Afghanistan",
+    "China",
+    "India",
+    "Iran",
+    "Pakistan"
+  ],
+  "counts_by_node_type": {
+    "Climate Indicator": 699,
+    "Country": 5,
+    "Date": 1723,
+    "Drought": 226,
+    "Flood": 306,
+    "Heatwave": 382,
+    "Location": 22,
+    "Rainfall Event": 722,
+    "Storm": 166,
+    "Temperature Event": 3147,
+    "Time Window": 3361,
+    "Wind Event": 1744
+  },
+  "counts_by_relationship_type": {
+    "AFFECTED": 6693,
+    "ASSOCIATED_WITH": 2429,
+    "CAUSED": 332,
+    "ENDED_ON": 6693,
+    "FOLLOWED": 3530,
+    "LOCATED_IN": 22,
+    "OCCURRED_IN": 6693,
+    "PRECEDED": 3530,
+    "STARTED_ON": 6693,
+    "UPSTREAM_OF": 1879,
+    "WITHIN_TIME_WINDOW": 6693
+  },
+  "dangling_edge_endpoints": 0,
+  "duplicate_node_ids": 0,
+  "duplicate_relationship_ids": 0,
+  "generated_at": "2026-06-29T21:24:55Z",
+  "graph_exceeds_minimums": true,
+  "node_count": 12503,
+  "relationship_count": 45187,
+  "required_node_types_missing": [],
+  "required_node_types_present": [
+    "Climate Indicator",
+    "Country",
+    "Date",
+    "Drought",
+    "Flood",
+    "Heatwave",
+    "Location",
+    "Rainfall Event",
+    "Storm",
+    "Temperature Event",
+    "Time Window",
+    "Wind Event"
+  ],
+  "required_relationship_types_missing": [],
+  "required_relationship_types_present": [
+    "AFFECTED",
+    "ASSOCIATED_WITH",
+    "CAUSED",
+    "FOLLOWED",
+    "OCCURRED_IN",
+    "PRECEDED",
+    "UPSTREAM_OF"
+  ],
+  "self_loops": 0,
+  "source": {
+    "name": "Weather Intelligence Knowledge Graph",
+    "phase": "Phase 5",
+    "source_daily_weather": "data/processed/daily_weather.csv",
+    "source_events": "data/processed/weather_events.csv",
+    "source_graph_rules": "config/graph_rules.yaml",
+    "source_locations": "config/locations.yaml"
+  }
+}
