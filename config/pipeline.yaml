@@ -35,3 +35,4 @@ paths:
 runtime:
   offline_mode: false
   log_level: INFO
+  live_request_delay_seconds: 10

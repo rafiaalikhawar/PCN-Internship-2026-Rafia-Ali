@@ -17,3 +17,11 @@ This document records LLM assistance for the PCN Research Internship Assessment 
 - How used: Codex generated and edited implementation files according to `AGENTS.md`, `PLAN.md`, `TASK_SPEC.md`, and the Phase 2-3 user request.
 - Purpose: implement public Open-Meteo historical-weather collection, raw-response caching, cache-only operation, daily weather normalization, and coverage reporting.
 - Extent of reliance: implementation assistance for code and tests. No event detection, knowledge graph construction, analytical findings, graph statistics, screenshots, or final report conclusions were generated or claimed.
+
+## Phase 2-3 Hardening - Open-Meteo Rate Limits
+
+- Tool used: OpenAI Codex.
+- Where used: Open-Meteo collector retry logic, collection CLI option, mocked rate-limit tests, README update, and this disclosure entry.
+- How used: Codex generated and edited code for HTTP 429 handling according to the focused rate-limit fix request.
+- Purpose: handle Open-Meteo 429 rate-limit responses with `Retry-After` support, fallback waiting, bounded retries, and configurable delay between uncached live requests.
+- Extent of reliance: implementation assistance for collector hardening and tests only. No normalization redesign, event detection, graph construction, analytical findings, or later-phase functionality was generated.

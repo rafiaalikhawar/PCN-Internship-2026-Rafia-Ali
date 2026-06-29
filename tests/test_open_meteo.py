@@ -13,10 +13,17 @@ from weather_kg.open_meteo import build_request_params, collect_open_meteo, dail
 
 
 class FakeResponse:
-    def __init__(self, status_code: int, payload: dict, text: str = "fake response") -> None:
+    def __init__(
+        self,
+        status_code: int,
+        payload: dict,
+        text: str = "fake response",
+        headers: dict[str, str] | None = None,
+    ) -> None:
         self.status_code = status_code
         self._payload = payload
         self.text = text
+        self.headers = headers or {}
 
     def json(self) -> dict:
         return self._payload
@@ -223,6 +230,155 @@ def test_retry_handling_for_server_error(tmp_path: Path) -> None:
 
     assert summary.successful_locations == 1
     assert len(session.calls) == 2
+
+
+def test_429_followed_by_success_uses_retry_after(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    pipeline_path = _tmp_pipeline(tmp_path)
+    sleeps: list[float] = []
+    monkeypatch.setattr("weather_kg.open_meteo.time.sleep", sleeps.append)
+    session = FakeSession(
+        [
+            FakeResponse(429, {}, "rate limited", headers={"Retry-After": "2"}),
+            FakeResponse(200, _api_payload()),
+        ]
+    )
+
+    summary = collect_open_meteo(
+        start_date="2025-01-01",
+        end_date="2025-01-07",
+        limit_locations_count=1,
+        refresh=True,
+        pipeline_path=pipeline_path,
+        session=session,
+    )
+
+    assert summary.successful_locations == 1
+    assert len(session.calls) == 2
+    assert sleeps == [2.0]
+
+
+def test_429_without_retry_after_uses_fallback_wait(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    pipeline_path = _tmp_pipeline(tmp_path)
+    sleeps: list[float] = []
+    monkeypatch.setattr("weather_kg.open_meteo.time.sleep", sleeps.append)
+    session = FakeSession([FakeResponse(429, {}, "rate limited"), FakeResponse(200, _api_payload())])
+
+    summary = collect_open_meteo(
+        start_date="2025-01-01",
+        end_date="2025-01-07",
+        limit_locations_count=1,
+        refresh=True,
+        pipeline_path=pipeline_path,
+        session=session,
+    )
+
+    assert summary.successful_locations == 1
+    assert sleeps == [65.0]
+
+
+def test_429_retry_exhaustion_fails_location(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    pipeline_path = _tmp_pipeline(tmp_path)
+    sleeps: list[float] = []
+    monkeypatch.setattr("weather_kg.open_meteo.time.sleep", sleeps.append)
+    session = FakeSession(
+        [
+            FakeResponse(429, {}, "rate limited"),
+            FakeResponse(429, {}, "rate limited"),
+            FakeResponse(429, {}, "rate limited"),
+            FakeResponse(429, {}, "rate limited"),
+        ]
+    )
+
+    summary = collect_open_meteo(
+        start_date="2025-01-01",
+        end_date="2025-01-07",
+        limit_locations_count=1,
+        refresh=True,
+        pipeline_path=pipeline_path,
+        session=session,
+    )
+
+    assert summary.failed_locations == 1
+    assert summary.successful_locations == 0
+    assert len(session.calls) == 4
+    assert sleeps == [65.0, 65.0, 65.0]
+    assert "HTTP 429 rate limit" in (summary.results[0].error or "")
+
+
+def test_cached_response_does_not_sleep(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    pipeline_path = _tmp_pipeline(tmp_path)
+    location = load_locations()[0]
+    path = cache_path(tmp_path / "cache", location.location_id, "2025-01-01", "2025-01-07")
+    write_json(path, _success_payload(location.location_id))
+    sleeps: list[float] = []
+    monkeypatch.setattr("weather_kg.open_meteo.time.sleep", sleeps.append)
+    session = FakeSession([FakeResponse(200, _api_payload())])
+
+    summary = collect_open_meteo(
+        start_date="2025-01-01",
+        end_date="2025-01-07",
+        limit_locations_count=1,
+        pipeline_path=pipeline_path,
+        session=session,
+    )
+
+    assert summary.cached_locations == 1
+    assert sleeps == []
+    assert session.calls == []
+
+
+def test_live_request_delay_applies_between_uncached_requests(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    pipeline_path = _tmp_pipeline(tmp_path)
+    sleeps: list[float] = []
+    monkeypatch.setattr("weather_kg.open_meteo.time.sleep", sleeps.append)
+    session = FakeSession([FakeResponse(200, _api_payload()), FakeResponse(200, _api_payload())])
+
+    summary = collect_open_meteo(
+        start_date="2025-01-01",
+        end_date="2025-01-07",
+        limit_locations_count=2,
+        refresh=True,
+        pipeline_path=pipeline_path,
+        live_request_delay_seconds=3,
+        session=session,
+    )
+
+    assert summary.successful_locations == 2
+    assert len(session.calls) == 2
+    assert sleeps == [3]
+
+
+def test_successful_cache_is_preserved_when_refresh_hits_429(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    pipeline_path = _tmp_pipeline(tmp_path)
+    location = load_locations()[0]
+    path = cache_path(tmp_path / "cache", location.location_id, "2025-01-01", "2025-01-07")
+    write_json(path, _success_payload(location.location_id, temperature=1.0))
+    monkeypatch.setattr("weather_kg.open_meteo.time.sleep", lambda _seconds: None)
+    session = FakeSession(
+        [
+            FakeResponse(429, {}, "rate limited"),
+            FakeResponse(429, {}, "rate limited"),
+            FakeResponse(429, {}, "rate limited"),
+            FakeResponse(429, {}, "rate limited"),
+        ]
+    )
+
+    summary = collect_open_meteo(
+        start_date="2025-01-01",
+        end_date="2025-01-07",
+        limit_locations_count=1,
+        refresh=True,
+        pipeline_path=pipeline_path,
+        session=session,
+    )
+
+    assert summary.failed_locations == 1
+    preserved = read_json(path)
+    assert preserved["status"] == "success"
+    assert preserved["daily"]["temperature_2m_max"] == [1.0]
 
 
 def test_malformed_api_response_is_failed_not_successful(tmp_path: Path) -> None:

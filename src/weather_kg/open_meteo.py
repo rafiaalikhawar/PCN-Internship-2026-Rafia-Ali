@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from datetime import UTC, date, datetime
+from email.utils import parsedate_to_datetime
 import logging
 from pathlib import Path
 import time
@@ -21,6 +22,9 @@ LOGGER = logging.getLogger(__name__)
 DEFAULT_TIMEOUT_SECONDS = 30
 DEFAULT_MAX_RETRIES = 3
 DEFAULT_BACKOFF_SECONDS = 1.0
+DEFAULT_RATE_LIMIT_RETRIES = 3
+DEFAULT_RATE_LIMIT_WAIT_SECONDS = 65.0
+DEFAULT_LIVE_REQUEST_DELAY_SECONDS = 10.0
 
 
 class CollectionError(RuntimeError):
@@ -121,6 +125,8 @@ def collect_open_meteo(
     pipeline_path: Path | str = "config/pipeline.yaml",
     timeout_seconds: int = DEFAULT_TIMEOUT_SECONDS,
     max_retries: int = DEFAULT_MAX_RETRIES,
+    max_rate_limit_retries: int = DEFAULT_RATE_LIMIT_RETRIES,
+    live_request_delay_seconds: float | None = None,
     session: requests.Session | None = None,
 ) -> CollectionSummary:
     """Collect configured Open-Meteo responses with deterministic raw caching."""
@@ -134,9 +140,11 @@ def collect_open_meteo(
     variables = daily_variables(pipeline_config)
     cache_dir = Path(pipeline_config.paths["raw_cache"])
     client = session or requests.Session()
+    request_delay = resolve_live_request_delay(pipeline_config, live_request_delay_seconds)
 
     successful = cached = skipped = failed = 0
     results: list[LocationCollectionResult] = []
+    live_request_already_made = False
 
     for location in locations:
         path = cache_path(
@@ -171,13 +179,18 @@ def collect_open_meteo(
             continue
 
         try:
+            if live_request_already_made and request_delay > 0:
+                LOGGER.info("Waiting %.1f seconds before next uncached Open-Meteo request", request_delay)
+                time.sleep(request_delay)
             raw_response = _request_with_retries(
                 client=client,
                 base_url=pipeline_config.data_source.base_url,
                 params=params,
                 timeout_seconds=timeout_seconds,
                 max_retries=max_retries,
+                max_rate_limit_retries=max_rate_limit_retries,
             )
+            live_request_already_made = True
             payload = _build_cache_payload(
                 status="success",
                 location=location,
@@ -193,6 +206,7 @@ def collect_open_meteo(
             results.append(LocationCollectionResult(location.location_id, "success", str(path)))
             LOGGER.info("Collected Open-Meteo response for %s", location.location_id)
         except Exception as exc:  # noqa: BLE001 - this protects other locations in a batch.
+            live_request_already_made = True
             failed += 1
             error_message = str(exc)
             LOGGER.error("Failed to collect %s: %s", location.location_id, error_message)
@@ -232,6 +246,26 @@ def validate_success_payload(payload: dict[str, Any]) -> None:
         raise CollectionError("Open-Meteo success payload is missing daily time values")
 
 
+def resolve_live_request_delay(
+    pipeline_config: PipelineConfig,
+    override_seconds: float | None = None,
+) -> float:
+    """Resolve the delay between uncached live API requests."""
+
+    if override_seconds is not None:
+        if override_seconds < 0:
+            raise CollectionError("--request-delay-seconds cannot be negative")
+        return float(override_seconds)
+    configured_value = pipeline_config.runtime.get("live_request_delay_seconds", DEFAULT_LIVE_REQUEST_DELAY_SECONDS)
+    try:
+        delay = float(configured_value)
+    except (TypeError, ValueError) as exc:
+        raise CollectionError("runtime.live_request_delay_seconds must be a number") from exc
+    if delay < 0:
+        raise CollectionError("runtime.live_request_delay_seconds cannot be negative")
+    return delay
+
+
 def cache_matches_request(
     payload: dict[str, Any],
     location: Location,
@@ -269,10 +303,13 @@ def _request_with_retries(
     params: dict[str, Any],
     timeout_seconds: int,
     max_retries: int,
+    max_rate_limit_retries: int,
 ) -> dict[str, Any]:
     last_error: Exception | None = None
+    rate_limit_retries = 0
+    ordinary_attempt = 0
 
-    for attempt in range(1, max_retries + 1):
+    while ordinary_attempt < max_retries:
         try:
             response = client.get(base_url, params=params, timeout=timeout_seconds)
             status_code = response.status_code
@@ -284,20 +321,57 @@ def _request_with_retries(
                     reason = data.get("reason", "Open-Meteo returned an error")
                     raise CollectionError(str(reason))
                 return data
-            if status_code in {429} or 500 <= status_code < 600:
+            if status_code == 429:
+                last_error = CollectionError(f"HTTP 429 rate limit: {response.text[:300]}")
+                if rate_limit_retries < max_rate_limit_retries:
+                    rate_limit_retries += 1
+                    wait_seconds = _retry_after_seconds(response.headers.get("Retry-After"))
+                    LOGGER.warning(
+                        "Open-Meteo rate limit hit; waiting %.1f seconds before retry %s/%s",
+                        wait_seconds,
+                        rate_limit_retries,
+                        max_rate_limit_retries,
+                    )
+                    time.sleep(wait_seconds)
+                    continue
+                raise CollectionError(
+                    f"HTTP 429 rate limit after {max_rate_limit_retries} retries: {response.text[:300]}"
+                )
+            if 500 <= status_code < 600:
+                ordinary_attempt += 1
                 last_error = CollectionError(f"temporary HTTP {status_code}: {response.text[:300]}")
-                if attempt < max_retries:
-                    time.sleep(DEFAULT_BACKOFF_SECONDS * attempt)
+                if ordinary_attempt < max_retries:
+                    time.sleep(DEFAULT_BACKOFF_SECONDS * ordinary_attempt)
                     continue
             raise CollectionError(f"HTTP {status_code}: {response.text[:300]}")
         except (requests.Timeout, requests.ConnectionError) as exc:
+            ordinary_attempt += 1
             last_error = exc
-            if attempt < max_retries:
-                time.sleep(DEFAULT_BACKOFF_SECONDS * attempt)
+            if ordinary_attempt < max_retries:
+                time.sleep(DEFAULT_BACKOFF_SECONDS * ordinary_attempt)
                 continue
             break
 
     raise CollectionError(f"Open-Meteo request failed after {max_retries} attempts: {last_error}")
+
+
+def _retry_after_seconds(header_value: str | None) -> float:
+    if header_value is None or str(header_value).strip() == "":
+        return DEFAULT_RATE_LIMIT_WAIT_SECONDS
+    value = str(header_value).strip()
+    try:
+        seconds = float(value)
+    except ValueError:
+        try:
+            retry_at = parsedate_to_datetime(value)
+            if retry_at.tzinfo is None:
+                retry_at = retry_at.replace(tzinfo=UTC)
+            seconds = (retry_at - datetime.now(UTC)).total_seconds()
+        except (TypeError, ValueError):
+            return DEFAULT_RATE_LIMIT_WAIT_SECONDS
+    if seconds < 0:
+        return DEFAULT_RATE_LIMIT_WAIT_SECONDS
+    return seconds
 
 
 def _build_cache_payload(

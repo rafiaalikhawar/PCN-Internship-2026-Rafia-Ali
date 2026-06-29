@@ -110,6 +110,15 @@ python -m weather_kg collect \
   --limit-locations 2
 ```
 
+The collector waits between uncached live API requests to reduce rate-limit errors. The default is configured in `config/pipeline.yaml` as `runtime.live_request_delay_seconds: 10`. Override it from the CLI when needed:
+
+```bash
+python -m weather_kg collect \
+  --request-delay-seconds 15
+```
+
+HTTP 429 rate limits are handled separately from ordinary failures. If Open-Meteo returns a `Retry-After` header, the collector waits that long before retrying the same location. Without `Retry-After`, it waits 65 seconds. Rate-limit retries are bounded at three retries for the same location.
+
 Force new API requests instead of reusing successful cache files:
 
 ```bash
@@ -137,6 +146,8 @@ data/cache/open_meteo/
 ```
 
 Each cache file preserves request parameters, location metadata, source metadata, requested date range, retrieval timestamp, returned daily units, raw daily values, and success/error status. Successful cache files are reused by default. A failed request for one location does not discard successful locations.
+
+When rerun without `--refresh`, successful compatible cache files are reused and only missing or incompatible locations are fetched. Successful cache files are not overwritten by error responses.
 
 Collection also writes:
 

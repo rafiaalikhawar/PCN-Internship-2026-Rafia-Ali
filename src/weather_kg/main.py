@@ -43,6 +43,11 @@ def build_parser() -> argparse.ArgumentParser:
     _add_date_location_args(collect_parser)
     collect_parser.add_argument("--refresh", action="store_true", help="Force new API requests instead of reusing cache")
     collect_parser.add_argument("--cache-only", action="store_true", help="Forbid internet requests and use only cache")
+    collect_parser.add_argument(
+        "--request-delay-seconds",
+        type=float,
+        help="Override delay between uncached live Open-Meteo requests",
+    )
     collect_parser.set_defaults(func=_collect_command)
 
     normalize_parser = subparsers.add_parser(
@@ -97,6 +102,7 @@ def _collect_command(args: argparse.Namespace) -> int:
             limit_locations_count=args.limit_locations,
             refresh=args.refresh,
             cache_only=args.cache_only,
+            live_request_delay_seconds=args.request_delay_seconds,
         )
     except (CollectionError, ConfigError) as exc:
         LOGGER.error("%s", exc)
