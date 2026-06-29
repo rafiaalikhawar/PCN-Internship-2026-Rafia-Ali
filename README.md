@@ -1,6 +1,6 @@
 # Weather Intelligence Knowledge Graph
 
-PCN Research Internship Assessment 2026 submission scaffold.
+PCN Research Internship Assessment 2026 submission.
 
 ## Selected Task
 
@@ -10,7 +10,7 @@ This repository is intentionally scoped to Task 2 only. Task 1 and Task 3 are no
 
 ## Current Implementation Status
 
-Current phase: Phase 1 - Project Scaffold.
+Current phase: Phases 2-3 - Open-Meteo collection, raw caching, and daily normalization.
 
 Implemented:
 
@@ -19,21 +19,23 @@ Implemented:
 - configuration files
 - representative location registry across Pakistan, India, Afghanistan, Iran, and China/Xinjiang
 - configuration validation
-- initial tests
+- Open-Meteo historical archive collection
+- deterministic raw-response caching
+- cache reuse, refresh mode, and cache-only mode
+- daily weather-data normalization
+- data coverage report generation
+- mocked unit tests for collection, cache, and normalization behavior
 - documentation skeletons
 
 Not implemented yet:
 
-- Open-Meteo API collection
-- raw API-response caching
-- daily weather normalization
 - weather event detection
 - knowledge graph construction
 - analytical queries
 - graph/map visualizations
 - generated graph statistics or findings
 
-No graph statistics, analytical findings, screenshots, API results, or completion claims are included at this stage.
+No graph statistics, event counts, analytical findings, screenshots, or graph completion claims are included at this stage.
 
 ## Planned Architecture
 
@@ -68,6 +70,8 @@ pip install -r requirements.txt
 ```bash
 python -m weather_kg --help
 python -m weather_kg run --help
+python -m weather_kg collect --help
+python -m weather_kg normalize --help
 python -m weather_kg validate-config
 pytest -q
 ```
@@ -83,55 +87,170 @@ make test
 
 The `run` command currently reports that later pipeline phases are not implemented yet. It does not collect data or generate graph outputs in Phase 1.
 
+## Data Collection
+
+Collect Open-Meteo historical archive responses with:
+
+```bash
+python -m weather_kg collect
+```
+
+The command reads:
+
+- locations from `config/locations.yaml`
+- default date range from `config/pipeline.yaml`
+- daily weather variables from `config/pipeline.yaml`
+
+Override the date range or location count when needed:
+
+```bash
+python -m weather_kg collect \
+  --start-date 2025-01-01 \
+  --end-date 2025-01-07 \
+  --limit-locations 2
+```
+
+Force new API requests instead of reusing successful cache files:
+
+```bash
+python -m weather_kg collect \
+  --start-date 2025-01-01 \
+  --end-date 2025-01-07 \
+  --limit-locations 2 \
+  --refresh
+```
+
+Forbid internet requests and use only existing cache files:
+
+```bash
+python -m weather_kg collect \
+  --start-date 2025-01-01 \
+  --end-date 2025-01-07 \
+  --limit-locations 2 \
+  --cache-only
+```
+
+Raw response cache files are written under:
+
+```text
+data/cache/open_meteo/
+```
+
+Each cache file preserves request parameters, location metadata, source metadata, requested date range, retrieval timestamp, returned daily units, raw daily values, and success/error status. Successful cache files are reused by default. A failed request for one location does not discard successful locations.
+
+Collection also writes:
+
+```text
+data/processed/collection_summary.json
+```
+
+## Normalization
+
+Normalize successful raw cache files with:
+
+```bash
+python -m weather_kg normalize
+```
+
+Use the same date/location overrides as collection:
+
+```bash
+python -m weather_kg normalize \
+  --start-date 2025-01-01 \
+  --end-date 2025-01-07 \
+  --limit-locations 2
+```
+
+Generated files:
+
+```text
+data/processed/daily_weather.csv
+data/processed/data_coverage.json
+```
+
+The normalized CSV preserves missing weather observations as missing values. It does not replace missing observations with zero. Rows are sorted deterministically by country, location ID, and date.
+
+The normalized output keeps configured location coordinates (`latitude`, `longitude`) separate from Open-Meteo returned grid metadata (`api_latitude`, `api_longitude`, `api_elevation_m`). It also preserves `weather_code` when the raw response provides it and includes `iso_week_year` alongside `epidemiological_week` for year-boundary clarity.
+
+## Small Live Smoke Test
+
+This smoke test uses two configured locations and seven days of real Open-Meteo data:
+
+```bash
+python -m weather_kg collect \
+  --start-date 2025-01-01 \
+  --end-date 2025-01-07 \
+  --limit-locations 2 \
+  --refresh
+
+python -m weather_kg normalize \
+  --start-date 2025-01-01 \
+  --end-date 2025-01-07 \
+  --limit-locations 2
+
+python -m weather_kg collect \
+  --start-date 2025-01-01 \
+  --end-date 2025-01-07 \
+  --limit-locations 2 \
+  --cache-only
+```
+
+The default test suite does not require internet access; API behavior is mocked in tests.
+
 ## Repository Structure
 
 ```text
 .
-├── AGENTS.md
-├── PLAN.md
-├── TASK_SPEC.md
-├── README.md
-├── pyproject.toml
-├── requirements.txt
-├── .env.example
-├── .gitignore
-├── Makefile
-├── config/
-│   ├── locations.yaml
-│   ├── pipeline.yaml
-│   └── event_thresholds.yaml
-├── data/
-│   ├── cache/
-│   ├── interim/
-│   └── processed/
-├── outputs/
-│   ├── figures/
-│   ├── graph/
-│   ├── maps/
-│   ├── queries/
-│   └── validation/
-├── reports/
-│   ├── technical_report.md
-│   └── llm_usage.md
-├── scripts/
-│   ├── run_pipeline.py
-│   └── validate_requirements.py
-├── src/weather_kg/
-│   ├── __init__.py
-│   ├── __main__.py
-│   ├── config.py
-│   ├── logging_config.py
-│   ├── main.py
-│   ├── models.py
-│   └── pipeline.py
-├── tests/
-└── demo_video/
-    └── README.md
+|-- AGENTS.md
+|-- PLAN.md
+|-- TASK_SPEC.md
+|-- README.md
+|-- pyproject.toml
+|-- requirements.txt
+|-- .env.example
+|-- .gitignore
+|-- Makefile
+|-- config/
+|   |-- locations.yaml
+|   |-- pipeline.yaml
+|   `-- event_thresholds.yaml
+|-- data/
+|   |-- cache/
+|   |-- interim/
+|   `-- processed/
+|-- outputs/
+|   |-- figures/
+|   |-- graph/
+|   |-- maps/
+|   |-- queries/
+|   `-- validation/
+|-- reports/
+|   |-- technical_report.md
+|   `-- llm_usage.md
+|-- scripts/
+|   |-- run_pipeline.py
+|   `-- validate_requirements.py
+|-- src/weather_kg/
+|   |-- __init__.py
+|   |-- __main__.py
+|   |-- cache.py
+|   |-- config.py
+|   |-- logging_config.py
+|   |-- main.py
+|   |-- models.py
+|   |-- normalize.py
+|   |-- open_meteo.py
+|   `-- pipeline.py
+|-- tests/
+`-- demo_video/
+    `-- README.md
 ```
 
 ## Configuration
 
-Locations are configured in `config/locations.yaml`. Phase 1 validation checks:
+Locations are configured in `config/locations.yaml`. Pipeline and Open-Meteo variable settings are configured in `config/pipeline.yaml`.
+
+Configuration validation checks:
 
 - all five required countries are present
 - location IDs are unique
@@ -140,6 +259,8 @@ Locations are configured in `config/locations.yaml`. Phase 1 validation checks:
 - corridor values are valid
 - country codes match country names
 - Pakistan and each neighbouring country have at least one location
+
+Configured daily Open-Meteo variables currently include maximum, minimum, and mean temperature, precipitation, rain, precipitation hours, maximum wind speed, maximum wind gusts, and weather code.
 
 ## Demo Video Link
 

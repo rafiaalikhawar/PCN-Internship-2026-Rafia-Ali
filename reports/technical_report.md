@@ -4,7 +4,7 @@ Project: Weather Intelligence Knowledge Graph
 
 Selected task: Task 2 - Weather Intelligence Knowledge Graph
 
-Current status: Phase 1 scaffold only.
+Current status: Phases 2-3 implemented for Open-Meteo collection, raw caching, and daily normalization. Event detection, graph construction, analytical queries, visualizations, and findings are not implemented yet.
 
 ## 1. System Architecture
 
@@ -18,11 +18,11 @@ Open-Meteo API/cache -> daily normalization -> event detection -> NetworkX graph
 
 Planned primary source: Open-Meteo historical weather API.
 
-No API responses have been collected in Phase 1.
+The collector uses the Open-Meteo historical archive endpoint with no API key. Raw responses are cached before normalization.
 
 ## 3. Entity Extraction Methodology
 
-To be completed after event detection is implemented.
+To be completed after event detection is implemented. Current implementation stops at daily weather normalization.
 
 ## 4. Entity Resolution Strategy
 

@@ -20,6 +20,8 @@ data_source:
       - temperature_2m_mean
       - wind_speed_10m_max
       - wind_gusts_10m_max
+      - rain_sum
+      - precipitation_hours
       - weather_code
 
 paths:

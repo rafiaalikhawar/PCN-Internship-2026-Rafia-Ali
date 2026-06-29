@@ -1,10 +1,12 @@
-.PHONY: help install test validate-config
+.PHONY: help install test validate-config collect normalize
 
 help:
 	@echo "Available commands:"
 	@echo "  make install          Install the project in editable mode"
 	@echo "  make test             Run tests"
 	@echo "  make validate-config  Validate configuration files"
+	@echo "  make collect          Collect Open-Meteo data using configured defaults"
+	@echo "  make normalize        Normalize cached Open-Meteo data"
 	@echo "  make help             Show this help message"
 
 install:
@@ -15,3 +17,9 @@ test:
 
 validate-config:
 	python3 -m weather_kg validate-config
+
+collect:
+	python3 -m weather_kg collect
+
+normalize:
+	python3 -m weather_kg normalize

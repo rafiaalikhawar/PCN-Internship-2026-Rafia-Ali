@@ -3,12 +3,15 @@
 from __future__ import annotations
 
 import argparse
+import json
 import logging
 from pathlib import Path
 
 from weather_kg import __version__
 from weather_kg.config import ConfigError, validate_config
 from weather_kg.logging_config import configure_logging
+from weather_kg.normalize import NormalizationError, normalize_daily_weather
+from weather_kg.open_meteo import CollectionError, collect_open_meteo
 from weather_kg.pipeline import run_pipeline
 
 
@@ -31,6 +34,24 @@ def build_parser() -> argparse.ArgumentParser:
         description="Run the Weather Intelligence KG pipeline.",
     )
     run_parser.set_defaults(func=_run_command)
+
+    collect_parser = subparsers.add_parser(
+        "collect",
+        help="Collect Open-Meteo historical weather data into the raw cache.",
+        description="Collect configured Open-Meteo archive responses and cache one raw JSON file per location/date range.",
+    )
+    _add_date_location_args(collect_parser)
+    collect_parser.add_argument("--refresh", action="store_true", help="Force new API requests instead of reusing cache")
+    collect_parser.add_argument("--cache-only", action="store_true", help="Forbid internet requests and use only cache")
+    collect_parser.set_defaults(func=_collect_command)
+
+    normalize_parser = subparsers.add_parser(
+        "normalize",
+        help="Normalize successful raw Open-Meteo cache files into daily weather CSV.",
+        description="Normalize cached Open-Meteo responses into data/processed/daily_weather.csv.",
+    )
+    _add_date_location_args(normalize_parser)
+    normalize_parser.set_defaults(func=_normalize_command)
 
     validate_parser = subparsers.add_parser(
         "validate-config",
@@ -68,6 +89,58 @@ def _run_command(_args: argparse.Namespace) -> int:
     return 0
 
 
+def _collect_command(args: argparse.Namespace) -> int:
+    try:
+        summary = collect_open_meteo(
+            start_date=args.start_date,
+            end_date=args.end_date,
+            limit_locations_count=args.limit_locations,
+            refresh=args.refresh,
+            cache_only=args.cache_only,
+        )
+    except (CollectionError, ConfigError) as exc:
+        LOGGER.error("%s", exc)
+        print(str(exc))
+        return 1
+
+    summary_dict = summary.to_dict()
+    summary_path = Path("data/processed/collection_summary.json")
+    summary_path.parent.mkdir(parents=True, exist_ok=True)
+    with summary_path.open("w", encoding="utf-8") as handle:
+        json.dump(summary_dict, handle, indent=2, sort_keys=True)
+        handle.write("\n")
+
+    print("Open-Meteo collection complete.")
+    print(f"Requested locations: {summary.requested_locations}")
+    print(f"Successful API responses: {summary.successful_locations}")
+    print(f"Cached responses reused: {summary.cached_locations}")
+    print(f"Skipped locations: {summary.skipped_locations}")
+    print(f"Failed locations: {summary.failed_locations}")
+    print(f"Collection summary: {summary_path}")
+    usable_locations = summary.successful_locations + summary.cached_locations
+    return 1 if usable_locations == 0 else 0
+
+
+def _normalize_command(args: argparse.Namespace) -> int:
+    try:
+        result = normalize_daily_weather(
+            start_date=args.start_date,
+            end_date=args.end_date,
+            limit_locations_count=args.limit_locations,
+        )
+    except (NormalizationError, CollectionError, ConfigError) as exc:
+        LOGGER.error("%s", exc)
+        print(str(exc))
+        return 1
+
+    print("Daily weather normalization complete.")
+    print(f"Rows: {result.row_count}")
+    print(f"Duplicate records: {result.duplicate_count}")
+    print(f"Daily CSV: {result.daily_weather_csv}")
+    print(f"Coverage report: {result.coverage_json}")
+    return 0
+
+
 def _validate_config_command(args: argparse.Namespace) -> int:
     try:
         locations, pipeline_config = validate_config(
@@ -86,6 +159,12 @@ def _validate_config_command(args: argparse.Namespace) -> int:
     print(f"Countries: {', '.join(countries)}")
     print(f"Data source: {pipeline_config.data_source.name}")
     return 0
+
+
+def _add_date_location_args(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument("--start-date", help="Override configured start date, ISO format YYYY-MM-DD")
+    parser.add_argument("--end-date", help="Override configured end date, ISO format YYYY-MM-DD")
+    parser.add_argument("--limit-locations", type=int, help="Process only the first N configured locations")
 
 
 if __name__ == "__main__":

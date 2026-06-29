@@ -19,8 +19,9 @@ def run_pipeline() -> PipelineStatus:
     return PipelineStatus(
         implemented=False,
         message=(
-            "Pipeline phases for API collection, normalization, event detection, "
-            "graph construction, analytics, and visualization are not implemented yet. "
-            "This repository is currently at Phase 1: Project Scaffold."
+            "The combined run command is not wired yet. Use `weather_kg collect` "
+            "and `weather_kg normalize` for the implemented collection and daily "
+            "normalization phases. Event detection, graph construction, analytics, "
+            "and visualization are not implemented yet."
         ),
     )
