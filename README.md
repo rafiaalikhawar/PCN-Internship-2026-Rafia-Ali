@@ -8,37 +8,18 @@ Task 2 - Weather Intelligence Knowledge Graph.
 
 This repository is intentionally scoped to Task 2 only. Task 1 and Task 3 are not implemented in this codebase.
 
+## Live Demo
+
+The project is deployed on Streamlit: [View the live application](https://weather-intelligence.streamlit.app/)
+
 ## Current Implementation Status
 
 The collection, normalization, event detection, knowledge graph, analytical queries, offline validation, saved visualizations, and local research dashboard are implemented.
 
-Implemented:
-
-- Python package under `src/weather_kg/`
-- command-line interface
-- configuration files
-- representative location registry across Pakistan, India, Afghanistan, Iran, and China/Xinjiang
-- configuration validation
-- Open-Meteo historical archive collection
-- deterministic raw-response caching
-- cache reuse, refresh mode, and cache-only mode
-- daily weather-data normalization
-- data coverage report generation
-- weather event detection for rainfall, temperature, heatwave, wind, storm candidates, meteorological drought indicators, and inferred flood-risk candidates
-- NetworkX directed multigraph construction with required Task 2 node and relationship types
-- graph exports to node CSV, relationship CSV, JSON, GraphML, and summary JSON
-- six required analytical query outputs generated from the graph exports
-- local Streamlit dashboard over generated outputs
-- Folium map of the 22 configured locations
-- representative PyVis knowledge-graph artifact and bounded graph explorer
-- automated submission validation report
-- unit and integration-style tests
-
-Final deliverable still completed outside this repository:
-
+## demo video:
 - recorded demo video link
 
-The repository includes the final technical report source and demo recording instructions. The recorded video URL should be added after the video is uploaded.
+The repository includes the final technical report source.
 
 ## Verified Generated Outputs
 
@@ -501,8 +482,3 @@ Configuration validation checks:
 
 Configured daily Open-Meteo variables currently include maximum, minimum, and mean temperature, precipitation, rain, precipitation hours, maximum wind speed, maximum wind gusts, and weather code.
 
-## Demo Video Link
-
-The demo video should be recorded from the completed local pipeline and dashboard. Add the final unlisted YouTube, Google Drive, or Loom link here after upload.
-
-Video link: `TO_BE_ADDED_AFTER_RECORDING`
