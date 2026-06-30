@@ -10,7 +10,7 @@ This repository is intentionally scoped to Task 2 only. Task 1 and Task 3 are no
 
 ## Current Implementation Status
 
-Current phase: Phase 7 - local Streamlit research dashboard and bounded visual exploration.
+The collection, normalization, event detection, knowledge graph, analytical queries, offline validation, and local research dashboard are implemented.
 
 Implemented:
 
@@ -40,7 +40,7 @@ Not implemented yet:
 
 No final report conclusions or demo-video link are included at this stage.
 
-## Planned Architecture
+## Architecture
 
 ```text
 config -> Open-Meteo collection/cache -> daily normalization -> event detection
@@ -48,7 +48,7 @@ config -> Open-Meteo collection/cache -> daily normalization -> event detection
        -> validation/tests
 ```
 
-The final implementation is planned to use Open-Meteo historical weather data, local raw-response caching, pandas/numpy processing, NetworkX graph construction, PyVis graph HTML, Folium map HTML, and pytest validation.
+The implementation uses Open-Meteo historical weather data, local raw-response caching, pandas/numpy processing, NetworkX graph construction, PyVis graph exploration, Folium mapping, and pytest validation.
 
 ## Python Version
 
@@ -79,6 +79,7 @@ python -m weather_kg detect-events --help
 python -m weather_kg build-graph --help
 python -m weather_kg analyze --help
 python -m weather_kg validate-config
+python -m weather_kg validate-submission
 pytest -q
 ```
 
@@ -87,6 +88,9 @@ Make targets:
 ```bash
 make help
 make install
+make pipeline
+make pipeline-cached
+make validate
 make validate-config
 make test
 make build-graph
@@ -94,7 +98,19 @@ make analyze
 make dashboard
 ```
 
-The combined `run` command is not wired yet. Use `collect`, `normalize`, `detect-events`, `build-graph`, `analyze`, and the dashboard command for the implemented phases.
+Run the complete pipeline with existing compatible cache files and no internet access:
+
+```bash
+python -m weather_kg run --cache-only
+```
+
+Run the complete pipeline with live collection allowed for missing cache files:
+
+```bash
+python -m weather_kg run
+```
+
+The pipeline runs collection, normalization, event detection, graph construction, and all six analytical queries in order. Cache-only mode fails clearly before downstream processing when any required compatible cache is missing.
 
 ## Data Collection
 

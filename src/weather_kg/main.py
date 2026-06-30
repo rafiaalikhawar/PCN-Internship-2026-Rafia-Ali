@@ -15,7 +15,8 @@ from weather_kg.graph import GraphBuildError, build_weather_knowledge_graph
 from weather_kg.logging_config import configure_logging
 from weather_kg.normalize import NormalizationError, normalize_daily_weather
 from weather_kg.open_meteo import CollectionError, collect_open_meteo
-from weather_kg.pipeline import run_pipeline
+from weather_kg.pipeline import PipelineError, run_pipeline
+from weather_kg.validation import validate_submission
 
 
 LOGGER = logging.getLogger(__name__)
@@ -33,9 +34,16 @@ def build_parser() -> argparse.ArgumentParser:
 
     run_parser = subparsers.add_parser(
         "run",
-        help="Run the pipeline when later phases are implemented.",
-        description="Run the Weather Intelligence KG pipeline.",
+        help="Run the complete weather intelligence pipeline.",
+        description=(
+            "Collect historical observations, normalize daily records, detect events, "
+            "build the knowledge graph, and generate all six analytical outputs."
+        ),
     )
+    _add_date_location_args(run_parser)
+    run_parser.add_argument("--cache-only", action="store_true", help="Forbid internet requests and require compatible caches")
+    run_parser.add_argument("--refresh", action="store_true", help="Force new API requests instead of reusing cache")
+    run_parser.add_argument("--request-delay-seconds", type=float, help="Override delay between uncached live requests")
     run_parser.set_defaults(func=_run_command)
 
     collect_parser = subparsers.add_parser(
@@ -64,7 +72,7 @@ def build_parser() -> argparse.ArgumentParser:
     detect_parser = subparsers.add_parser(
         "detect-events",
         help="Detect weather events from normalized daily weather data.",
-        description="Detect Phase 4 weather events and write event CSV/JSON plus threshold and summary outputs.",
+        description="Detect weather events and write event CSV/JSON plus threshold and summary outputs.",
     )
     detect_parser.add_argument(
         "--input",
@@ -81,7 +89,7 @@ def build_parser() -> argparse.ArgumentParser:
     graph_parser = subparsers.add_parser(
         "build-graph",
         help="Build the NetworkX weather knowledge graph from detected events.",
-        description="Build Phase 5 graph nodes, relationships, JSON, GraphML, and summary outputs without API collection.",
+        description="Build graph nodes, relationships, JSON, GraphML, and summary outputs from detected events.",
     )
     graph_parser.add_argument(
         "--events",
@@ -113,7 +121,7 @@ def build_parser() -> argparse.ArgumentParser:
     analyze_parser = subparsers.add_parser(
         "analyze",
         help="Run the six required analytical queries over the generated graph.",
-        description="Run Phase 6 analytical queries from graph CSV exports and write reproducible analysis outputs.",
+        description="Run six analytical queries from graph CSV exports and write reproducible analysis outputs.",
     )
     analyze_parser.add_argument("--nodes", default="data/graph/nodes.csv", help="Path to graph nodes CSV")
     analyze_parser.add_argument(
@@ -140,7 +148,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     validate_parser = subparsers.add_parser(
         "validate-config",
-        help="Validate Phase 1 configuration files.",
+        help="Validate pipeline configuration files.",
         description="Validate locations, pipeline settings, and event-threshold configuration.",
     )
     validate_parser.add_argument("--locations", default="config/locations.yaml", help="Path to locations YAML")
@@ -151,6 +159,18 @@ def build_parser() -> argparse.ArgumentParser:
         help="Path to event-threshold YAML",
     )
     validate_parser.set_defaults(func=_validate_config_command)
+
+    submission_parser = subparsers.add_parser(
+        "validate-submission",
+        help="Validate implemented submission requirements and write reports.",
+        description="Run offline coverage, event, graph, analysis, and deliverable validation.",
+    )
+    submission_parser.add_argument(
+        "--output-dir",
+        default="outputs/validation",
+        help="Directory for JSON and Markdown validation reports",
+    )
+    submission_parser.set_defaults(func=_validate_submission_command)
 
     return parser
 
@@ -167,10 +187,28 @@ def main(argv: list[str] | None = None) -> int:
     return args.func(args)
 
 
-def _run_command(_args: argparse.Namespace) -> int:
-    status = run_pipeline()
-    LOGGER.info(status.message)
-    print(status.message)
+def _run_command(args: argparse.Namespace) -> int:
+    try:
+        result = run_pipeline(
+            cache_only=args.cache_only,
+            refresh=args.refresh,
+            start_date=args.start_date,
+            end_date=args.end_date,
+            limit_locations_count=args.limit_locations,
+            live_request_delay_seconds=args.request_delay_seconds,
+            reporter=print,
+        )
+    except (PipelineError, CollectionError, NormalizationError, EventDetectionError, GraphBuildError, AnalysisError, ConfigError) as exc:
+        LOGGER.error("%s", exc)
+        print(f"Pipeline failed: {exc}")
+        return 1
+
+    print("Pipeline complete.")
+    print(f"Stages: {', '.join(result.stages)}")
+    print(f"Daily rows: {result.normalization.row_count}")
+    print(f"Events: {result.events.event_count}")
+    print(f"Graph: {result.graph.node_count} nodes, {result.graph.relationship_count} relationships")
+    print(f"Analysis output: {result.analysis.output_dir}")
     return 0
 
 
@@ -311,6 +349,23 @@ def _validate_config_command(args: argparse.Namespace) -> int:
     print(f"Countries: {', '.join(countries)}")
     print(f"Data source: {pipeline_config.data_source.name}")
     return 0
+
+
+def _validate_submission_command(args: argparse.Namespace) -> int:
+    report = validate_submission(output_dir=Path(args.output_dir))
+    print(f"Submission validation: {'PASS' if report.passed else 'FAIL'}")
+    print(f"Checks passed: {sum(check.passed for check in report.checks)}/{len(report.checks)}")
+    print(f"JSON report: {Path(args.output_dir) / 'validation_report.json'}")
+    print(f"Markdown report: {Path(args.output_dir) / 'validation_report.md'}")
+    if report.warnings:
+        print("Remaining deliverable warnings:")
+        for warning in report.warnings:
+            print(f"- {warning}")
+    if not report.passed:
+        for check in report.checks:
+            if not check.passed:
+                print(f"FAILED [{check.category}] {check.name}: {check.message}")
+    return 0 if report.passed else 1
 
 
 def _add_date_location_args(parser: argparse.ArgumentParser) -> None:

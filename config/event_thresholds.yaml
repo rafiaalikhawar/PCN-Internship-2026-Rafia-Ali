@@ -1,5 +1,5 @@
 threshold_method:
-  description: Location-month percentile thresholds for Phase 4 weather event detection.
+  description: Location-month percentile thresholds for weather event detection.
   percentile_by_location_and_month: true
   minimum_samples_per_location_month: 30
 

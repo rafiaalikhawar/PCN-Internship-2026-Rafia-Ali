@@ -1,9 +1,12 @@
-.PHONY: help install test validate-config collect normalize detect-events build-graph analyze dashboard
+.PHONY: help install pipeline pipeline-cached test validate validate-config collect normalize detect-events build-graph analyze dashboard
 
 help:
 	@echo "Available commands:"
 	@echo "  make install          Install the project in editable mode"
+	@echo "  make pipeline         Run the complete pipeline"
+	@echo "  make pipeline-cached  Run the complete pipeline using cache only"
 	@echo "  make test             Run tests"
+	@echo "  make validate         Validate the complete submission offline"
 	@echo "  make validate-config  Validate configuration files"
 	@echo "  make collect          Collect Open-Meteo data using configured defaults"
 	@echo "  make normalize        Normalize cached Open-Meteo data"
@@ -16,8 +19,17 @@ help:
 install:
 	python3 -m pip install -e .
 
+pipeline:
+	python3 -m weather_kg run
+
+pipeline-cached:
+	python3 -m weather_kg run --cache-only
+
 test:
-	python3 -m pytest -q
+	pytest -q
+
+validate:
+	python3 -m weather_kg validate-submission
 
 validate-config:
 	python3 -m weather_kg validate-config

@@ -86,7 +86,7 @@ def detect_weather_events(
     thresholds_csv: Path | str = DEFAULT_THRESHOLDS_CSV,
     summary_json: Path | str = DEFAULT_SUMMARY_JSON,
 ) -> EventDetectionResult:
-    """Detect Phase 4 weather events and write reproducible outputs."""
+    """Detect weather events and write reproducible outputs."""
 
     input_path = Path(input_csv)
     if not input_path.exists():

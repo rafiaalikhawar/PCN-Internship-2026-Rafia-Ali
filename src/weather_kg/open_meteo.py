@@ -13,7 +13,7 @@ from typing import Any
 import requests
 
 from weather_kg.cache import cache_path, is_successful_cache, read_json, write_json
-from weather_kg.config import ConfigError, load_locations, load_pipeline_config
+from weather_kg.config import load_locations, load_pipeline_config
 from weather_kg.models import DateRange, Location, PipelineConfig
 
 

@@ -123,7 +123,7 @@ def build_weather_knowledge_graph(
     graph_rules_path: Path | str = DEFAULT_GRAPH_RULES,
     output_dir: Path | str = DEFAULT_OUTPUT_DIR,
 ) -> GraphBuildResult:
-    """Build and export the Phase 5 NetworkX knowledge graph."""
+    """Build and export the NetworkX weather knowledge graph."""
 
     events_path = Path(events_csv)
     daily_path = Path(daily_weather_csv)
@@ -142,7 +142,7 @@ def build_weather_knowledge_graph(
     graph.graph.update(
         {
             "name": "Weather Intelligence Knowledge Graph",
-            "phase": "Phase 5",
+            "pipeline_stage": "knowledge_graph_construction",
             "source_events": str(events_path),
             "source_daily_weather": str(daily_path),
             "source_locations": str(locations_path),
@@ -545,7 +545,7 @@ def _add_storm_association_and_derivation_edges(
                 source_id=storm_id,
                 target_id=source_id,
                 relationship_type="ASSOCIATED_WITH",
-                method=f"Storm candidate has {label} from Phase 4 event detection",
+                method=f"Storm candidate has {label} from event detection output",
                 inference_status="algorithmic_association",
                 evidence_type="phase4_rule",
                 provenance=provenance,

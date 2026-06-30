@@ -1,0 +1,1443 @@
+{
+  "checks": [
+    {
+      "category": "input_coverage",
+      "message": "Check passed.",
+      "name": "location_registry_exists",
+      "observed": 22,
+      "passed": true,
+      "path": "config/locations.yaml",
+      "required": "> 0 locations",
+      "status": "pass"
+    },
+    {
+      "category": "input_coverage",
+      "message": "Check passed.",
+      "name": "normalized_daily_exists",
+      "observed": 40172,
+      "passed": true,
+      "path": "data/processed/daily_weather.csv",
+      "required": "> 0 rows",
+      "status": "pass"
+    },
+    {
+      "category": "input_coverage",
+      "message": "Check passed.",
+      "name": "coverage_summary_exists",
+      "observed": "dict",
+      "passed": true,
+      "path": "data/processed/data_coverage.json",
+      "required": "non-empty JSON object",
+      "status": "pass"
+    },
+    {
+      "category": "input_coverage",
+      "message": "Check passed.",
+      "name": "collection_summary_exists",
+      "observed": 4087,
+      "passed": true,
+      "path": "data/processed/collection_summary.json",
+      "required": "> 0 bytes",
+      "status": "pass"
+    },
+    {
+      "category": "input_coverage",
+      "message": "Check passed.",
+      "name": "configured_location_count",
+      "observed": 22,
+      "passed": true,
+      "path": "config/locations.yaml",
+      "required": 22,
+      "status": "pass"
+    },
+    {
+      "category": "input_coverage",
+      "message": "Check passed.",
+      "name": "configured_countries",
+      "observed": [
+        "Afghanistan",
+        "China",
+        "India",
+        "Iran",
+        "Pakistan"
+      ],
+      "passed": true,
+      "path": "config/locations.yaml",
+      "required": [
+        "Afghanistan",
+        "China",
+        "India",
+        "Iran",
+        "Pakistan"
+      ],
+      "status": "pass"
+    },
+    {
+      "category": "input_coverage",
+      "message": "Check passed.",
+      "name": "daily_required_columns",
+      "observed": [
+        "admin_region",
+        "api_elevation_m",
+        "api_latitude",
+        "api_longitude",
+        "corridor",
+        "country",
+        "country_code",
+        "date",
+        "day",
+        "epidemiological_week",
+        "iso_week_year",
+        "latitude",
+        "location_id",
+        "location_kind",
+        "location_name",
+        "longitude",
+        "month",
+        "precipitation_hours",
+        "precipitation_mm",
+        "rain_mm",
+        "retrieved_at",
+        "source_cache_file",
+        "source_name",
+        "source_timezone",
+        "temperature_max_c",
+        "temperature_mean_c",
+        "temperature_min_c",
+        "weather_code",
+        "wind_gusts_max_kmh",
+        "wind_speed_max_kmh",
+        "year"
+      ],
+      "passed": true,
+      "path": "data/processed/daily_weather.csv",
+      "required": [
+        "country",
+        "date",
+        "location_id",
+        "source_cache_file",
+        "source_name"
+      ],
+      "status": "pass"
+    },
+    {
+      "category": "input_coverage",
+      "message": "Check passed.",
+      "name": "daily_valid_dates",
+      "observed": 40172,
+      "passed": true,
+      "path": "data/processed/daily_weather.csv",
+      "required": 40172,
+      "status": "pass"
+    },
+    {
+      "category": "input_coverage",
+      "message": "Check passed.",
+      "name": "daily_unique_location_dates",
+      "observed": 0,
+      "passed": true,
+      "path": "data/processed/daily_weather.csv",
+      "required": 0,
+      "status": "pass"
+    },
+    {
+      "category": "input_coverage",
+      "message": "Check passed.",
+      "name": "daily_location_count",
+      "observed": 22,
+      "passed": true,
+      "path": "data/processed/daily_weather.csv",
+      "required": 22,
+      "status": "pass"
+    },
+    {
+      "category": "input_coverage",
+      "message": "Check passed.",
+      "name": "daily_country_coverage",
+      "observed": [
+        "Afghanistan",
+        "China",
+        "India",
+        "Iran",
+        "Pakistan"
+      ],
+      "passed": true,
+      "path": "data/processed/daily_weather.csv",
+      "required": [
+        "Afghanistan",
+        "China",
+        "India",
+        "Iran",
+        "Pakistan"
+      ],
+      "status": "pass"
+    },
+    {
+      "category": "input_coverage",
+      "message": "Check passed.",
+      "name": "daily_date_scope",
+      "observed": [
+        "2021-01-01",
+        "2025-12-31"
+      ],
+      "passed": true,
+      "path": "data/processed/daily_weather.csv",
+      "required": [
+        "2021-01-01",
+        "2025-12-31"
+      ],
+      "status": "pass"
+    },
+    {
+      "category": "input_coverage",
+      "message": "Check passed.",
+      "name": "coverage_date_scope",
+      "observed": [
+        "2021-01-01",
+        "2025-12-31"
+      ],
+      "passed": true,
+      "path": "data/processed/data_coverage.json",
+      "required": [
+        "2021-01-01",
+        "2025-12-31"
+      ],
+      "status": "pass"
+    },
+    {
+      "category": "events",
+      "message": "Check passed.",
+      "name": "event_output_exists",
+      "observed": 6693,
+      "passed": true,
+      "path": "data/processed/weather_events.csv",
+      "required": "> 0 rows",
+      "status": "pass"
+    },
+    {
+      "category": "events",
+      "message": "Check passed.",
+      "name": "event_summary_exists",
+      "observed": 1592,
+      "passed": true,
+      "path": "data/processed/event_detection_summary.json",
+      "required": "> 0 bytes",
+      "status": "pass"
+    },
+    {
+      "category": "events",
+      "message": "Check passed.",
+      "name": "event_required_columns",
+      "observed": [
+        "absolute_threshold",
+        "caveat",
+        "country",
+        "critical_rolling_precipitation_mm",
+        "critical_window_end",
+        "critical_window_start",
+        "derivation_method",
+        "duration_days",
+        "end_date",
+        "event_id",
+        "event_subtype",
+        "event_type",
+        "inferred",
+        "location_id",
+        "location_name",
+        "lookback_days",
+        "maximum_daily_precipitation_mm",
+        "maximum_temperature_c",
+        "maximum_wind_gusts_kmh",
+        "maximum_wind_speed_kmh",
+        "minimum_temperature_c",
+        "percentile_threshold",
+        "related_rainfall_event_id",
+        "related_wind_event_id",
+        "rolling_precipitation_mm",
+        "severity_percentile",
+        "severity_score",
+        "severity_score_raw",
+        "source_dataset",
+        "source_date_end",
+        "source_date_start",
+        "start_date",
+        "status",
+        "total_precipitation_mm"
+      ],
+      "passed": true,
+      "path": "data/processed/weather_events.csv",
+      "required": [
+        "event_id",
+        "event_type",
+        "event_subtype",
+        "status",
+        "location_id",
+        "location_name",
+        "country",
+        "start_date",
+        "end_date",
+        "duration_days",
+        "total_precipitation_mm",
+        "maximum_daily_precipitation_mm",
+        "maximum_temperature_c",
+        "minimum_temperature_c",
+        "maximum_wind_speed_kmh",
+        "maximum_wind_gusts_kmh",
+        "rolling_precipitation_mm",
+        "lookback_days",
+        "critical_window_start",
+        "critical_window_end",
+        "critical_rolling_precipitation_mm",
+        "percentile_threshold",
+        "absolute_threshold",
+        "severity_score",
+        "severity_score_raw",
+        "severity_percentile",
+        "related_rainfall_event_id",
+        "related_wind_event_id",
+        "derivation_method",
+        "source_date_start",
+        "source_date_end",
+        "source_dataset",
+        "inferred",
+        "caveat"
+      ],
+      "status": "pass"
+    },
+    {
+      "category": "events",
+      "message": "Check passed.",
+      "name": "required_event_types",
+      "observed": [
+        "Drought",
+        "Flood",
+        "Heatwave",
+        "Rainfall",
+        "Storm",
+        "Temperature",
+        "Wind"
+      ],
+      "passed": true,
+      "path": "data/processed/weather_events.csv",
+      "required": [
+        "Drought",
+        "Flood",
+        "Heatwave",
+        "Rainfall",
+        "Storm",
+        "Temperature",
+        "Wind"
+      ],
+      "status": "pass"
+    },
+    {
+      "category": "events",
+      "message": "Check passed.",
+      "name": "unique_event_ids",
+      "observed": 0,
+      "passed": true,
+      "path": "data/processed/weather_events.csv",
+      "required": 0,
+      "status": "pass"
+    },
+    {
+      "category": "events",
+      "message": "Check passed.",
+      "name": "event_date_order",
+      "observed": 6693,
+      "passed": true,
+      "path": "data/processed/weather_events.csv",
+      "required": 6693,
+      "status": "pass"
+    },
+    {
+      "category": "events",
+      "message": "Check passed.",
+      "name": "event_duration",
+      "observed": 6693,
+      "passed": true,
+      "path": "data/processed/weather_events.csv",
+      "required": 6693,
+      "status": "pass"
+    },
+    {
+      "category": "events",
+      "message": "Check passed.",
+      "name": "event_provenance",
+      "observed": [
+        "source_date_start",
+        "source_date_end",
+        "source_dataset",
+        "derivation_method"
+      ],
+      "passed": true,
+      "path": "data/processed/weather_events.csv",
+      "required": [
+        "source_date_start",
+        "source_date_end",
+        "source_dataset",
+        "derivation_method"
+      ],
+      "status": "pass"
+    },
+    {
+      "category": "events",
+      "message": "Check passed.",
+      "name": "storm_supporting_events",
+      "observed": 166,
+      "passed": true,
+      "path": "data/processed/weather_events.csv",
+      "required": "valid Rainfall and Wind references",
+      "status": "pass"
+    },
+    {
+      "category": "events",
+      "message": "Check passed.",
+      "name": "flood_inference_labels",
+      "observed": 306,
+      "passed": true,
+      "path": "data/processed/weather_events.csv",
+      "required": "inferred_candidate with caveat",
+      "status": "pass"
+    },
+    {
+      "category": "events",
+      "message": "Check passed.",
+      "name": "drought_indicator_labels",
+      "observed": 226,
+      "passed": true,
+      "path": "data/processed/weather_events.csv",
+      "required": "derived_indicator with caveat",
+      "status": "pass"
+    },
+    {
+      "category": "graph",
+      "message": "Check passed.",
+      "name": "graph_nodes_exist",
+      "observed": 12503,
+      "passed": true,
+      "path": "data/graph/nodes.csv",
+      "required": "> 0 rows",
+      "status": "pass"
+    },
+    {
+      "category": "graph",
+      "message": "Check passed.",
+      "name": "graph_relationships_exist",
+      "observed": 45187,
+      "passed": true,
+      "path": "data/graph/relationships.csv",
+      "required": "> 0 rows",
+      "status": "pass"
+    },
+    {
+      "category": "graph",
+      "message": "Check passed.",
+      "name": "graph_summary_exists",
+      "observed": "dict",
+      "passed": true,
+      "path": "data/graph/graph_summary.json",
+      "required": "non-empty JSON object",
+      "status": "pass"
+    },
+    {
+      "category": "graph",
+      "message": "Check passed.",
+      "name": "graph_json_exists",
+      "observed": 54407947,
+      "passed": true,
+      "path": "data/graph/weather_knowledge_graph.json",
+      "required": "> 0 bytes",
+      "status": "pass"
+    },
+    {
+      "category": "graph",
+      "message": "Check passed.",
+      "name": "graphml_exists",
+      "observed": 38366951,
+      "passed": true,
+      "path": "data/graph/weather_knowledge_graph.graphml",
+      "required": "> 0 bytes",
+      "status": "pass"
+    },
+    {
+      "category": "graph",
+      "message": "Check passed.",
+      "name": "graph_node_schema",
+      "observed": [
+        "absolute_threshold",
+        "admin_region",
+        "caveat",
+        "corridor",
+        "country",
+        "country_code",
+        "critical_rolling_precipitation_mm",
+        "critical_window_end",
+        "critical_window_start",
+        "date",
+        "derivation_method",
+        "duration_days",
+        "end_date",
+        "event_count",
+        "event_id",
+        "event_subtype",
+        "event_type",
+        "indicator_name",
+        "inferred",
+        "label",
+        "latitude",
+        "location_id",
+        "location_kind",
+        "location_name",
+        "longitude",
+        "lookback_days",
+        "maximum_daily_precipitation_mm",
+        "maximum_severity_percentile",
+        "maximum_temperature_c",
+        "maximum_wind_gusts_kmh",
+        "maximum_wind_speed_kmh",
+        "mean_severity_percentile",
+        "method",
+        "minimum_temperature_c",
+        "node_id",
+        "node_type",
+        "percentile_threshold",
+        "provenance",
+        "related_rainfall_event_id",
+        "related_wind_event_id",
+        "severity_percentile",
+        "severity_score_raw",
+        "source",
+        "source_dataset",
+        "start_date",
+        "status",
+        "total_precipitation_mm",
+        "year"
+      ],
+      "passed": true,
+      "path": "data/graph/nodes.csv",
+      "required": [
+        "country",
+        "event_id",
+        "node_id",
+        "node_type"
+      ],
+      "status": "pass"
+    },
+    {
+      "category": "graph",
+      "message": "Check passed.",
+      "name": "graph_relationship_schema",
+      "observed": [
+        "caveat",
+        "confidence",
+        "event_type_mapping",
+        "evidence_type",
+        "inference_status",
+        "lag_days",
+        "method",
+        "provenance",
+        "relationship_id",
+        "relationship_type",
+        "source_country",
+        "source_event_id",
+        "source_id",
+        "source_location",
+        "target_country",
+        "target_event_id",
+        "target_id",
+        "target_location"
+      ],
+      "passed": true,
+      "path": "data/graph/relationships.csv",
+      "required": [
+        "relationship_id",
+        "relationship_type",
+        "source_id",
+        "target_id"
+      ],
+      "status": "pass"
+    },
+    {
+      "category": "graph",
+      "message": "Check passed.",
+      "name": "graph_node_minimum",
+      "observed": 12503,
+      "passed": true,
+      "path": "data/graph/nodes.csv",
+      "required": 200,
+      "status": "pass"
+    },
+    {
+      "category": "graph",
+      "message": "Check passed.",
+      "name": "graph_relationship_minimum",
+      "observed": 45187,
+      "passed": true,
+      "path": "data/graph/relationships.csv",
+      "required": 350,
+      "status": "pass"
+    },
+    {
+      "category": "graph",
+      "message": "Check passed.",
+      "name": "required_node_types",
+      "observed": [
+        "Climate Indicator",
+        "Country",
+        "Date",
+        "Drought",
+        "Flood",
+        "Heatwave",
+        "Location",
+        "Rainfall Event",
+        "Storm",
+        "Temperature Event",
+        "Time Window",
+        "Wind Event"
+      ],
+      "passed": true,
+      "path": "data/graph/nodes.csv",
+      "required": [
+        "Climate Indicator",
+        "Country",
+        "Date",
+        "Drought",
+        "Flood",
+        "Heatwave",
+        "Location",
+        "Rainfall Event",
+        "Storm",
+        "Temperature Event",
+        "Time Window",
+        "Wind Event"
+      ],
+      "status": "pass"
+    },
+    {
+      "category": "graph",
+      "message": "Check passed.",
+      "name": "required_relationship_types",
+      "observed": [
+        "AFFECTED",
+        "ASSOCIATED_WITH",
+        "CAUSED",
+        "ENDED_ON",
+        "FOLLOWED",
+        "LOCATED_IN",
+        "OCCURRED_IN",
+        "PRECEDED",
+        "STARTED_ON",
+        "UPSTREAM_OF",
+        "WITHIN_TIME_WINDOW"
+      ],
+      "passed": true,
+      "path": "data/graph/relationships.csv",
+      "required": [
+        "AFFECTED",
+        "ASSOCIATED_WITH",
+        "CAUSED",
+        "FOLLOWED",
+        "OCCURRED_IN",
+        "PRECEDED",
+        "UPSTREAM_OF"
+      ],
+      "status": "pass"
+    },
+    {
+      "category": "graph",
+      "message": "Check passed.",
+      "name": "unique_node_ids",
+      "observed": 0,
+      "passed": true,
+      "path": "data/graph/nodes.csv",
+      "required": 0,
+      "status": "pass"
+    },
+    {
+      "category": "graph",
+      "message": "Check passed.",
+      "name": "unique_relationship_ids",
+      "observed": 0,
+      "passed": true,
+      "path": "data/graph/relationships.csv",
+      "required": 0,
+      "status": "pass"
+    },
+    {
+      "category": "graph",
+      "message": "Check passed.",
+      "name": "no_dangling_endpoints",
+      "observed": 0,
+      "passed": true,
+      "path": "data/graph/relationships.csv",
+      "required": 0,
+      "status": "pass"
+    },
+    {
+      "category": "graph",
+      "message": "Check passed.",
+      "name": "graph_country_coverage",
+      "observed": [
+        "Afghanistan",
+        "China",
+        "India",
+        "Iran",
+        "Pakistan"
+      ],
+      "passed": true,
+      "path": "data/graph/nodes.csv",
+      "required": [
+        "Afghanistan",
+        "China",
+        "India",
+        "Iran",
+        "Pakistan"
+      ],
+      "status": "pass"
+    },
+    {
+      "category": "graph",
+      "message": "Check passed.",
+      "name": "event_occurred_in_cardinality",
+      "observed": 6693,
+      "passed": true,
+      "path": "data/graph/relationships.csv",
+      "required": "exactly one valid target for 6693 events",
+      "status": "pass"
+    },
+    {
+      "category": "graph",
+      "message": "Check passed.",
+      "name": "location_located_in_cardinality",
+      "observed": 22,
+      "passed": true,
+      "path": "data/graph/relationships.csv",
+      "required": "one valid country for 22 locations",
+      "status": "pass"
+    },
+    {
+      "category": "graph",
+      "message": "Check passed.",
+      "name": "upstream_candidate_direction",
+      "observed": 1879,
+      "passed": true,
+      "path": "data/graph/relationships.csv",
+      "required": "non-Pakistan source to Pakistan target with candidate caveat",
+      "status": "pass"
+    },
+    {
+      "category": "graph",
+      "message": "Check passed.",
+      "name": "caused_derivation_labels",
+      "observed": 332,
+      "passed": true,
+      "path": "data/graph/relationships.csv",
+      "required": "algorithmic_derivation with non-causation caveat",
+      "status": "pass"
+    },
+    {
+      "category": "graph",
+      "message": "Check passed.",
+      "name": "preceded_followed_consistency",
+      "observed": 0,
+      "passed": true,
+      "path": "data/graph/relationships.csv",
+      "required": 0,
+      "status": "pass"
+    },
+    {
+      "category": "graph",
+      "message": "Check passed.",
+      "name": "graph_summary_counts",
+      "observed": [
+        12503,
+        45187
+      ],
+      "passed": true,
+      "path": "data/graph/graph_summary.json",
+      "required": [
+        12503,
+        45187
+      ],
+      "status": "pass"
+    },
+    {
+      "category": "graph",
+      "message": "Check passed.",
+      "name": "graph_json_counts",
+      "observed": [
+        12503,
+        45187
+      ],
+      "passed": true,
+      "path": "data/graph/weather_knowledge_graph.json",
+      "required": [
+        12503,
+        45187
+      ],
+      "status": "pass"
+    },
+    {
+      "category": "graph",
+      "message": "Check passed.",
+      "name": "graphml_reload_and_counts",
+      "observed": [
+        12503,
+        45187
+      ],
+      "passed": true,
+      "path": "data/graph/weather_knowledge_graph.graphml",
+      "required": [
+        12503,
+        45187
+      ],
+      "status": "pass"
+    },
+    {
+      "category": "analysis",
+      "message": "Check passed.",
+      "name": "analysis_file_highest_rainfall.csv",
+      "observed": 4176,
+      "passed": true,
+      "path": "data/analysis/highest_rainfall.csv",
+      "required": "> 0 bytes",
+      "status": "pass"
+    },
+    {
+      "category": "analysis",
+      "message": "Check passed.",
+      "name": "analysis_nonempty_highest_rainfall.csv",
+      "observed": 20,
+      "passed": true,
+      "path": "data/analysis/highest_rainfall.csv",
+      "required": "> 0 rows",
+      "status": "pass"
+    },
+    {
+      "category": "analysis",
+      "message": "Check passed.",
+      "name": "analysis_schema_highest_rainfall.csv",
+      "observed": [
+        "caveat",
+        "country",
+        "end_date",
+        "event_id",
+        "location_id",
+        "location_name",
+        "maximum_daily_precipitation_mm",
+        "percentile_threshold",
+        "rank",
+        "severity_percentile",
+        "start_date",
+        "status",
+        "total_precipitation_mm"
+      ],
+      "passed": true,
+      "path": "data/analysis/highest_rainfall.csv",
+      "required": [
+        "event_id",
+        "location_id",
+        "maximum_daily_precipitation_mm",
+        "rank"
+      ],
+      "status": "pass"
+    },
+    {
+      "category": "analysis",
+      "message": "Check passed.",
+      "name": "analysis_file_multi_event_locations.csv",
+      "observed": 5787,
+      "passed": true,
+      "path": "data/analysis/multi_event_locations.csv",
+      "required": "> 0 bytes",
+      "status": "pass"
+    },
+    {
+      "category": "analysis",
+      "message": "Check passed.",
+      "name": "analysis_nonempty_multi_event_locations.csv",
+      "observed": 22,
+      "passed": true,
+      "path": "data/analysis/multi_event_locations.csv",
+      "required": "> 0 rows",
+      "status": "pass"
+    },
+    {
+      "category": "analysis",
+      "message": "Check passed.",
+      "name": "analysis_schema_multi_event_locations.csv",
+      "observed": [
+        "country",
+        "distinct_event_type_count",
+        "event_types",
+        "events_by_type",
+        "location_id",
+        "location_kind",
+        "location_name",
+        "maximum_severity_percentile",
+        "mean_severity_percentile",
+        "total_event_count",
+        "years_with_detected_events"
+      ],
+      "passed": true,
+      "path": "data/analysis/multi_event_locations.csv",
+      "required": [
+        "country",
+        "distinct_event_type_count",
+        "location_id",
+        "total_event_count"
+      ],
+      "status": "pass"
+    },
+    {
+      "category": "analysis",
+      "message": "Check passed.",
+      "name": "analysis_file_cooccurring_patterns.csv",
+      "observed": 4258,
+      "passed": true,
+      "path": "data/analysis/cooccurring_patterns.csv",
+      "required": "> 0 bytes",
+      "status": "pass"
+    },
+    {
+      "category": "analysis",
+      "message": "Check passed.",
+      "name": "analysis_nonempty_cooccurring_patterns.csv",
+      "observed": 21,
+      "passed": true,
+      "path": "data/analysis/cooccurring_patterns.csv",
+      "required": "> 0 rows",
+      "status": "pass"
+    },
+    {
+      "category": "analysis",
+      "message": "Check passed.",
+      "name": "analysis_schema_cooccurring_patterns.csv",
+      "observed": [
+        "algorithmically_related_pair_count",
+        "caveat",
+        "distinct_country_count",
+        "distinct_location_count",
+        "event_type_pair",
+        "example_event_ids",
+        "includes_algorithmic_derivation",
+        "median_gap_days",
+        "total_pair_count"
+      ],
+      "passed": true,
+      "path": "data/analysis/cooccurring_patterns.csv",
+      "required": [
+        "caveat",
+        "event_type_pair",
+        "total_pair_count"
+      ],
+      "status": "pass"
+    },
+    {
+      "category": "analysis",
+      "message": "Check passed.",
+      "name": "analysis_file_climate_indicator_trends.csv",
+      "observed": 27911,
+      "passed": true,
+      "path": "data/analysis/climate_indicator_trends.csv",
+      "required": "> 0 bytes",
+      "status": "pass"
+    },
+    {
+      "category": "analysis",
+      "message": "Check passed.",
+      "name": "analysis_nonempty_climate_indicator_trends.csv",
+      "observed": 153,
+      "passed": true,
+      "path": "data/analysis/climate_indicator_trends.csv",
+      "required": "> 0 rows",
+      "status": "pass"
+    },
+    {
+      "category": "analysis",
+      "message": "Check passed.",
+      "name": "analysis_schema_climate_indicator_trends.csv",
+      "observed": [
+        "absolute_change",
+        "available_years",
+        "caveat",
+        "country",
+        "direction",
+        "event_type",
+        "final_year",
+        "final_year_value",
+        "first_year",
+        "first_year_value",
+        "indicator_name",
+        "linear_slope",
+        "location_id"
+      ],
+      "passed": true,
+      "path": "data/analysis/climate_indicator_trends.csv",
+      "required": [
+        "caveat",
+        "direction",
+        "event_type",
+        "linear_slope",
+        "location_id"
+      ],
+      "status": "pass"
+    },
+    {
+      "category": "analysis",
+      "message": "Check passed.",
+      "name": "analysis_file_climate_indicator_annual_values.csv",
+      "observed": 132803,
+      "passed": true,
+      "path": "data/analysis/climate_indicator_annual_values.csv",
+      "required": "> 0 bytes",
+      "status": "pass"
+    },
+    {
+      "category": "analysis",
+      "message": "Check passed.",
+      "name": "analysis_nonempty_climate_indicator_annual_values.csv",
+      "observed": 765,
+      "passed": true,
+      "path": "data/analysis/climate_indicator_annual_values.csv",
+      "required": "> 0 rows",
+      "status": "pass"
+    },
+    {
+      "category": "analysis",
+      "message": "Check passed.",
+      "name": "analysis_schema_climate_indicator_annual_values.csv",
+      "observed": [
+        "annual_value",
+        "caveat",
+        "country",
+        "event_type",
+        "indicator_name",
+        "location_id",
+        "value_source",
+        "year"
+      ],
+      "passed": true,
+      "path": "data/analysis/climate_indicator_annual_values.csv",
+      "required": [
+        "annual_value",
+        "event_type",
+        "location_id",
+        "year"
+      ],
+      "status": "pass"
+    },
+    {
+      "category": "analysis",
+      "message": "Check passed.",
+      "name": "analysis_file_weather_exposure_ranking.csv",
+      "observed": 7133,
+      "passed": true,
+      "path": "data/analysis/weather_exposure_ranking.csv",
+      "required": "> 0 bytes",
+      "status": "pass"
+    },
+    {
+      "category": "analysis",
+      "message": "Check passed.",
+      "name": "analysis_nonempty_weather_exposure_ranking.csv",
+      "observed": 22,
+      "passed": true,
+      "path": "data/analysis/weather_exposure_ranking.csv",
+      "required": "> 0 rows",
+      "status": "pass"
+    },
+    {
+      "category": "analysis",
+      "message": "Check passed.",
+      "name": "analysis_schema_weather_exposure_ranking.csv",
+      "observed": [
+        "active_year_list",
+        "active_years",
+        "country",
+        "distinct_event_types",
+        "diversity_component",
+        "event_types",
+        "exposure_score",
+        "frequency_component",
+        "location_id",
+        "location_name",
+        "methodology_caveat",
+        "overall_rank",
+        "recurrence_component",
+        "severity_component",
+        "total_events"
+      ],
+      "passed": true,
+      "path": "data/analysis/weather_exposure_ranking.csv",
+      "required": [
+        "country",
+        "exposure_score",
+        "location_id",
+        "methodology_caveat",
+        "severity_component"
+      ],
+      "status": "pass"
+    },
+    {
+      "category": "analysis",
+      "message": "Check passed.",
+      "name": "analysis_file_pakistan_weather_exposure_ranking.csv",
+      "observed": 2771,
+      "passed": true,
+      "path": "data/analysis/pakistan_weather_exposure_ranking.csv",
+      "required": "> 0 bytes",
+      "status": "pass"
+    },
+    {
+      "category": "analysis",
+      "message": "Check passed.",
+      "name": "analysis_nonempty_pakistan_weather_exposure_ranking.csv",
+      "observed": 8,
+      "passed": true,
+      "path": "data/analysis/pakistan_weather_exposure_ranking.csv",
+      "required": "> 0 rows",
+      "status": "pass"
+    },
+    {
+      "category": "analysis",
+      "message": "Check passed.",
+      "name": "analysis_schema_pakistan_weather_exposure_ranking.csv",
+      "observed": [
+        "active_year_list",
+        "active_years",
+        "country",
+        "distinct_event_types",
+        "diversity_component",
+        "event_types",
+        "exposure_score",
+        "frequency_component",
+        "location_id",
+        "location_name",
+        "methodology_caveat",
+        "overall_rank",
+        "pakistan_rank",
+        "recurrence_component",
+        "severity_component",
+        "total_events"
+      ],
+      "passed": true,
+      "path": "data/analysis/pakistan_weather_exposure_ranking.csv",
+      "required": [
+        "country",
+        "exposure_score",
+        "location_id",
+        "methodology_caveat",
+        "pakistan_rank"
+      ],
+      "status": "pass"
+    },
+    {
+      "category": "analysis",
+      "message": "Check passed.",
+      "name": "analysis_file_cross_border_precursor_edges.csv",
+      "observed": 673385,
+      "passed": true,
+      "path": "data/analysis/cross_border_precursor_edges.csv",
+      "required": "> 0 bytes",
+      "status": "pass"
+    },
+    {
+      "category": "analysis",
+      "message": "Check passed.",
+      "name": "analysis_nonempty_cross_border_precursor_edges.csv",
+      "observed": 1879,
+      "passed": true,
+      "path": "data/analysis/cross_border_precursor_edges.csv",
+      "required": "> 0 rows",
+      "status": "pass"
+    },
+    {
+      "category": "analysis",
+      "message": "Check passed.",
+      "name": "analysis_schema_cross_border_precursor_edges.csv",
+      "observed": [
+        "caveat",
+        "confidence",
+        "event_type_mapping",
+        "evidence_type",
+        "inference_status",
+        "lag_days",
+        "method",
+        "source_country",
+        "source_event_id",
+        "source_location",
+        "target_event_id",
+        "target_pakistani_location"
+      ],
+      "passed": true,
+      "path": "data/analysis/cross_border_precursor_edges.csv",
+      "required": [
+        "caveat",
+        "source_country",
+        "source_event_id",
+        "target_event_id",
+        "target_pakistani_location"
+      ],
+      "status": "pass"
+    },
+    {
+      "category": "analysis",
+      "message": "Check passed.",
+      "name": "analysis_file_cross_border_lag_summary.csv",
+      "observed": 86402,
+      "passed": true,
+      "path": "data/analysis/cross_border_lag_summary.csv",
+      "required": "> 0 bytes",
+      "status": "pass"
+    },
+    {
+      "category": "analysis",
+      "message": "Check passed.",
+      "name": "analysis_nonempty_cross_border_lag_summary.csv",
+      "observed": 375,
+      "passed": true,
+      "path": "data/analysis/cross_border_lag_summary.csv",
+      "required": "> 0 rows",
+      "status": "pass"
+    },
+    {
+      "category": "analysis",
+      "message": "Check passed.",
+      "name": "analysis_schema_cross_border_lag_summary.csv",
+      "observed": [
+        "caveat",
+        "earliest_example",
+        "event_type_mapping",
+        "latest_example",
+        "maximum_lag_days",
+        "mean_lag_days",
+        "median_lag_days",
+        "minimum_lag_days",
+        "relationship_count",
+        "source_country",
+        "source_location",
+        "target_pakistani_location"
+      ],
+      "passed": true,
+      "path": "data/analysis/cross_border_lag_summary.csv",
+      "required": [
+        "caveat",
+        "median_lag_days",
+        "source_country",
+        "target_pakistani_location"
+      ],
+      "status": "pass"
+    },
+    {
+      "category": "analysis",
+      "message": "Check passed.",
+      "name": "analysis_file_analysis_summary.json",
+      "observed": 7468,
+      "passed": true,
+      "path": "data/analysis/analysis_summary.json",
+      "required": "> 0 bytes",
+      "status": "pass"
+    },
+    {
+      "category": "analysis",
+      "message": "Check passed.",
+      "name": "highest_rainfall_ranking_method",
+      "observed": "maximum_daily_precipitation_mm",
+      "passed": true,
+      "path": "data/analysis/highest_rainfall.csv",
+      "required": "descending maximum daily precipitation",
+      "status": "pass"
+    },
+    {
+      "category": "analysis",
+      "message": "Check passed.",
+      "name": "exposure_score_bounds",
+      "observed": [
+        0.638513,
+        0.871901
+      ],
+      "passed": true,
+      "path": "data/analysis/weather_exposure_ranking.csv",
+      "required": "0 through 1",
+      "status": "pass"
+    },
+    {
+      "category": "analysis",
+      "message": "Check passed.",
+      "name": "exposure_uses_percentile_component",
+      "observed": [
+        "overall_rank",
+        "location_id",
+        "location_name",
+        "country",
+        "total_events",
+        "distinct_event_types",
+        "event_types",
+        "active_years",
+        "active_year_list",
+        "frequency_component",
+        "diversity_component",
+        "severity_component",
+        "recurrence_component",
+        "exposure_score",
+        "methodology_caveat"
+      ],
+      "passed": true,
+      "path": "data/analysis/weather_exposure_ranking.csv",
+      "required": "severity_component without severity_score_raw",
+      "status": "pass"
+    },
+    {
+      "category": "analysis",
+      "message": "Check passed.",
+      "name": "pakistan_ranking_scope",
+      "observed": [
+        "Pakistan"
+      ],
+      "passed": true,
+      "path": "data/analysis/pakistan_weather_exposure_ranking.csv",
+      "required": [
+        "Pakistan"
+      ],
+      "status": "pass"
+    },
+    {
+      "category": "analysis",
+      "message": "Check passed.",
+      "name": "cross_border_uses_upstream_only",
+      "observed": 1879,
+      "passed": true,
+      "path": "data/analysis/cross_border_precursor_edges.csv",
+      "required": "subset of UPSTREAM_OF event pairs",
+      "status": "pass"
+    },
+    {
+      "category": "analysis",
+      "message": "Check passed.",
+      "name": "cross_border_targets_pakistan",
+      "observed": 1879,
+      "passed": true,
+      "path": "data/analysis/cross_border_precursor_edges.csv",
+      "required": "all targets in Pakistan",
+      "status": "pass"
+    },
+    {
+      "category": "analysis",
+      "message": "Check passed.",
+      "name": "cross_border_candidate_caveats",
+      "observed": true,
+      "passed": true,
+      "path": "data/analysis/cross_border_precursor_edges.csv",
+      "required": true,
+      "status": "pass"
+    },
+    {
+      "category": "analysis",
+      "message": "Check passed.",
+      "name": "analytical_language_safety",
+      "observed": [],
+      "passed": true,
+      "path": "data/analysis",
+      "required": [],
+      "status": "pass"
+    },
+    {
+      "category": "deliverables",
+      "message": "Check passed.",
+      "name": "dashboard_app_exists",
+      "observed": 56509,
+      "passed": true,
+      "path": "app.py",
+      "required": "> 0 bytes",
+      "status": "pass"
+    },
+    {
+      "category": "deliverables",
+      "message": "Check passed.",
+      "name": "dashboard_helper_exists",
+      "observed": 13409,
+      "passed": true,
+      "path": "src/weather_kg/dashboard.py",
+      "required": "> 0 bytes",
+      "status": "pass"
+    },
+    {
+      "category": "deliverables",
+      "message": "Check passed.",
+      "name": "dashboard_tests_exist",
+      "observed": 4773,
+      "passed": true,
+      "path": "tests/test_dashboard.py",
+      "required": "> 0 bytes",
+      "status": "pass"
+    },
+    {
+      "category": "deliverables",
+      "message": "Check passed.",
+      "name": "readme_exists",
+      "observed": 14051,
+      "passed": true,
+      "path": "README.md",
+      "required": "> 0 bytes",
+      "status": "pass"
+    },
+    {
+      "category": "deliverables",
+      "message": "Check passed.",
+      "name": "technical_report_source_exists",
+      "observed": 1677,
+      "passed": true,
+      "path": "reports/technical_report.md",
+      "required": "> 0 bytes",
+      "status": "pass"
+    },
+    {
+      "category": "deliverables",
+      "message": "Check passed.",
+      "name": "llm_disclosure_exists",
+      "observed": 6778,
+      "passed": true,
+      "path": "reports/llm_usage.md",
+      "required": "> 0 bytes",
+      "status": "pass"
+    },
+    {
+      "category": "deliverables",
+      "message": "Check passed.",
+      "name": "demo_instructions_exist",
+      "observed": 647,
+      "passed": true,
+      "path": "demo_video/README.md",
+      "required": "> 0 bytes",
+      "status": "pass"
+    },
+    {
+      "category": "deliverables",
+      "message": "Check passed.",
+      "name": "dashboard_import",
+      "observed": "imported without server startup",
+      "passed": true,
+      "path": "app.py",
+      "required": "successful import without server",
+      "status": "pass"
+    }
+  ],
+  "determinism_note": "The validation timestamp changes between runs; compare check results semantically.",
+  "overall_status": "pass",
+  "remaining_deliverable_warnings": [
+    "Saved full PyVis HTML export remains a final deliverable.",
+    "Saved Folium HTML export remains a final deliverable.",
+    "Final report figures/screenshots remain final deliverables.",
+    "Technical report completion remains a later finalization deliverable.",
+    "Demo video link remains a later finalization deliverable."
+  ],
+  "summary": {
+    "failed_checks": 0,
+    "passed_checks": 91,
+    "total_checks": 91,
+    "warning_count": 5
+  },
+  "validation_timestamp": "2026-06-30T00:13:19Z"
+}

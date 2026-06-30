@@ -51,7 +51,7 @@ class AnalysisError(RuntimeError):
 
 @dataclass(frozen=True)
 class AnalysisResult:
-    """Paths and summary for Phase 6 analytical outputs."""
+    """Paths and summary for graph-based analytical outputs."""
 
     output_dir: Path
     summary_json: Path

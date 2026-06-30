@@ -1,4 +1,4 @@
-"""Configuration loading and validation for Phase 1."""
+"""Configuration loading and validation."""
 
 from __future__ import annotations
 
@@ -157,7 +157,7 @@ def load_locations(path: Path | str = "config/locations.yaml") -> list[Location]
 
 
 def load_pipeline_config(path: Path | str = "config/pipeline.yaml") -> PipelineConfig:
-    """Load and validate the scaffold-level pipeline configuration."""
+    """Load and validate the pipeline configuration."""
 
     path = Path(path)
     data = load_yaml(path)
@@ -204,7 +204,7 @@ def validate_config(
     pipeline_path: Path | str = "config/pipeline.yaml",
     thresholds_path: Path | str = "config/event_thresholds.yaml",
 ) -> tuple[list[Location], PipelineConfig]:
-    """Validate all Phase 1 configuration files."""
+    """Validate all pipeline configuration files."""
 
     locations = load_locations(locations_path)
     pipeline_config = load_pipeline_config(pipeline_path)

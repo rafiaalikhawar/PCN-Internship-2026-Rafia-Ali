@@ -1,4 +1,4 @@
-"""Typed models for Phase 1 configuration and metadata."""
+"""Typed models for pipeline configuration and metadata."""
 
 from __future__ import annotations
 

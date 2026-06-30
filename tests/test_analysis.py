@@ -27,7 +27,8 @@ def test_analyze_help(capsys) -> None:
     captured = capsys.readouterr()
 
     assert exc_info.value.code == 0
-    assert "Run Phase 6 analytical queries" in captured.out
+    assert "Run six analytical queries" in captured.out
+    assert "Phase" not in captured.out
 
 
 def test_highest_rainfall_uses_maximum_daily_rainfall_and_tie_breaking(tmp_path: Path) -> None:

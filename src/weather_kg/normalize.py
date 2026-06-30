@@ -15,7 +15,6 @@ from weather_kg.cache import cache_path, is_successful_cache, read_json
 from weather_kg.config import load_locations, load_pipeline_config
 from weather_kg.models import Location
 from weather_kg.open_meteo import (
-    CollectionError,
     build_request_params,
     cache_matches_request,
     daily_variables,

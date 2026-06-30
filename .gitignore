@@ -55,3 +55,5 @@ outputs/validation/*
 !outputs/maps/.gitkeep
 !outputs/queries/.gitkeep
 !outputs/validation/.gitkeep
+!outputs/validation/validation_report.json
+!outputs/validation/validation_report.md

@@ -57,3 +57,11 @@ This document records LLM assistance for the PCN Research Internship Assessment 
 - How used: Codex generated and edited code for a local file-driven research dashboard that reads existing generated outputs and preserves methodological caveats.
 - Purpose: provide local visualization and inspection of verified pipeline outputs without external APIs, authentication, databases, Docker, or paid services.
 - Extent of reliance: implementation assistance for dashboard code and tests. No final report conclusions, demo recording, screenshots, external data, chatbot, causal claims, or forecast claims were generated.
+
+## Finalization Batch 1 - Reproducibility and Submission Validation
+
+- Tool used: OpenAI Codex.
+- Where used: end-to-end pipeline orchestration, submission validation module and reports, CLI and Makefile commands, dependency cleanup, configuration metadata, offline integration tests, validation tests, and focused reproducibility documentation.
+- How used: Codex inspected the existing stage APIs and generated schemas, then implemented orchestration by calling the existing collection, normalization, event detection, graph construction, and analysis functions in order. It also implemented offline checks for coverage, events, graph integrity, analytical outputs, dashboard imports, and required repository deliverables.
+- Purpose: replace stale scaffold behavior with reproducible commands and produce a machine-readable and reviewer-readable validation result.
+- Extent of reliance: implementation and test assistance only. Event methodology, thresholds, graph relationship rules, exposure weights, rankings, analytical findings, graph nodes, graph relationships, and query outputs were not changed.

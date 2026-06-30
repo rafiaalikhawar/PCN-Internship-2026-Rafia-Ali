@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "weather-intelligence-kg"
 version = "0.1.0"
-description = "Task 2 Weather Intelligence Knowledge Graph scaffold for the PCN Research Internship Assessment 2026."
+description = "Task 2 Weather Intelligence Knowledge Graph for the PCN Research Internship Assessment 2026."
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "MIT" }
@@ -20,9 +20,8 @@ dependencies = [
   "pyvis>=0.3,<0.4",
   "folium>=0.16,<1",
   "streamlit>=1.36,<2",
+  "altair>=5.0,<7",
   "PyYAML>=6.0,<7",
-  "matplotlib>=3.8,<4",
-  "pytest>=8.0,<9",
 ]
 
 [project.optional-dependencies]

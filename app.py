@@ -539,17 +539,6 @@ def _caveat(text: str) -> None:
     st.markdown(f'<div class="caveat-box">{text}</div>', unsafe_allow_html=True)
 
 
-def _pretty_table(frame: pd.DataFrame, max_rows: int | None = None) -> None:
-    if max_rows is not None:
-        frame = frame.head(max_rows)
-    display = frame.copy()
-    for column in display.columns:
-        if pd.api.types.is_float_dtype(display[column]):
-            display[column] = display[column].map(lambda value: "" if pd.isna(value) else f"{value:.6g}")
-    html = display.to_html(index=False, classes="pretty-table", border=0)
-    st.markdown(f'<div class="table-card">{html}</div>', unsafe_allow_html=True)
-
-
 def _evidence_table(
     frame: pd.DataFrame,
     summary_columns: list[str] | None = None,

@@ -68,7 +68,7 @@
   "self_loops": 0,
   "source": {
     "name": "Weather Intelligence Knowledge Graph",
-    "phase": "Phase 5",
+    "pipeline_stage": "knowledge_graph_construction",
     "source_daily_weather": "data/processed/daily_weather.csv",
     "source_events": "data/processed/weather_events.csv",
     "source_graph_rules": "config/graph_rules.yaml",
