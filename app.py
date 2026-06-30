@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import hashlib
+import json
 from pathlib import Path
 import sys
 
@@ -23,30 +25,39 @@ from weather_kg.dashboard import (
     CANDIDATE_ASSOCIATION_CAVEAT,
     CLIMATE_TREND_CAVEAT,
     EXPOSURE_CAVEAT,
+    REPRESENTATIVE_GRAPH_CAVEAT,
     build_graph_explorer_subgraph,
     build_location_map,
     build_pyvis_html,
     event_counts_by_country,
     event_counts_by_type,
-    filter_climate_annual_values,
-    filter_cross_border_edges,
-    filter_highest_rainfall,
     load_dashboard_data,
+    load_representative_graph_artifact,
     locations_for_map,
     overview_metrics,
+)
+from weather_kg.query_service import (
+    build_graph_indexes,
+    load_graph,
+    query_climate_indicator_trends,
+    query_cooccurring_patterns,
+    query_cross_border_patterns,
+    query_highest_rainfall,
+    query_multi_event_locations,
+    query_weather_exposure,
 )
 
 
 SOURCE_LABELS = {
     "overview": "data/processed/data_coverage.json, data/processed/event_detection_summary.json, data/graph/graph_summary.json",
-    "highest_rainfall": "data/analysis/highest_rainfall.csv",
-    "multi_event": "data/analysis/multi_event_locations.csv",
-    "cooccurrence": "data/analysis/cooccurring_patterns.csv",
-    "climate": "data/analysis/climate_indicator_trends.csv, data/analysis/climate_indicator_annual_values.csv",
-    "exposure": "data/analysis/weather_exposure_ranking.csv, data/analysis/pakistan_weather_exposure_ranking.csv",
-    "cross_border": "data/analysis/cross_border_precursor_edges.csv, data/analysis/cross_border_lag_summary.csv",
+    "highest_rainfall": "data/graph/weather_knowledge_graph.graphml via graph-query service",
+    "multi_event": "data/graph/weather_knowledge_graph.graphml via graph-query service",
+    "cooccurrence": "data/graph/weather_knowledge_graph.graphml via graph-query service",
+    "climate": "data/graph/weather_knowledge_graph.graphml via graph-query service",
+    "exposure": "data/graph/weather_knowledge_graph.graphml via graph-query service",
+    "cross_border": "data/graph/weather_knowledge_graph.graphml via graph-query service",
     "map": "config/locations.yaml, data/analysis/weather_exposure_ranking.csv, data/analysis/multi_event_locations.csv",
-    "graph": "data/graph/nodes.csv, data/graph/relationships.csv",
+    "graph": "outputs/graph/weather_knowledge_graph.html, outputs/visualization_manifest.json, data/graph/nodes.csv, data/graph/relationships.csv",
 }
 
 
@@ -72,7 +83,7 @@ def main() -> None:
             "Exposure",
             "Cross-border Patterns",
             "Map",
-            "Graph Explorer",
+            "Knowledge Graph",
         ],
     )
     st.sidebar.caption("Generated evidence · local files")
@@ -97,7 +108,7 @@ def main() -> None:
         render_cross_border(data)
     elif page == "Map":
         render_map(data)
-    elif page == "Graph Explorer":
+    elif page == "Knowledge Graph":
         render_graph_explorer(data)
     _footer()
 
@@ -127,24 +138,29 @@ def render_overview(data: dict) -> None:
 def render_highest_rainfall(data: dict) -> None:
     _section_header("Rainfall", "Compare detected rainfall events across configured locations.")
     _source(SOURCE_LABELS["highest_rainfall"])
-    frame = data["highest_rainfall"]
+    graph, indexes = _graph_context()
+    option_frame = data["highest_rainfall"]
     filter_cols = st.columns([1.2, 1.2, 0.9, 1.2])
     with filter_cols[0]:
-        country = _select("Country", frame["country"])
+        country = _select("Country", option_frame["country"], key="rainfall_country")
     with filter_cols[1]:
-        location = _select("Location", frame["location_id"])
-    years = sorted(pd.to_datetime(frame["start_date"]).dt.year.dropna().unique().tolist())
+        location = _select("Location", option_frame["location_id"], key="rainfall_location")
+    years = sorted(pd.to_datetime(option_frame["start_date"]).dt.year.dropna().unique().tolist())
     with filter_cols[2]:
-        year = st.selectbox("Year", ["All", *years])
+        year = st.selectbox("Year", ["All", *years], key="rainfall_year")
     with filter_cols[3]:
-        limit = st.slider("Result limit", min_value=1, max_value=max(20, len(frame)), value=min(20, len(frame)))
-    filtered = filter_highest_rainfall(
-        frame,
-        country=country,
-        location_id=location,
-        year=None if year == "All" else int(year),
-        limit=limit,
+        limit = st.slider("Result limit", min_value=1, max_value=max(20, len(option_frame)), value=min(20, len(option_frame)), key="rainfall_limit")
+    result = query_highest_rainfall(
+        graph,
+        indexes,
+        top_n=limit,
+        country=None if country == "All" else country,
+        location=None if location == "All" else location,
+        start_year=None if year == "All" else int(year),
+        end_year=None if year == "All" else int(year),
     )
+    filtered = result.frame
+    _query_provenance(result)
     if not filtered.empty:
         top = filtered.iloc[0]
         _highlight_card(
@@ -159,17 +175,33 @@ def render_highest_rainfall(data: dict) -> None:
             f"Its event spans {top['start_date']} to {top['end_date']}; the chart ranks locations by maximum daily precipitation, not by official station records.",
         )
     _bar_chart(filtered.head(15), x="location_name", y="maximum_daily_precipitation_mm", accent="blue", height=350, title="Highest daily rainfall values in the filtered results")
+    if not filtered.empty:
+        _render_evidence_network(
+            data,
+            *_rainfall_evidence(data["nodes"], data["relationships"], str(filtered.iloc[0]["event_id"])),
+            label="Rainfall event evidence path",
+        )
     _evidence_table(
         filtered,
         ["rank", "location_name", "country", "start_date", "end_date", "maximum_daily_precipitation_mm", "total_precipitation_mm", "severity_percentile"],
     )
+    _download_query(filtered, "highest_rainfall_graph_query.csv")
     _caveat("Values are derived from Open-Meteo gridded historical data and should not be interpreted as official weather-station records.")
 
 
 def render_multi_event_locations(data: dict) -> None:
     _section_header("Configured locations with multiple event types", "Compare the breadth and frequency of detected event types.")
     _source(SOURCE_LABELS["multi_event"])
-    frame = data["multi_event_locations"]
+    graph, indexes = _graph_context()
+    options = data["multi_event_locations"]
+    left, right = st.columns(2)
+    with left:
+        country = _select("Country", options["country"], key="multi_event_country")
+    with right:
+        top_n = st.slider("Top N locations", min_value=1, max_value=22, value=22, key="multi_top")
+    result = query_multi_event_locations(graph, indexes, top_n=top_n, country=None if country == "All" else country)
+    frame = result.frame
+    _query_provenance(result)
     _bar_chart(frame.head(22), x="location_name", y="total_event_count", color="country", accent="sage", height=420, title="Detected events by configured location")
     if not frame.empty:
         leader = frame.iloc[0]
@@ -177,6 +209,11 @@ def render_multi_event_locations(data: dict) -> None:
             "Reading the result",
             f"{leader['location_name']} appears first in this generated ranking with {int(leader['total_event_count']):,} detected events across "
             f"{int(leader['distinct_event_type_count']):,} event types. This measures the configured location, not a district-wide total.",
+        )
+        _render_evidence_network(
+            data,
+            *_location_event_type_evidence(data["nodes"], data["relationships"], str(leader["location_id"]), max_event_types=7),
+            label="Representative event-type evidence",
         )
     _evidence_table(
         frame[
@@ -192,6 +229,7 @@ def render_multi_event_locations(data: dict) -> None:
         ],
         ["location_name", "country", "distinct_event_type_count", "event_types", "total_event_count", "mean_severity_percentile"],
     )
+    _download_query(frame, "multi_event_locations_graph_query.csv")
     _note("These are configured locations. The dashboard does not relabel them as districts.")
 
 
@@ -199,7 +237,18 @@ def render_cooccurring_patterns(data: dict) -> None:
     _section_header("Co-occurring event patterns", "Explore event types that appeared close together at the same location.")
     _source(SOURCE_LABELS["cooccurrence"])
     _caveat("Co-occurring event patterns are temporal/location associations and do not prove causation.")
-    frame = data["cooccurring_patterns"]
+    graph, indexes = _graph_context()
+    options = data["multi_event_locations"]
+    controls = st.columns(3)
+    with controls[0]:
+        country = _select("Country", options["country"], key="cooccurrence_country")
+    with controls[1]:
+        location = _select("Location", options["location_id"], key="cooccurrence_location")
+    with controls[2]:
+        max_gap = st.slider("Maximum gap days", min_value=0, max_value=7, value=2, key="cooccurrence_gap")
+    result = query_cooccurring_patterns(graph, indexes, max_gap_days=max_gap, country=None if country == "All" else country, location=None if location == "All" else location)
+    frame = result.frame
+    _query_provenance(result)
     _bar_chart(frame.head(20), x="event_type_pair", y="total_pair_count", accent="lavender", height=400, title="Most frequent co-occurring event-type pairs")
     if not frame.empty:
         pair = frame.iloc[0]
@@ -209,6 +258,11 @@ def render_cooccurring_patterns(data: dict) -> None:
             "Reading the result",
             f"{pair['event_type_pair']} is the most frequent visible pair, observed {int(pair['total_pair_count']):,} times across "
             f"{int(pair['distinct_location_count']):,} configured locations.{association} Co-occurrence does not establish causation.",
+        )
+        _render_evidence_network(
+            data,
+            *_cooccurrence_evidence(data["nodes"], data["relationships"], pair.get("example_event_ids")),
+            label="Example co-occurrence evidence",
         )
     _evidence_table(
         frame[
@@ -225,26 +279,30 @@ def render_cooccurring_patterns(data: dict) -> None:
         ],
         ["event_type_pair", "total_pair_count", "distinct_location_count", "median_gap_days", "includes_algorithmic_derivation"],
     )
+    _download_query(frame, "cooccurring_patterns_graph_query.csv")
 
 
 def render_climate_trends(data: dict) -> None:
     _section_header("Climate trends", "Review annual indicator patterns within the five-year dataset.")
     _source(SOURCE_LABELS["climate"])
     _caveat(CLIMATE_TREND_CAVEAT)
+    graph, indexes = _graph_context()
     annual = data["climate_indicator_annual_values"]
-    trends = data["climate_indicator_trends"]
     left, right = st.columns(2)
     with left:
-        location = _select("Location", annual["location_id"])
+        location = _select("Location", annual["location_id"], key="climate_location")
     with right:
-        event_type = _select("Event type", annual["event_type"])
-    filtered_annual = filter_climate_annual_values(annual, location_id=location, event_type=event_type)
+        event_type = _select("Event type", annual["event_type"], key="climate_event_type")
+    result = query_climate_indicator_trends(
+        graph,
+        indexes,
+        location=None if location == "All" else location,
+        indicator_type=None if event_type == "All" else event_type,
+    )
+    relevant_trends = result.frame
+    filtered_annual = result.secondary_frames["annual_values"]
+    _query_provenance(result)
     _line_chart(filtered_annual, x="year", y="annual_value", color="event_type", height=340)
-    relevant_trends = trends.copy()
-    if location != "All":
-        relevant_trends = relevant_trends[relevant_trends["location_id"] == location]
-    if event_type != "All":
-        relevant_trends = relevant_trends[relevant_trends["event_type"] == event_type]
     if not relevant_trends.empty:
         trend = relevant_trends.iloc[0]
         _mini_metrics({
@@ -259,14 +317,18 @@ def render_climate_trends(data: dict) -> None:
             "The slope summarises change in this dataset only; it is not climate attribution.",
         )
     _evidence_table(relevant_trends, ["location_id", "country", "event_type", "direction", "linear_slope", "first_year_value", "final_year_value"])
+    _download_query(relevant_trends, "climate_indicator_trends_graph_query.csv")
 
 
 def render_exposure(data: dict) -> None:
     _section_header("Weather-event exposure score", "Compare detected event frequency, diversity, severity, and recurrence.")
     _source(SOURCE_LABELS["exposure"])
     _caveat(EXPOSURE_CAVEAT)
-    mode = st.radio("Ranking", ["All configured locations", "Pakistan only"], horizontal=True)
-    frame = data["pakistan_weather_exposure_ranking"] if mode == "Pakistan only" else data["weather_exposure_ranking"]
+    graph, indexes = _graph_context()
+    mode = st.radio("Ranking", ["All configured locations", "Pakistan only"], horizontal=True, key="exposure_ranking_mode")
+    result = query_weather_exposure(graph, indexes, country="Pakistan" if mode == "Pakistan only" else None)
+    frame = result.frame
+    _query_provenance(result)
     if not frame.empty:
         top = frame.iloc[0]
         _highlight_card(
@@ -277,13 +339,18 @@ def render_exposure(data: dict) -> None:
         )
     _bar_chart(frame, x="location_name", y="exposure_score", color="country", accent="sage", height=420, title="Weather-event exposure score by location")
     if not frame.empty:
-        selected_location = st.selectbox("Inspect score components", frame["location_name"].tolist())
+        selected_location = st.selectbox("Inspect score components", frame["location_name"].tolist(), key="exposure_component_location")
         selected = frame[frame["location_name"] == selected_location].iloc[0]
         _component_bars(selected)
         _how_to_read(
             "How the score works",
             "A higher score reflects more detected events, a broader mix of event types, stronger percentile severity, and recurrence across years. "
             "It does not measure people, infrastructure, poverty, health, damage, or preparedness.",
+        )
+        _render_evidence_network(
+            data,
+            *_location_event_type_evidence(data["nodes"], data["relationships"], str(selected["location_id"]), max_event_types=5),
+            label="Selected location event evidence",
         )
     _evidence_table(
         frame[
@@ -310,38 +377,65 @@ def render_exposure(data: dict) -> None:
         ],
         ["overall_rank", "pakistan_rank", "location_name", "country", "exposure_score", "frequency_component", "diversity_component", "severity_component", "recurrence_component"],
     )
+    _download_query(frame, "weather_exposure_graph_query.csv")
 
 
 def render_cross_border(data: dict) -> None:
     _section_header("Candidate cross-border precursor patterns", "Review temporal and geographic associations represented by UPSTREAM_OF candidate links.")
     _source(SOURCE_LABELS["cross_border"])
     _caveat(CANDIDATE_ASSOCIATION_CAVEAT)
+    graph, indexes = _graph_context()
     edges = data["cross_border_precursor_edges"]
     top_filters = st.columns(3)
     with top_filters[0]:
-        source_country = _select("Source country", edges["source_country"])
+        source_country = _select("Source country", edges["source_country"], key="cross_source_country")
     with top_filters[1]:
-        source_location = _select("Source location", edges["source_location"])
+        source_location = _select("Source location", edges["source_location"], key="cross_source_location")
     with top_filters[2]:
-        target_location = _select("Pakistani target location", edges["target_pakistani_location"])
+        target_location = _select("Pakistani target location", edges["target_pakistani_location"], key="cross_target_location")
     lower_filters = st.columns([2, 1])
     with lower_filters[0]:
-        mapping = _select("Event mapping", edges["event_type_mapping"])
+        mapping = _select("Event mapping", edges["event_type_mapping"], key="cross_event_mapping")
     with lower_filters[1]:
-        max_lag = st.slider("Maximum lag days", min_value=1, max_value=int(edges["lag_days"].max()), value=int(edges["lag_days"].max()))
-    filtered = filter_cross_border_edges(edges, source_country, source_location, target_location, mapping, max_lag)
+        max_lag = st.slider("Maximum lag days", min_value=1, max_value=int(edges["lag_days"].max()), value=int(edges["lag_days"].max()), key="cross_max_lag")
+    result = query_cross_border_patterns(
+        graph,
+        indexes,
+        source_country=None if source_country == "All" else source_country,
+        source_location=None if source_location == "All" else source_location,
+        target_location=None if target_location == "All" else target_location,
+        event_type_mapping=None if mapping == "All" else mapping,
+        maximum_lag=max_lag,
+    )
+    filtered = result.frame
+    _query_provenance(result)
     if filtered.empty:
         _empty_state("No candidate relationships match these filters.")
     else:
         _mini_metrics({"Relationships": f"{len(filtered):,}", "Median lag": f"{pd.to_numeric(filtered['lag_days'], errors='coerce').median():.1f} days"})
+        summary = result.secondary_frames["lag_summary"]
+        if not summary.empty:
+            leader = summary.iloc[0]
+            _insight(
+                "Reading the result",
+                f"The most frequent cross-border candidate pattern shown is {leader['source_location']} to "
+                f"{leader['target_pakistani_location']}, with a median lag of {float(leader['median_lag_days']):.1f} days. "
+                "This is a candidate association, not a forecast.",
+            )
         _how_to_read(
             "How to read a candidate link",
             "Each row connects a source event outside Pakistan to a later related event at a configured Pakistani location. "
             "Lag is elapsed time between events; the link is a screening association, not a prediction.",
         )
+        _render_evidence_network(
+            data,
+            *_cross_border_evidence(data["nodes"], data["relationships"], filtered.iloc[0]),
+            label="Cross-border candidate evidence path",
+        )
         _evidence_table(filtered, ["source_country", "source_location", "target_pakistani_location", "event_type_mapping", "lag_days"], max_rows=60)
     _panel_title("Lag Summary")
-    _evidence_table(data["cross_border_lag_summary"], max_rows=60)
+    _evidence_table(result.secondary_frames["lag_summary"], max_rows=60)
+    _download_query(filtered, "cross_border_patterns_graph_query.csv")
 
 
 def render_map(data: dict) -> None:
@@ -350,9 +444,9 @@ def render_map(data: dict) -> None:
     event_types = ["All", *sorted({event for value in data["multi_event_locations"]["event_types"].dropna() for event in str(value).split("|")})]
     left, right = st.columns(2)
     with left:
-        selected_event_type = st.selectbox("Selected event type", event_types)
+        selected_event_type = st.selectbox("Selected event type", event_types, key="map_event_type")
     with right:
-        size_metric = st.selectbox("Marker sizing", ["total_events", "exposure_score", "selected_event_count"])
+        size_metric = st.selectbox("Marker sizing", ["total_events", "exposure_score", "selected_event_count"], key="map_size_metric")
     map_data = locations_for_map(data["locations"], data["weather_exposure_ranking"], data["multi_event_locations"], selected_event_type)
     try:
         fmap = build_location_map(map_data, size_metric=size_metric)
@@ -366,25 +460,200 @@ def render_map(data: dict) -> None:
 
 
 def render_graph_explorer(data: dict) -> None:
-    _section_header("Graph explorer", "Inspect a small, bounded neighbourhood from the generated knowledge graph.")
+    _section_header("Knowledge Graph", "Inspect the saved representative graph and a bounded neighbourhood explorer.")
     _source(SOURCE_LABELS["graph"])
-    _note("The complete graph is not rendered by default. This view creates a bounded neighbourhood subgraph.")
+    overview_tab, neighbourhood_tab = st.tabs(["Representative overview", "Explore a neighbourhood"])
+    with overview_tab:
+        render_representative_graph_overview()
+    with neighbourhood_tab:
+        render_graph_neighbourhood(data)
+
+
+def render_representative_graph_overview() -> None:
+    _panel_title("Representative overview")
+    try:
+        artifact = load_representative_graph_artifact()
+    except (FileNotFoundError, KeyError, json.JSONDecodeError) as exc:
+        _empty_state(str(exc))
+        return
+
+    _note(
+        "This deterministic representative view contains selected nodes and verified relationships from the full "
+        f"{artifact.full_node_count:,}-node, {artifact.full_edge_count:,}-relationship knowledge graph."
+    )
+    _mini_metrics(
+        {
+            "Representative nodes": f"{artifact.representative_node_count:,}",
+            "Representative relationships": f"{artifact.representative_edge_count:,}",
+            "Full graph nodes": f"{artifact.full_node_count:,}",
+            "Full graph relationships": f"{artifact.full_edge_count:,}",
+        }
+    )
+    _caveat(REPRESENTATIVE_GRAPH_CAVEAT)
+    components.html(artifact.html, height=720, scrolling=True)
+    _note("Representative view generated from the full knowledge graph.")
+    with st.expander("Technical details · representative graph"):
+        st.markdown(
+            f"- Saved graph artifact: `{artifact.html_path}`\n"
+            f"- Visualization manifest: `{artifact.manifest_path}`\n"
+            f"- Representative graph size: {artifact.representative_node_count:,} nodes and {artifact.representative_edge_count:,} relationships\n"
+            f"- Full graph size recorded in manifest: {artifact.full_node_count:,} nodes and {artifact.full_edge_count:,} relationships"
+        )
+
+
+def _rainfall_evidence(nodes: pd.DataFrame, relationships: pd.DataFrame, event_id: str) -> tuple[pd.DataFrame, pd.DataFrame]:
+    rels = _relationship_chain(
+        relationships,
+        [
+            (event_id, "OCCURRED_IN", None),
+            (None, "LOCATED_IN", None),
+        ],
+    )
+    if rels.empty:
+        return nodes.head(0).copy(), rels
+    occurred = rels[rels["relationship_type"] == "OCCURRED_IN"].head(1)
+    if occurred.empty:
+        return nodes.head(0).copy(), relationships.head(0).copy()
+    location_id = str(occurred.iloc[0]["target_id"])
+    located = relationships[
+        (relationships["source_id"].astype(str) == location_id)
+        & (relationships["relationship_type"] == "LOCATED_IN")
+    ].head(1)
+    rels = pd.concat([occurred, located], ignore_index=True)
+    return _nodes_for_relationships(nodes, rels), rels
+
+
+def _location_event_type_evidence(
+    nodes: pd.DataFrame,
+    relationships: pd.DataFrame,
+    location_id: str,
+    max_event_types: int,
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    occurred = relationships[
+        (relationships["target_id"].astype(str) == location_id)
+        & (relationships["relationship_type"] == "OCCURRED_IN")
+    ].copy()
+    events = nodes[nodes["node_id"].astype(str).isin(occurred["source_id"].astype(str))].copy()
+    if events.empty:
+        return nodes.head(0).copy(), relationships.head(0).copy()
+    events["_severity"] = pd.to_numeric(events.get("severity_percentile"), errors="coerce").fillna(-1)
+    representatives = (
+        events.sort_values(["event_type", "_severity", "node_id"], ascending=[True, False, True], kind="mergesort")
+        .drop_duplicates("event_type", keep="first")
+        .head(max_event_types)
+    )
+    event_ids = set(representatives["node_id"].astype(str))
+    event_rels = occurred[occurred["source_id"].astype(str).isin(event_ids)]
+    located = relationships[
+        (relationships["source_id"].astype(str) == location_id)
+        & (relationships["relationship_type"] == "LOCATED_IN")
+    ].head(1)
+    rels = pd.concat([event_rels, located], ignore_index=True)
+    return _nodes_for_relationships(nodes, rels), rels
+
+
+def _cooccurrence_evidence(
+    nodes: pd.DataFrame,
+    relationships: pd.DataFrame,
+    example_event_ids: object,
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    event_ids = [part for part in str(example_event_ids or "").split("|") if part]
+    if len(event_ids) < 2:
+        return nodes.head(0).copy(), relationships.head(0).copy()
+    event_set = set(event_ids[:2])
+    rels = relationships[
+        relationships["source_id"].astype(str).isin(event_set)
+        & relationships["relationship_type"].isin(["OCCURRED_IN", "STARTED_ON", "ENDED_ON", "WITHIN_TIME_WINDOW", "ASSOCIATED_WITH"])
+    ].copy()
+    if rels.empty:
+        return nodes.head(0).copy(), rels
+    rels = rels.sort_values(["relationship_type", "source_id", "target_id"], kind="mergesort").head(12)
+    return _nodes_for_relationships(nodes, rels), rels
+
+
+def _cross_border_evidence(nodes: pd.DataFrame, relationships: pd.DataFrame, row: pd.Series) -> tuple[pd.DataFrame, pd.DataFrame]:
+    source_id = str(row["source_event_id"])
+    target_id = str(row["target_event_id"])
+    upstream = relationships[
+        (relationships["source_id"].astype(str) == source_id)
+        & (relationships["target_id"].astype(str) == target_id)
+        & (relationships["relationship_type"] == "UPSTREAM_OF")
+    ].head(1)
+    occurred = relationships[
+        relationships["source_id"].astype(str).isin({source_id, target_id})
+        & (relationships["relationship_type"] == "OCCURRED_IN")
+    ].copy()
+    rels = pd.concat([upstream, occurred], ignore_index=True)
+    return _nodes_for_relationships(nodes, rels), rels
+
+
+def _relationship_chain(relationships: pd.DataFrame, specs: list[tuple[str | None, str, str | None]]) -> pd.DataFrame:
+    parts = []
+    current_target: str | None = None
+    for source, relationship_type, target in specs:
+        actual_source = current_target if source is None else source
+        subset = relationships[relationships["relationship_type"] == relationship_type].copy()
+        if actual_source is not None:
+            subset = subset[subset["source_id"].astype(str) == actual_source]
+        if target is not None:
+            subset = subset[subset["target_id"].astype(str) == target]
+        subset = subset.head(1)
+        if subset.empty:
+            break
+        current_target = str(subset.iloc[0]["target_id"])
+        parts.append(subset)
+    if not parts:
+        return relationships.head(0).copy()
+    return pd.concat(parts, ignore_index=True)
+
+
+def _nodes_for_relationships(nodes: pd.DataFrame, relationships: pd.DataFrame) -> pd.DataFrame:
+    if relationships.empty:
+        return nodes.head(0).copy()
+    ids = set(relationships["source_id"].astype(str)) | set(relationships["target_id"].astype(str))
+    return nodes[nodes["node_id"].astype(str).isin(ids)].sort_values(["node_type", "node_id"], kind="mergesort").reset_index(drop=True)
+
+
+def _render_evidence_network(data: dict, nodes: pd.DataFrame, relationships: pd.DataFrame, label: str) -> None:
+    _panel_title(label)
+    if relationships.empty:
+        _empty_state("No connected graph evidence is available for this selection.")
+        return
+    selected_ids = set(nodes["node_id"].astype(str))
+    endpoints_present = set(relationships["source_id"].astype(str)) | set(relationships["target_id"].astype(str))
+    if not endpoints_present <= selected_ids:
+        _empty_state("No connected graph evidence is available for this selection.")
+        return
+    _note(f"Displaying {len(nodes):,} connected nodes and {len(relationships):,} verified relationships from the full graph.")
+    try:
+        graph_html = build_pyvis_html(nodes, relationships)
+    except ModuleNotFoundError as exc:
+        _dependency_notice("Graph package unavailable", str(exc))
+        _evidence_table(nodes[["node_id", "node_type", "label"]])
+        _evidence_table(relationships[["source_id", "relationship_type", "target_id", "caveat"]])
+        return
+    components.html(graph_html, height=390, scrolling=True)
+
+
+def render_graph_neighbourhood(data: dict) -> None:
+    _panel_title("Explore a neighbourhood")
+    _note("The complete graph is not rendered in Streamlit. This view creates a bounded neighbourhood subgraph.")
     nodes = data["nodes"]
     relationships = data["relationships"]
     top = st.columns(4)
     with top[0]:
-        location = _select("Location", nodes[nodes["node_type"] == "Location"]["node_id"])
+        location = _select("Location", nodes[nodes["node_type"] == "Location"]["node_id"], key="neighbour_location")
     with top[1]:
-        event = _select("Event", nodes[nodes["event_id"].notna()]["node_id"])
+        event = _select("Event", nodes[nodes["event_id"].notna()]["node_id"], key="neighbour_event")
     with top[2]:
-        country = _select("Country", nodes[nodes["node_type"] == "Country"]["country"])
+        country = _select("Country", nodes[nodes["node_type"] == "Country"]["country"], key="neighbour_country")
     with top[3]:
-        relationship_type = _select("Relationship type", relationships["relationship_type"])
+        relationship_type = _select("Relationship type", relationships["relationship_type"], key="neighbour_relationship")
     bounds = st.columns(2)
     with bounds[0]:
-        depth = st.slider("Maximum neighbourhood depth", 0, 3, 1)
+        depth = st.slider("Maximum neighbourhood depth", 0, 3, 1, key="neighbour_depth")
     with bounds[1]:
-        max_nodes = st.slider("Maximum displayed nodes", 10, 250, 80)
+        max_nodes = st.slider("Maximum displayed nodes", 10, 250, 80, key="neighbour_max_nodes")
     if all(value == "All" for value in [location, event, country, relationship_type]):
         _empty_state("Select a location, event, country, or relationship type to explore its connected graph neighbourhood.")
         return
@@ -413,6 +682,40 @@ def render_graph_explorer(data: dict) -> None:
 
 def _cached_data() -> dict:
     return st.cache_data(show_spinner=False)(load_dashboard_data)()
+
+
+def _graph_context():
+    return st.cache_resource(show_spinner=False)(_load_graph_context)()
+
+
+def _load_graph_context():
+    graph = load_graph("data/graph/weather_knowledge_graph.graphml")
+    return graph, build_graph_indexes(graph)
+
+
+def _query_provenance(result) -> None:
+    provenance = result.provenance
+    _note("Result calculated from the full knowledge graph.")
+    with st.expander(f"Query provenance · {provenance.query_name}"):
+        st.markdown(
+            f"- Graph source: `{provenance.graph_source_path}`\n"
+            f"- Graph checksum: `{provenance.graph_checksum}`\n"
+            f"- Query parameters: `{json.dumps(provenance.query_parameters, sort_keys=True)}`\n"
+            f"- Execution duration: {provenance.execution_duration_seconds:.6f}s\n"
+            f"- Nodes inspected: {provenance.nodes_inspected:,}\n"
+            f"- Edges inspected: {provenance.edges_inspected:,}\n"
+            f"- Result source: {provenance.result_source}"
+        )
+
+
+def _download_query(frame: pd.DataFrame, filename: str) -> None:
+    st.download_button(
+        "Download current graph-query result",
+        data=frame.to_csv(index=False).encode("utf-8"),
+        file_name=filename,
+        mime="text/csv",
+        key=f"download_{filename}",
+    )
 
 
 def _top_header(metrics: dict[str, int]) -> None:
@@ -556,8 +859,14 @@ def _evidence_table(
     _light_table(summary)
     technical_columns = [column for column in display.columns if column not in available]
     if technical_columns:
-        with st.expander("Technical details"):
+        with st.expander(f"Technical details · {_table_signature(display)}"):
             _light_table(_readable_frame(display))
+
+
+def _table_signature(frame: pd.DataFrame) -> str:
+    preview = frame.head(3).to_csv(index=False)
+    digest = hashlib.md5(preview.encode("utf-8")).hexdigest()[:8]
+    return f"{len(frame):,} rows · {digest}"
 
 
 def _light_table(frame: pd.DataFrame) -> None:
@@ -690,9 +999,9 @@ def _line_chart(frame: pd.DataFrame, x: str, y: str, color: str | None = None, h
     st.altair_chart(chart, theme=None, width="stretch")
 
 
-def _select(label: str, series: pd.Series) -> str:
+def _select(label: str, series: pd.Series, key: str | None = None) -> str:
     values = sorted(str(value) for value in series.dropna().unique())
-    return st.selectbox(label, ["All", *values])
+    return st.selectbox(label, ["All", *values], key=key)
 
 
 def _chart_heading(title: str, axis_note: str) -> None:

@@ -44,7 +44,7 @@ class DataSourceMetadata:
 
 @dataclass(frozen=True)
 class PipelineConfig:
-    """Top-level pipeline configuration for scaffold validation."""
+    """Top-level pipeline configuration for the weather pipeline."""
 
     project: dict[str, Any]
     date_range: DateRange

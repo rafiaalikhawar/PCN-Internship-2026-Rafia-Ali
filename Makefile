@@ -1,4 +1,4 @@
-.PHONY: help install pipeline pipeline-cached test validate validate-config collect normalize detect-events build-graph analyze dashboard
+.PHONY: help install pipeline pipeline-cached test validate visualizations validate-config collect normalize detect-events build-graph analyze dashboard
 
 help:
 	@echo "Available commands:"
@@ -7,6 +7,7 @@ help:
 	@echo "  make pipeline-cached  Run the complete pipeline using cache only"
 	@echo "  make test             Run tests"
 	@echo "  make validate         Validate the complete submission offline"
+	@echo "  make visualizations   Export saved map, graph, and report figures"
 	@echo "  make validate-config  Validate configuration files"
 	@echo "  make collect          Collect Open-Meteo data using configured defaults"
 	@echo "  make normalize        Normalize cached Open-Meteo data"
@@ -30,6 +31,9 @@ test:
 
 validate:
 	python3 -m weather_kg validate-submission
+
+visualizations:
+	python3 -m weather_kg export-visualizations
 
 validate-config:
 	python3 -m weather_kg validate-config

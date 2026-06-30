@@ -1,8 +1,8 @@
 # Submission Validation Report
 
 - Overall status: **PASS**
-- Validation timestamp: `2026-06-30T00:13:19Z`
-- Checks: 91/91 passed
+- Validation timestamp: `2026-06-30T16:28:33Z`
+- Checks: 100/100 passed
 - Determinism note: the timestamp changes between runs; compare check results semantically.
 
 ## Checks
@@ -92,19 +92,24 @@
 | analysis | cross_border_targets_pakistan | PASS | 1879 | all targets in Pakistan | `data/analysis/cross_border_precursor_edges.csv` | Check passed. |
 | analysis | cross_border_candidate_caveats | PASS | true | true | `data/analysis/cross_border_precursor_edges.csv` | Check passed. |
 | analysis | analytical_language_safety | PASS | [] | [] | `data/analysis` | Check passed. |
-| deliverables | dashboard_app_exists | PASS | 56509 | > 0 bytes | `app.py` | Check passed. |
-| deliverables | dashboard_helper_exists | PASS | 13409 | > 0 bytes | `src/weather_kg/dashboard.py` | Check passed. |
-| deliverables | dashboard_tests_exist | PASS | 4773 | > 0 bytes | `tests/test_dashboard.py` | Check passed. |
-| deliverables | readme_exists | PASS | 14051 | > 0 bytes | `README.md` | Check passed. |
-| deliverables | technical_report_source_exists | PASS | 1677 | > 0 bytes | `reports/technical_report.md` | Check passed. |
-| deliverables | llm_disclosure_exists | PASS | 6778 | > 0 bytes | `reports/llm_usage.md` | Check passed. |
-| deliverables | demo_instructions_exist | PASS | 647 | > 0 bytes | `demo_video/README.md` | Check passed. |
+| deliverables | dashboard_app_exists | PASS | 70906 | > 0 bytes | `app.py` | Check passed. |
+| deliverables | dashboard_helper_exists | PASS | 15513 | > 0 bytes | `src/weather_kg/dashboard.py` | Check passed. |
+| deliverables | dashboard_tests_exist | PASS | 14586 | > 0 bytes | `tests/test_dashboard.py` | Check passed. |
+| deliverables | readme_exists | PASS | 17181 | > 0 bytes | `README.md` | Check passed. |
+| deliverables | technical_report_source_exists | PASS | 8165 | > 0 bytes | `reports/technical_report.md` | Check passed. |
+| deliverables | llm_disclosure_exists | PASS | 9256 | > 0 bytes | `reports/llm_usage.md` | Check passed. |
+| deliverables | demo_instructions_exist | PASS | 2164 | > 0 bytes | `demo_video/README.md` | Check passed. |
+| deliverables | saved_folium_map_exists | PASS | 36162 | > 0 bytes | `outputs/maps/weather_locations.html` | Check passed. |
+| deliverables | saved_pyvis_graph_exists | PASS | 959130 | > 0 bytes | `outputs/graph/weather_knowledge_graph.html` | Check passed. |
+| deliverables | visualization_manifest_exists | PASS | 4355 | > 0 bytes | `outputs/visualization_manifest.json` | Check passed. |
+| deliverables | figure_top_daily_rainfall.png | PASS | 85032 | > 0 bytes | `outputs/figures/top_daily_rainfall.png` | Check passed. |
+| deliverables | figure_multi_event_locations.png | PASS | 97251 | > 0 bytes | `outputs/figures/multi_event_locations.png` | Check passed. |
+| deliverables | figure_cooccurring_event_patterns.png | PASS | 80761 | > 0 bytes | `outputs/figures/cooccurring_event_patterns.png` | Check passed. |
+| deliverables | figure_climate_indicator_trends.png | PASS | 160825 | > 0 bytes | `outputs/figures/climate_indicator_trends.png` | Check passed. |
+| deliverables | figure_weather_exposure_ranking.png | PASS | 69766 | > 0 bytes | `outputs/figures/weather_exposure_ranking.png` | Check passed. |
+| deliverables | figure_cross_border_lag_patterns.png | PASS | 155897 | > 0 bytes | `outputs/figures/cross_border_lag_patterns.png` | Check passed. |
 | deliverables | dashboard_import | PASS | imported without server startup | successful import without server | `app.py` | Check passed. |
 
 ## Remaining Deliverable Warnings
 
-- Saved full PyVis HTML export remains a final deliverable.
-- Saved Folium HTML export remains a final deliverable.
-- Final report figures/screenshots remain final deliverables.
-- Technical report completion remains a later finalization deliverable.
-- Demo video link remains a later finalization deliverable.
+- Demo video link should be added after the final recording is uploaded.

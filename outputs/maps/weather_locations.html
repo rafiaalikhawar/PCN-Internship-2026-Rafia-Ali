@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_e9f8d5ba82e7912de9af8a5265827678 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+        <div style="position:fixed;left:24px;bottom:24px;z-index:9999;background:#fff;border:1px solid #dedbd4;
+        border-radius:10px;padding:12px 14px;box-shadow:0 4px 16px rgba(0,0,0,.08);font:12px Arial;color:#252525;">
+          <strong>Configured locations</strong><div style="margin:7px 0;display:grid;gap:4px;">
+          <span><i style="background:#8EAD98"></i>Pakistan</span><span><i style="background:#DFAE91"></i>India</span><span><i style="background:#7897B1"></i>Afghanistan</span><span><i style="background:#B9AED5"></i>Iran</span><span><i style="background:#9CB9D3"></i>China</span></div><div>Marker size: Weather-event exposure score</div>
+          <div style="margin-top:8px;max-width:300px;color:#6f6f6f;">Historical analysis of configured locations using Open-Meteo gridded data. Not a forecast.</div>
+        </div>
+        <style>.leaflet-container span i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;}</style>
+        
+    
+            <div class="folium-map" id="map_e9f8d5ba82e7912de9af8a5265827678" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_e9f8d5ba82e7912de9af8a5265827678 = L.map(
+                "map_e9f8d5ba82e7912de9af8a5265827678",
+                {
+                    center: [32.75939090909091, 70.86188181818181],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 4,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+            L.control.scale().addTo(map_e9f8d5ba82e7912de9af8a5265827678);
+
+            
+
+        
+    
+            var tile_layer_f452cd592eef031106effa3be4cc4adb = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 20,
+  "maxNativeZoom": 20,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_f452cd592eef031106effa3be4cc4adb.addTo(map_e9f8d5ba82e7912de9af8a5265827678);
+        
+    
+            var circle_marker_811dd5a273c725bb960d37e1b97b18b1 = L.circleMarker(
+                [34.3529, 62.204],
+                {"bubblingMouseEvents": true, "color": "#7897B1", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#7897B1", "fillOpacity": 0.78, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 14.79268000068555, "stroke": true, "weight": 2}
+            ).addTo(map_e9f8d5ba82e7912de9af8a5265827678);
+        
+    
+        var popup_b821f688a6cdfeb9a4cd25e25dd09e58 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_038846d76d7b4b383c3ba0840a3a03a4 = $(`<div id="html_038846d76d7b4b383c3ba0840a3a03a4" style="width: 100.0%; height: 100.0%;"><strong>Herat</strong><br>Country: Afghanistan<br>Total detected events: 319<br>Distinct event-type count: 7<br>Weather-event exposure score: 0.8039<br>Configured location ID: af_herat</div>`)[0];
+                popup_b821f688a6cdfeb9a4cd25e25dd09e58.setContent(html_038846d76d7b4b383c3ba0840a3a03a4);
+            
+        
+
+        circle_marker_811dd5a273c725bb960d37e1b97b18b1.bindPopup(popup_b821f688a6cdfeb9a4cd25e25dd09e58)
+        ;
+
+        
+    
+    
+            circle_marker_811dd5a273c725bb960d37e1b97b18b1.bindTooltip(
+                `<div>
+                     Herat · Afghanistan
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_4898a86dce31cfec09dc0fe2174ab921 = L.circleMarker(
+                [34.4342, 70.4478],
+                {"bubblingMouseEvents": true, "color": "#7897B1", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#7897B1", "fillOpacity": 0.78, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.503200678698132, "stroke": true, "weight": 2}
+            ).addTo(map_e9f8d5ba82e7912de9af8a5265827678);
+        
+    
+        var popup_e750875eebd430cb30a04f4d94d01acf = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_1c71007690e8a2ea3c8d17b7c287dedb = $(`<div id="html_1c71007690e8a2ea3c8d17b7c287dedb" style="width: 100.0%; height: 100.0%;"><strong>Jalalabad</strong><br>Country: Afghanistan<br>Total detected events: 303<br>Distinct event-type count: 7<br>Weather-event exposure score: 0.7765<br>Configured location ID: af_jalalabad</div>`)[0];
+                popup_e750875eebd430cb30a04f4d94d01acf.setContent(html_1c71007690e8a2ea3c8d17b7c287dedb);
+            
+        
+
+        circle_marker_4898a86dce31cfec09dc0fe2174ab921.bindPopup(popup_e750875eebd430cb30a04f4d94d01acf)
+        ;
+
+        
+    
+    
+            circle_marker_4898a86dce31cfec09dc0fe2174ab921.bindTooltip(
+                `<div>
+                     Jalalabad · Afghanistan
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_bdb20c0d17815029011d2583eed05e50 = L.circleMarker(
+                [34.5553, 69.2075],
+                {"bubblingMouseEvents": true, "color": "#7897B1", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#7897B1", "fillOpacity": 0.78, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.300229660479544, "stroke": true, "weight": 2}
+            ).addTo(map_e9f8d5ba82e7912de9af8a5265827678);
+        
+    
+        var popup_05b667cc031f3dbd0b80fc37dcfac09c = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_ddb3c38169d81db037504111ec2d8afd = $(`<div id="html_ddb3c38169d81db037504111ec2d8afd" style="width: 100.0%; height: 100.0%;"><strong>Kabul</strong><br>Country: Afghanistan<br>Total detected events: 269<br>Distinct event-type count: 7<br>Weather-event exposure score: 0.6449<br>Configured location ID: af_kabul</div>`)[0];
+                popup_05b667cc031f3dbd0b80fc37dcfac09c.setContent(html_ddb3c38169d81db037504111ec2d8afd);
+            
+        
+
+        circle_marker_bdb20c0d17815029011d2583eed05e50.bindPopup(popup_05b667cc031f3dbd0b80fc37dcfac09c)
+        ;
+
+        
+    
+    
+            circle_marker_bdb20c0d17815029011d2583eed05e50.bindTooltip(
+                `<div>
+                     Kabul · Afghanistan
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_24c74094bfbbbf565cf47b2360b38eee = L.circleMarker(
+                [31.6289, 65.7372],
+                {"bubblingMouseEvents": true, "color": "#7897B1", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#7897B1", "fillOpacity": 0.78, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12.300679555075668, "stroke": true, "weight": 2}
+            ).addTo(map_e9f8d5ba82e7912de9af8a5265827678);
+        
+    
+        var popup_b3ebe93183f5ac058e33d04a8bb4b633 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_a00e8ce76458b2d522547472f73fb07a = $(`<div id="html_a00e8ce76458b2d522547472f73fb07a" style="width: 100.0%; height: 100.0%;"><strong>Kandahar</strong><br>Country: Afghanistan<br>Total detected events: 294<br>Distinct event-type count: 7<br>Weather-event exposure score: 0.7510<br>Configured location ID: af_kandahar</div>`)[0];
+                popup_b3ebe93183f5ac058e33d04a8bb4b633.setContent(html_a00e8ce76458b2d522547472f73fb07a);
+            
+        
+
+        circle_marker_24c74094bfbbbf565cf47b2360b38eee.bindPopup(popup_b3ebe93183f5ac058e33d04a8bb4b633)
+        ;
+
+        
+    
+    
+            circle_marker_24c74094bfbbbf565cf47b2360b38eee.bindTooltip(
+                `<div>
+                     Kandahar · Afghanistan
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_fc4a1e20475c7ad33cd1f6b2f07b92bc = L.circleMarker(
+                [37.1107, 79.9253],
+                {"bubblingMouseEvents": true, "color": "#9CB9D3", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#9CB9D3", "fillOpacity": 0.78, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8.379076901982963, "stroke": true, "weight": 2}
+            ).addTo(map_e9f8d5ba82e7912de9af8a5265827678);
+        
+    
+        var popup_8e5df26cb4119d6fa26b1f74e9db8476 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_edc467af36aadd7fc17a0e3fa265d233 = $(`<div id="html_edc467af36aadd7fc17a0e3fa265d233" style="width: 100.0%; height: 100.0%;"><strong>Hotan</strong><br>Country: China<br>Total detected events: 275<br>Distinct event-type count: 7<br>Weather-event exposure score: 0.6678<br>Configured location ID: cn_hotan</div>`)[0];
+                popup_8e5df26cb4119d6fa26b1f74e9db8476.setContent(html_edc467af36aadd7fc17a0e3fa265d233);
+            
+        
+
+        circle_marker_fc4a1e20475c7ad33cd1f6b2f07b92bc.bindPopup(popup_8e5df26cb4119d6fa26b1f74e9db8476)
+        ;
+
+        
+    
+    
+            circle_marker_fc4a1e20475c7ad33cd1f6b2f07b92bc.bindTooltip(
+                `<div>
+                     Hotan · China
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_ba0e01fba7a73fe210092956965b1734 = L.circleMarker(
+                [39.4704, 75.9898],
+                {"bubblingMouseEvents": true, "color": "#9CB9D3", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#9CB9D3", "fillOpacity": 0.78, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.835779902994155, "stroke": true, "weight": 2}
+            ).addTo(map_e9f8d5ba82e7912de9af8a5265827678);
+        
+    
+        var popup_904c3458c61a3d50eb5617692d32b646 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_2fc39d87c9881b5e7d88db0976af4bd7 = $(`<div id="html_2fc39d87c9881b5e7d88db0976af4bd7" style="width: 100.0%; height: 100.0%;"><strong>Kashgar</strong><br>Country: China<br>Total detected events: 279<br>Distinct event-type count: 7<br>Weather-event exposure score: 0.6987<br>Configured location ID: cn_kashgar</div>`)[0];
+                popup_904c3458c61a3d50eb5617692d32b646.setContent(html_2fc39d87c9881b5e7d88db0976af4bd7);
+            
+        
+
+        circle_marker_ba0e01fba7a73fe210092956965b1734.bindPopup(popup_904c3458c61a3d50eb5617692d32b646)
+        ;
+
+        
+    
+    
+            circle_marker_ba0e01fba7a73fe210092956965b1734.bindTooltip(
+                `<div>
+                     Kashgar · China
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_d14529d4169e66d6d3cf0d13ca78d183 = L.circleMarker(
+                [43.8256, 87.6168],
+                {"bubblingMouseEvents": true, "color": "#9CB9D3", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#9CB9D3", "fillOpacity": 0.78, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 11.137089310504395, "stroke": true, "weight": 2}
+            ).addTo(map_e9f8d5ba82e7912de9af8a5265827678);
+        
+    
+        var popup_5723b02d30b92da3ca848ac5471e8bdd = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_0792682a2cf060a8e73369ac0ecec2dd = $(`<div id="html_0792682a2cf060a8e73369ac0ecec2dd" style="width: 100.0%; height: 100.0%;"><strong>Urumqi</strong><br>Country: China<br>Total detected events: 286<br>Distinct event-type count: 7<br>Weather-event exposure score: 0.7263<br>Configured location ID: cn_urumqi</div>`)[0];
+                popup_5723b02d30b92da3ca848ac5471e8bdd.setContent(html_0792682a2cf060a8e73369ac0ecec2dd);
+            
+        
+
+        circle_marker_d14529d4169e66d6d3cf0d13ca78d183.bindPopup(popup_5723b02d30b92da3ca848ac5471e8bdd)
+        ;
+
+        
+    
+    
+            circle_marker_d14529d4169e66d6d3cf0d13ca78d183.bindTooltip(
+                `<div>
+                     Urumqi · China
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_4eddc0dd5ed6404f33a1c0ffe589a435 = L.circleMarker(
+                [31.634, 74.8723],
+                {"bubblingMouseEvents": true, "color": "#DFAE91", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#DFAE91", "fillOpacity": 0.78, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 15.635773904399539, "stroke": true, "weight": 2}
+            ).addTo(map_e9f8d5ba82e7912de9af8a5265827678);
+        
+    
+        var popup_2f1036cf0a8ee690781a8cad017648f6 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_d619b043c8ed7ce80eb4f2d203ce1ae9 = $(`<div id="html_d619b043c8ed7ce80eb4f2d203ce1ae9" style="width: 100.0%; height: 100.0%;"><strong>Amritsar</strong><br>Country: India<br>Total detected events: 335<br>Distinct event-type count: 7<br>Weather-event exposure score: 0.8217<br>Configured location ID: in_amritsar</div>`)[0];
+                popup_2f1036cf0a8ee690781a8cad017648f6.setContent(html_d619b043c8ed7ce80eb4f2d203ce1ae9);
+            
+        
+
+        circle_marker_4eddc0dd5ed6404f33a1c0ffe589a435.bindPopup(popup_2f1036cf0a8ee690781a8cad017648f6)
+        ;
+
+        
+    
+    
+            circle_marker_4eddc0dd5ed6404f33a1c0ffe589a435.bindTooltip(
+                `<div>
+                     Amritsar · India
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_2fb3453f5910ad93ac63f913a856cbc2 = L.circleMarker(
+                [26.9124, 75.7873],
+                {"bubblingMouseEvents": true, "color": "#DFAE91", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#DFAE91", "fillOpacity": 0.78, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 11.221502390868423, "stroke": true, "weight": 2}
+            ).addTo(map_e9f8d5ba82e7912de9af8a5265827678);
+        
+    
+        var popup_2632382c67668cbb84057b0ab952646c = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_5db7202daabb6ad6fe40b7ba4b6670dc = $(`<div id="html_5db7202daabb6ad6fe40b7ba4b6670dc" style="width: 100.0%; height: 100.0%;"><strong>Jaipur</strong><br>Country: India<br>Total detected events: 292<br>Distinct event-type count: 7<br>Weather-event exposure score: 0.7281<br>Configured location ID: in_jaipur</div>`)[0];
+                popup_2632382c67668cbb84057b0ab952646c.setContent(html_5db7202daabb6ad6fe40b7ba4b6670dc);
+            
+        
+
+        circle_marker_2fb3453f5910ad93ac63f913a856cbc2.bindPopup(popup_2632382c67668cbb84057b0ab952646c)
+        ;
+
+        
+    
+    
+            circle_marker_2fb3453f5910ad93ac63f913a856cbc2.bindTooltip(
+                `<div>
+                     Jaipur · India
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_0d8bebec4dff24e00d3c0b042a9782c7 = L.circleMarker(
+                [28.6139, 77.209],
+                {"bubblingMouseEvents": true, "color": "#DFAE91", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#DFAE91", "fillOpacity": 0.78, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 14.259713438565822, "stroke": true, "weight": 2}
+            ).addTo(map_e9f8d5ba82e7912de9af8a5265827678);
+        
+    
+        var popup_d3d149563cd3ba10a17667570f4b6e60 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_a639d526977bfa32de4e27425b7ce444 = $(`<div id="html_a639d526977bfa32de4e27425b7ce444" style="width: 100.0%; height: 100.0%;"><strong>New Delhi</strong><br>Country: India<br>Total detected events: 312<br>Distinct event-type count: 7<br>Weather-event exposure score: 0.7925<br>Configured location ID: in_new_delhi</div>`)[0];
+                popup_d3d149563cd3ba10a17667570f4b6e60.setContent(html_a639d526977bfa32de4e27425b7ce444);
+            
+        
+
+        circle_marker_0d8bebec4dff24e00d3c0b042a9782c7.bindPopup(popup_d3d149563cd3ba10a17667570f4b6e60)
+        ;
+
+        
+    
+    
+            circle_marker_0d8bebec4dff24e00d3c0b042a9782c7.bindTooltip(
+                `<div>
+                     New Delhi · India
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_13b3fc3294246d50b5f8a657e03adc90 = L.circleMarker(
+                [34.0837, 74.7973],
+                {"bubblingMouseEvents": true, "color": "#DFAE91", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#DFAE91", "fillOpacity": 0.78, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 17.03261950057415, "stroke": true, "weight": 2}
+            ).addTo(map_e9f8d5ba82e7912de9af8a5265827678);
+        
+    
+        var popup_2a9fa6d1cb0cb83c4e11777460df1b0b = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_bb19f3d0858e6568006988c308f7193b = $(`<div id="html_bb19f3d0858e6568006988c308f7193b" style="width: 100.0%; height: 100.0%;"><strong>Srinagar</strong><br>Country: India<br>Total detected events: 338<br>Distinct event-type count: 7<br>Weather-event exposure score: 0.8514<br>Configured location ID: in_srinagar</div>`)[0];
+                popup_2a9fa6d1cb0cb83c4e11777460df1b0b.setContent(html_bb19f3d0858e6568006988c308f7193b);
+            
+        
+
+        circle_marker_13b3fc3294246d50b5f8a657e03adc90.bindPopup(popup_2a9fa6d1cb0cb83c4e11777460df1b0b)
+        ;
+
+        
+    
+    
+            circle_marker_13b3fc3294246d50b5f8a657e03adc90.bindTooltip(
+                `<div>
+                     Srinagar · India
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_8f2fdad540cc13dec53f128ee6df8fd3 = L.circleMarker(
+                [30.2839, 57.0834],
+                {"bubblingMouseEvents": true, "color": "#B9AED5", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#B9AED5", "fillOpacity": 0.78, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.0, "stroke": true, "weight": 2}
+            ).addTo(map_e9f8d5ba82e7912de9af8a5265827678);
+        
+    
+        var popup_b1f1263532188467555891b3fa48bf42 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_4122ce45535b952cea8d823e6ca87981 = $(`<div id="html_4122ce45535b952cea8d823e6ca87981" style="width: 100.0%; height: 100.0%;"><strong>Kerman</strong><br>Country: Iran<br>Total detected events: 277<br>Distinct event-type count: 6<br>Weather-event exposure score: 0.6385<br>Configured location ID: ir_kerman</div>`)[0];
+                popup_b1f1263532188467555891b3fa48bf42.setContent(html_4122ce45535b952cea8d823e6ca87981);
+            
+        
+
+        circle_marker_8f2fdad540cc13dec53f128ee6df8fd3.bindPopup(popup_b1f1263532188467555891b3fa48bf42)
+        ;
+
+        
+    
+    
+            circle_marker_8f2fdad540cc13dec53f128ee6df8fd3.bindTooltip(
+                `<div>
+                     Kerman · Iran
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b49508148a267ffac00f989747532329 = L.circleMarker(
+                [36.2605, 59.6168],
+                {"bubblingMouseEvents": true, "color": "#B9AED5", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#B9AED5", "fillOpacity": 0.78, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10.991027816340173, "stroke": true, "weight": 2}
+            ).addTo(map_e9f8d5ba82e7912de9af8a5265827678);
+        
+    
+        var popup_e7bfa347d82dd5086c60921652d73d24 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_8a88c8d5dd1e15ee227e1cfcdcc847d5 = $(`<div id="html_8a88c8d5dd1e15ee227e1cfcdcc847d5" style="width: 100.0%; height: 100.0%;"><strong>Mashhad</strong><br>Country: Iran<br>Total detected events: 288<br>Distinct event-type count: 7<br>Weather-event exposure score: 0.7232<br>Configured location ID: ir_mashhad</div>`)[0];
+                popup_e7bfa347d82dd5086c60921652d73d24.setContent(html_8a88c8d5dd1e15ee227e1cfcdcc847d5);
+            
+        
+
+        circle_marker_b49508148a267ffac00f989747532329.bindPopup(popup_e7bfa347d82dd5086c60921652d73d24)
+        ;
+
+        
+    
+    
+            circle_marker_b49508148a267ffac00f989747532329.bindTooltip(
+                `<div>
+                     Mashhad · Iran
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_17f16d1c0b87b98ffb154a4d1296bd53 = L.circleMarker(
+                [29.4963, 60.8629],
+                {"bubblingMouseEvents": true, "color": "#B9AED5", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#B9AED5", "fillOpacity": 0.78, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7.086769671105626, "stroke": true, "weight": 2}
+            ).addTo(map_e9f8d5ba82e7912de9af8a5265827678);
+        
+    
+        var popup_73cb1613ae05cb0f70a6573d7043402a = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_c71ccbfb9d01bf30192e57ee486a8aa9 = $(`<div id="html_c71ccbfb9d01bf30192e57ee486a8aa9" style="width: 100.0%; height: 100.0%;"><strong>Zahedan</strong><br>Country: Iran<br>Total detected events: 273<br>Distinct event-type count: 7<br>Weather-event exposure score: 0.6404<br>Configured location ID: ir_zahedan</div>`)[0];
+                popup_73cb1613ae05cb0f70a6573d7043402a.setContent(html_c71ccbfb9d01bf30192e57ee486a8aa9);
+            
+        
+
+        circle_marker_17f16d1c0b87b98ffb154a4d1296bd53.bindPopup(popup_73cb1613ae05cb0f70a6573d7043402a)
+        ;
+
+        
+    
+    
+            circle_marker_17f16d1c0b87b98ffb154a4d1296bd53.bindTooltip(
+                `<div>
+                     Zahedan · Iran
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_d72bd2e478d81aa5eb08b34c1a4dc287 = L.circleMarker(
+                [35.9208, 74.3141],
+                {"bubblingMouseEvents": true, "color": "#8EAD98", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#8EAD98", "fillOpacity": 0.78, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 17.33063396575659, "stroke": true, "weight": 2}
+            ).addTo(map_e9f8d5ba82e7912de9af8a5265827678);
+        
+    
+        var popup_7c313be0c19016e56134263730157b38 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_35b68af8e2f2f63007d2fc3203b632c1 = $(`<div id="html_35b68af8e2f2f63007d2fc3203b632c1" style="width: 100.0%; height: 100.0%;"><strong>Gilgit</strong><br>Country: Pakistan<br>Total detected events: 346<br>Distinct event-type count: 7<br>Weather-event exposure score: 0.8577<br>Configured location ID: pk_gilgit</div>`)[0];
+                popup_7c313be0c19016e56134263730157b38.setContent(html_35b68af8e2f2f63007d2fc3203b632c1);
+            
+        
+
+        circle_marker_d72bd2e478d81aa5eb08b34c1a4dc287.bindPopup(popup_7c313be0c19016e56134263730157b38)
+        ;
+
+        
+    
+    
+            circle_marker_d72bd2e478d81aa5eb08b34c1a4dc287.bindTooltip(
+                `<div>
+                     Gilgit · Pakistan
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_c89a49fa50b34a90525fd42d917d1738 = L.circleMarker(
+                [33.6844, 73.0479],
+                {"bubblingMouseEvents": true, "color": "#8EAD98", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#8EAD98", "fillOpacity": 0.78, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 18.0, "stroke": true, "weight": 2}
+            ).addTo(map_e9f8d5ba82e7912de9af8a5265827678);
+        
+    
+        var popup_a1bacd05f16389cfd6e06f26e67ea1eb = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_b8a5ee1cdd96ab402d15be4be8eb7de3 = $(`<div id="html_b8a5ee1cdd96ab402d15be4be8eb7de3" style="width: 100.0%; height: 100.0%;"><strong>Islamabad</strong><br>Country: Pakistan<br>Total detected events: 358<br>Distinct event-type count: 7<br>Weather-event exposure score: 0.8719<br>Configured location ID: pk_islamabad</div>`)[0];
+                popup_a1bacd05f16389cfd6e06f26e67ea1eb.setContent(html_b8a5ee1cdd96ab402d15be4be8eb7de3);
+            
+        
+
+        circle_marker_c89a49fa50b34a90525fd42d917d1738.bindPopup(popup_a1bacd05f16389cfd6e06f26e67ea1eb)
+        ;
+
+        
+    
+    
+            circle_marker_c89a49fa50b34a90525fd42d917d1738.bindTooltip(
+                `<div>
+                     Islamabad · Pakistan
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_d7230147cc8898685618e4aae08e5474 = L.circleMarker(
+                [24.8607, 67.0011],
+                {"bubblingMouseEvents": true, "color": "#8EAD98", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#8EAD98", "fillOpacity": 0.78, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9.41173496495107, "stroke": true, "weight": 2}
+            ).addTo(map_e9f8d5ba82e7912de9af8a5265827678);
+        
+    
+        var popup_b7327a8f0e8c08daff4d452ea3e4173a = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_ef48b108db43bab7f44abe83e4b0eb7e = $(`<div id="html_ef48b108db43bab7f44abe83e4b0eb7e" style="width: 100.0%; height: 100.0%;"><strong>Karachi</strong><br>Country: Pakistan<br>Total detected events: 285<br>Distinct event-type count: 7<br>Weather-event exposure score: 0.6897<br>Configured location ID: pk_karachi</div>`)[0];
+                popup_b7327a8f0e8c08daff4d452ea3e4173a.setContent(html_ef48b108db43bab7f44abe83e4b0eb7e);
+            
+        
+
+        circle_marker_d7230147cc8898685618e4aae08e5474.bindPopup(popup_b7327a8f0e8c08daff4d452ea3e4173a)
+        ;
+
+        
+    
+    
+            circle_marker_d7230147cc8898685618e4aae08e5474.bindTooltip(
+                `<div>
+                     Karachi · Pakistan
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_c0fb738a83dfc1504a393e26536120ce = L.circleMarker(
+                [31.5204, 74.3587],
+                {"bubblingMouseEvents": true, "color": "#8EAD98", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#8EAD98", "fillOpacity": 0.78, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 16.98105729514799, "stroke": true, "weight": 2}
+            ).addTo(map_e9f8d5ba82e7912de9af8a5265827678);
+        
+    
+        var popup_c569676ade3f3e9c5da81a94921558b4 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_86563218d90cd915926ae5bedadea316 = $(`<div id="html_86563218d90cd915926ae5bedadea316" style="width: 100.0%; height: 100.0%;"><strong>Lahore</strong><br>Country: Pakistan<br>Total detected events: 339<br>Distinct event-type count: 7<br>Weather-event exposure score: 0.8503<br>Configured location ID: pk_lahore</div>`)[0];
+                popup_c569676ade3f3e9c5da81a94921558b4.setContent(html_86563218d90cd915926ae5bedadea316);
+            
+        
+
+        circle_marker_c0fb738a83dfc1504a393e26536120ce.bindPopup(popup_c569676ade3f3e9c5da81a94921558b4)
+        ;
+
+        
+    
+    
+            circle_marker_c0fb738a83dfc1504a393e26536120ce.bindTooltip(
+                `<div>
+                     Lahore · Pakistan
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_11d1fd53ebd0439e5760fe6273e0813e = L.circleMarker(
+                [30.1575, 71.5249],
+                {"bubblingMouseEvents": true, "color": "#8EAD98", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#8EAD98", "fillOpacity": 0.78, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 13.229082043635492, "stroke": true, "weight": 2}
+            ).addTo(map_e9f8d5ba82e7912de9af8a5265827678);
+        
+    
+        var popup_527f28fae8573a5a1acdf93d52129a13 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_9a95f8bffa9f41022ae5c249df3a7c3e = $(`<div id="html_9a95f8bffa9f41022ae5c249df3a7c3e" style="width: 100.0%; height: 100.0%;"><strong>Multan</strong><br>Country: Pakistan<br>Total detected events: 303<br>Distinct event-type count: 7<br>Weather-event exposure score: 0.7707<br>Configured location ID: pk_multan</div>`)[0];
+                popup_527f28fae8573a5a1acdf93d52129a13.setContent(html_9a95f8bffa9f41022ae5c249df3a7c3e);
+            
+        
+
+        circle_marker_11d1fd53ebd0439e5760fe6273e0813e.bindPopup(popup_527f28fae8573a5a1acdf93d52129a13)
+        ;
+
+        
+    
+    
+            circle_marker_11d1fd53ebd0439e5760fe6273e0813e.bindTooltip(
+                `<div>
+                     Multan · Pakistan
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_236e30fc30db221663af398105631373 = L.circleMarker(
+                [34.0151, 71.5249],
+                {"bubblingMouseEvents": true, "color": "#8EAD98", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#8EAD98", "fillOpacity": 0.78, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 15.250329922703822, "stroke": true, "weight": 2}
+            ).addTo(map_e9f8d5ba82e7912de9af8a5265827678);
+        
+    
+        var popup_d2c6a09df0f892dcf1f54e4a68a50ea7 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_c65cf31eee91962224e39872db6aff16 = $(`<div id="html_c65cf31eee91962224e39872db6aff16" style="width: 100.0%; height: 100.0%;"><strong>Peshawar</strong><br>Country: Pakistan<br>Total detected events: 332<br>Distinct event-type count: 7<br>Weather-event exposure score: 0.8136<br>Configured location ID: pk_peshawar</div>`)[0];
+                popup_d2c6a09df0f892dcf1f54e4a68a50ea7.setContent(html_c65cf31eee91962224e39872db6aff16);
+            
+        
+
+        circle_marker_236e30fc30db221663af398105631373.bindPopup(popup_d2c6a09df0f892dcf1f54e4a68a50ea7)
+        ;
+
+        
+    
+    
+            circle_marker_236e30fc30db221663af398105631373.bindTooltip(
+                `<div>
+                     Peshawar · Pakistan
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_6f2833f41e391c7a33504572060d7942 = L.circleMarker(
+                [30.1798, 66.975],
+                {"bubblingMouseEvents": true, "color": "#8EAD98", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#8EAD98", "fillOpacity": 0.78, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12.548027319313757, "stroke": true, "weight": 2}
+            ).addTo(map_e9f8d5ba82e7912de9af8a5265827678);
+        
+    
+        var popup_c7667d927c959d085f394f7d4b7e96e0 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_7ba0f50ffd4ef3843a4c416aac1dedc1 = $(`<div id="html_7ba0f50ffd4ef3843a4c416aac1dedc1" style="width: 100.0%; height: 100.0%;"><strong>Quetta</strong><br>Country: Pakistan<br>Total detected events: 298<br>Distinct event-type count: 7<br>Weather-event exposure score: 0.7562<br>Configured location ID: pk_quetta</div>`)[0];
+                popup_c7667d927c959d085f394f7d4b7e96e0.setContent(html_7ba0f50ffd4ef3843a4c416aac1dedc1);
+            
+        
+
+        circle_marker_6f2833f41e391c7a33504572060d7942.bindPopup(popup_c7667d927c959d085f394f7d4b7e96e0)
+        ;
+
+        
+    
+    
+            circle_marker_6f2833f41e391c7a33504572060d7942.bindTooltip(
+                `<div>
+                     Quetta · Pakistan
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_215907f7b81e7f52c0905ff728f6a4c8 = L.circleMarker(
+                [27.7052, 68.8574],
+                {"bubblingMouseEvents": true, "color": "#8EAD98", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#8EAD98", "fillOpacity": 0.78, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10.992913088933447, "stroke": true, "weight": 2}
+            ).addTo(map_e9f8d5ba82e7912de9af8a5265827678);
+        
+    
+        var popup_1bbb419eb656da445dc099ea8fce3c79 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_3b282c6c270e669414c67f2a6314251b = $(`<div id="html_3b282c6c270e669414c67f2a6314251b" style="width: 100.0%; height: 100.0%;"><strong>Sukkur</strong><br>Country: Pakistan<br>Total detected events: 292<br>Distinct event-type count: 7<br>Weather-event exposure score: 0.7232<br>Configured location ID: pk_sukkur</div>`)[0];
+                popup_1bbb419eb656da445dc099ea8fce3c79.setContent(html_3b282c6c270e669414c67f2a6314251b);
+            
+        
+
+        circle_marker_215907f7b81e7f52c0905ff728f6a4c8.bindPopup(popup_1bbb419eb656da445dc099ea8fce3c79)
+        ;
+
+        
+    
+    
+            circle_marker_215907f7b81e7f52c0905ff728f6a4c8.bindTooltip(
+                `<div>
+                     Sukkur · Pakistan
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+</script>
+</html>

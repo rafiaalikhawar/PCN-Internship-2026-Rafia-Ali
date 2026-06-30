@@ -1,0 +1,84 @@
+{
+  "caveats": {
+    "climate": "Observed patterns within the five-year dataset; not proof of long-term climate change or attribution.",
+    "cooccurrence": "Co-occurrence is an association and does not imply causation.",
+    "cross_border": "Candidate temporal/geographic associations; not causation and not forecasts.",
+    "exposure": "This score does not include population, infrastructure, poverty, health, damage, or preparedness.",
+    "rainfall": "Open-Meteo gridded historical data; not an official station-record comparison."
+  },
+  "chart_titles": {
+    "climate_indicator_trends": "Selected five-year climate-indicator patterns",
+    "cooccurring_event_patterns": "Most frequent co-occurring event-type pairs",
+    "cross_border_lag_patterns": "Frequent candidate cross-border lag patterns",
+    "multi_event_locations": "Configured locations with multiple detected event types",
+    "top_daily_rainfall": "Highest daily rainfall values in the analysed dataset",
+    "weather_exposure_ranking": "Weather-event exposure score by configured location"
+  },
+  "determinism_note": "Timestamp and HTML layout metadata may change; node and row selection rules are deterministic.",
+  "figure_row_counts_used": {
+    "climate_indicator_trends": 30,
+    "cooccurring_event_patterns": 12,
+    "cross_border_lag_patterns": 12,
+    "multi_event_locations": 15,
+    "top_daily_rainfall": 12,
+    "weather_exposure_ranking": 15
+  },
+  "generation_timestamp": "2026-06-30T08:01:38Z",
+  "graph": {
+    "caveat": "Representative view of the verified historical graph. Not predictive.",
+    "exported_edge_count": 413,
+    "exported_node_count": 214,
+    "is_full_graph": false,
+    "maximum_edges": 1200,
+    "maximum_nodes": 250,
+    "selection_methodology": "Include every Country and Location node; select the highest-severity node for each configured location and weather-event node type (severity percentile descending, node ID ascending); select the strongest Climate Indicator per location (maximum severity percentile descending, node ID ascending); then include both real endpoints of the first relationship of every relationship type. Retain deterministic in-selection edges, prioritising one edge per relationship type before applying configured node and edge limits.",
+    "source_full_edge_count": 45187,
+    "source_full_node_count": 12503
+  },
+  "input_paths": {
+    "climate_indicator_annual_values": "data/analysis/climate_indicator_annual_values.csv",
+    "climate_indicator_trends": "data/analysis/climate_indicator_trends.csv",
+    "cooccurring_patterns": "data/analysis/cooccurring_patterns.csv",
+    "cross_border_lag_summary": "data/analysis/cross_border_lag_summary.csv",
+    "highest_rainfall": "data/analysis/highest_rainfall.csv",
+    "locations": "config/locations.yaml",
+    "multi_event_locations": "data/analysis/multi_event_locations.csv",
+    "nodes": "data/graph/nodes.csv",
+    "relationships": "data/graph/relationships.csv",
+    "weather_exposure_ranking": "data/analysis/weather_exposure_ranking.csv"
+  },
+  "map": {
+    "caveat": "Historical analysis of configured locations using Open-Meteo gridded data. Not a forecast.",
+    "country_count": 5,
+    "location_count": 22,
+    "marker_metric": "weather-event exposure score"
+  },
+  "output_file_sizes_bytes": {
+    "outputs/figures/climate_indicator_trends.png": 160825,
+    "outputs/figures/cooccurring_event_patterns.png": 80761,
+    "outputs/figures/cross_border_lag_patterns.png": 155897,
+    "outputs/figures/multi_event_locations.png": 97251,
+    "outputs/figures/top_daily_rainfall.png": 85032,
+    "outputs/figures/weather_exposure_ranking.png": 69766,
+    "outputs/graph/weather_knowledge_graph.html": 959130,
+    "outputs/maps/weather_locations.html": 36162
+  },
+  "output_paths": [
+    "outputs/maps/weather_locations.html",
+    "outputs/graph/weather_knowledge_graph.html",
+    "outputs/figures/top_daily_rainfall.png",
+    "outputs/figures/multi_event_locations.png",
+    "outputs/figures/cooccurring_event_patterns.png",
+    "outputs/figures/climate_indicator_trends.png",
+    "outputs/figures/weather_exposure_ranking.png",
+    "outputs/figures/cross_border_lag_patterns.png"
+  ],
+  "software_libraries": {
+    "folium": "0.20.0",
+    "matplotlib": "3.11.0",
+    "networkx": "3.6.1",
+    "numpy": "2.4.6",
+    "pandas": "2.3.3",
+    "pyvis": "0.3.2"
+  }
+}

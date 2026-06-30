@@ -15,6 +15,8 @@ dist/
 .pytest_cache/
 .coverage
 htmlcov/
+.streamlit/*
+!.streamlit/config.toml
 
 # Environment and secrets
 .env
@@ -48,8 +50,17 @@ outputs/validation/*
 
 # Keep reproducible directory placeholders
 !data/cache/.gitkeep
+!data/cache/open_meteo/
+!data/cache/open_meteo/*.json
 !data/interim/.gitkeep
 !data/processed/.gitkeep
+!data/processed/collection_summary.json
+!data/processed/daily_weather.csv
+!data/processed/data_coverage.json
+!data/processed/event_detection_summary.json
+!data/processed/event_thresholds.csv
+!data/processed/weather_events.csv
+!data/processed/weather_events.json
 !outputs/figures/.gitkeep
 !outputs/graph/.gitkeep
 !outputs/maps/.gitkeep
@@ -57,3 +68,11 @@ outputs/validation/*
 !outputs/validation/.gitkeep
 !outputs/validation/validation_report.json
 !outputs/validation/validation_report.md
+!outputs/figures/*.png
+!outputs/graph/weather_knowledge_graph.html
+!outputs/maps/weather_locations.html
+!outputs/visualization_manifest.json
+
+# Internal working notes and interrupted report-asset drafts
+reports/project_evidence_pack.md
+reports/report_assets/

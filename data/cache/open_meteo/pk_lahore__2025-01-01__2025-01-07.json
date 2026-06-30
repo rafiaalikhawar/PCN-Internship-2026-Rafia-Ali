@@ -1,0 +1,255 @@
+{
+  "cache_file": "data/cache/open_meteo/pk_lahore__2025-01-01__2025-01-07.json",
+  "daily": {
+    "precipitation_hours": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      8.0,
+      0.0,
+      0.0
+    ],
+    "precipitation_sum": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      36.6,
+      0.0,
+      0.0
+    ],
+    "rain_sum": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      36.6,
+      0.0,
+      0.0
+    ],
+    "temperature_2m_max": [
+      16.3,
+      17.2,
+      17.4,
+      18.8,
+      15.9,
+      17.4,
+      17.5
+    ],
+    "temperature_2m_mean": [
+      10.3,
+      11.4,
+      11.5,
+      11.6,
+      11.8,
+      11.8,
+      11.9
+    ],
+    "temperature_2m_min": [
+      6.7,
+      6.9,
+      7.8,
+      7.2,
+      8.4,
+      8.4,
+      7.8
+    ],
+    "time": [
+      "2025-01-01",
+      "2025-01-02",
+      "2025-01-03",
+      "2025-01-04",
+      "2025-01-05",
+      "2025-01-06",
+      "2025-01-07"
+    ],
+    "weather_code": [
+      3,
+      3,
+      3,
+      3,
+      65,
+      3,
+      0
+    ],
+    "wind_gusts_10m_max": [
+      18.7,
+      13.0,
+      10.4,
+      16.2,
+      20.2,
+      18.4,
+      21.2
+    ],
+    "wind_speed_10m_max": [
+      5.4,
+      5.4,
+      5.0,
+      8.7,
+      8.1,
+      8.1,
+      8.8
+    ]
+  },
+  "daily_units": {
+    "precipitation_hours": "h",
+    "precipitation_sum": "mm",
+    "rain_sum": "mm",
+    "temperature_2m_max": "\u00b0C",
+    "temperature_2m_mean": "\u00b0C",
+    "temperature_2m_min": "\u00b0C",
+    "time": "iso8601",
+    "weather_code": "wmo code",
+    "wind_gusts_10m_max": "km/h",
+    "wind_speed_10m_max": "km/h"
+  },
+  "location": {
+    "admin_region": "Punjab",
+    "aliases": [
+      "Lahore District"
+    ],
+    "corridor": "eastern_monsoon",
+    "country": "Pakistan",
+    "country_code": "PK",
+    "latitude": 31.5204,
+    "location_id": "pk_lahore",
+    "location_kind": "city",
+    "longitude": 74.3587,
+    "name": "Lahore"
+  },
+  "raw_response": {
+    "daily": {
+      "precipitation_hours": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        8.0,
+        0.0,
+        0.0
+      ],
+      "precipitation_sum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        36.6,
+        0.0,
+        0.0
+      ],
+      "rain_sum": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        36.6,
+        0.0,
+        0.0
+      ],
+      "temperature_2m_max": [
+        16.3,
+        17.2,
+        17.4,
+        18.8,
+        15.9,
+        17.4,
+        17.5
+      ],
+      "temperature_2m_mean": [
+        10.3,
+        11.4,
+        11.5,
+        11.6,
+        11.8,
+        11.8,
+        11.9
+      ],
+      "temperature_2m_min": [
+        6.7,
+        6.9,
+        7.8,
+        7.2,
+        8.4,
+        8.4,
+        7.8
+      ],
+      "time": [
+        "2025-01-01",
+        "2025-01-02",
+        "2025-01-03",
+        "2025-01-04",
+        "2025-01-05",
+        "2025-01-06",
+        "2025-01-07"
+      ],
+      "weather_code": [
+        3,
+        3,
+        3,
+        3,
+        65,
+        3,
+        0
+      ],
+      "wind_gusts_10m_max": [
+        18.7,
+        13.0,
+        10.4,
+        16.2,
+        20.2,
+        18.4,
+        21.2
+      ],
+      "wind_speed_10m_max": [
+        5.4,
+        5.4,
+        5.0,
+        8.7,
+        8.1,
+        8.1,
+        8.8
+      ]
+    },
+    "daily_units": {
+      "precipitation_hours": "h",
+      "precipitation_sum": "mm",
+      "rain_sum": "mm",
+      "temperature_2m_max": "\u00b0C",
+      "temperature_2m_mean": "\u00b0C",
+      "temperature_2m_min": "\u00b0C",
+      "time": "iso8601",
+      "weather_code": "wmo code",
+      "wind_gusts_10m_max": "km/h",
+      "wind_speed_10m_max": "km/h"
+    },
+    "elevation": 220.0,
+    "generationtime_ms": 36.15367412567139,
+    "latitude": 31.528997,
+    "longitude": 74.38995,
+    "timezone": "Asia/Karachi",
+    "timezone_abbreviation": "GMT+5",
+    "utc_offset_seconds": 18000
+  },
+  "request_params": {
+    "daily": "precipitation_sum,temperature_2m_max,temperature_2m_min,temperature_2m_mean,wind_speed_10m_max,wind_gusts_10m_max,rain_sum,precipitation_hours,weather_code",
+    "end_date": "2025-01-07",
+    "latitude": 31.5204,
+    "longitude": 74.3587,
+    "start_date": "2025-01-01",
+    "timezone": "auto"
+  },
+  "requested_date_range": {
+    "end_date": "2025-01-07",
+    "start_date": "2025-01-01"
+  },
+  "retrieved_at": "2026-06-29T16:10:11Z",
+  "source": {
+    "base_url": "https://archive-api.open-meteo.com/v1/archive",
+    "name": "Open-Meteo Historical Weather API",
+    "provider": "Open-Meteo",
+    "requires_api_key": false
+  },
+  "status": "success",
+  "timezone": "Asia/Karachi"
+}

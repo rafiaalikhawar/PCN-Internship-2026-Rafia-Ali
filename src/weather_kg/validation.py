@@ -182,11 +182,7 @@ def validate_submission(
     _check_dashboard_and_docs(root_path, collector)
 
     warnings = (
-        "Saved full PyVis HTML export remains a final deliverable.",
-        "Saved Folium HTML export remains a final deliverable.",
-        "Final report figures/screenshots remain final deliverables.",
-        "Technical report completion remains a later finalization deliverable.",
-        "Demo video link remains a later finalization deliverable.",
+        "Demo video link should be added after the final recording is uploaded.",
     )
     report = SubmissionValidationReport(
         validation_timestamp=datetime.now(UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
@@ -458,7 +454,19 @@ def _check_dashboard_and_docs(root: Path, checks: _CheckCollector) -> None:
         "technical_report_source_exists": root / "reports/technical_report.md",
         "llm_disclosure_exists": root / "reports/llm_usage.md",
         "demo_instructions_exist": root / "demo_video/README.md",
+        "saved_folium_map_exists": root / "outputs/maps/weather_locations.html",
+        "saved_pyvis_graph_exists": root / "outputs/graph/weather_knowledge_graph.html",
+        "visualization_manifest_exists": root / "outputs/visualization_manifest.json",
     }
+    for filename in (
+        "top_daily_rainfall.png",
+        "multi_event_locations.png",
+        "cooccurring_event_patterns.png",
+        "climate_indicator_trends.png",
+        "weather_exposure_ranking.png",
+        "cross_border_lag_patterns.png",
+    ):
+        required[f"figure_{filename}"] = root / "outputs/figures" / filename
     for name, path in required.items():
         _check_path(path, checks, name, "deliverables")
     app_path = root / "app.py"

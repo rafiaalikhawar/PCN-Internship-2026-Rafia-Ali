@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections import deque
+from dataclasses import dataclass
 import json
 from pathlib import Path
 from typing import Any
@@ -15,6 +16,9 @@ from weather_kg.config import load_locations
 
 DEFAULT_DATA_DIR = Path("data")
 DEFAULT_CONFIG_DIR = Path("config")
+DEFAULT_OUTPUT_DIR = Path("outputs")
+REPRESENTATIVE_GRAPH_HTML = Path("graph/weather_knowledge_graph.html")
+VISUALIZATION_MANIFEST = Path("visualization_manifest.json")
 
 CLIMATE_TREND_CAVEAT = (
     "These are patterns observed within the five-year dataset and are not proof "
@@ -25,12 +29,28 @@ EXPOSURE_CAVEAT = (
     "This is a weather-event exposure score, not an official vulnerability index "
     "or complete social vulnerability assessment."
 )
+REPRESENTATIVE_GRAPH_CAVEAT = (
+    "This is a representative historical graph view, not the complete graph and not a predictive model."
+)
 
 UNSUPPORTED_CLAIM_TERMS = [
     "confirmed disaster",
     "confirmed impact",
     "proves causation",
 ]
+
+
+@dataclass(frozen=True)
+class RepresentativeGraphArtifact:
+    """Saved representative graph HTML and manifest counts for dashboard embedding."""
+
+    html: str
+    html_path: Path
+    manifest_path: Path
+    representative_node_count: int
+    representative_edge_count: int
+    full_node_count: int
+    full_edge_count: int
 
 
 def load_dashboard_data(
@@ -169,6 +189,40 @@ def locations_for_map(
     else:
         merged["selected_event_count"] = merged["total_events"].fillna(0).astype(int)
     return merged.sort_values("location_id", kind="mergesort").reset_index(drop=True)
+
+
+def load_representative_graph_artifact(output_dir: Path | str = DEFAULT_OUTPUT_DIR) -> RepresentativeGraphArtifact:
+    """Read the saved representative PyVis graph and its generated manifest counts."""
+
+    output_path = Path(output_dir)
+    html_path = output_path / REPRESENTATIVE_GRAPH_HTML
+    manifest_path = output_path / VISUALIZATION_MANIFEST
+    if not html_path.exists():
+        raise FileNotFoundError(f"Saved representative graph HTML is missing: {html_path}")
+    if not manifest_path.exists():
+        raise FileNotFoundError(f"Visualization manifest is missing: {manifest_path}")
+
+    manifest = _read_json(manifest_path)
+    graph = manifest.get("graph", {})
+    required = [
+        "exported_node_count",
+        "exported_edge_count",
+        "source_full_node_count",
+        "source_full_edge_count",
+    ]
+    missing = [key for key in required if key not in graph]
+    if missing:
+        raise KeyError(f"Visualization manifest graph counts are incomplete: {', '.join(missing)}")
+
+    return RepresentativeGraphArtifact(
+        html=html_path.read_text(encoding="utf-8"),
+        html_path=html_path,
+        manifest_path=manifest_path,
+        representative_node_count=int(graph["exported_node_count"]),
+        representative_edge_count=int(graph["exported_edge_count"]),
+        full_node_count=int(graph["source_full_node_count"]),
+        full_edge_count=int(graph["source_full_edge_count"]),
+    )
 
 
 def build_location_map(map_data: pd.DataFrame, size_metric: str = "total_events") -> Any:

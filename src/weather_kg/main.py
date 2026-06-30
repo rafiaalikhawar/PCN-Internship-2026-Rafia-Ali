@@ -16,7 +16,19 @@ from weather_kg.logging_config import configure_logging
 from weather_kg.normalize import NormalizationError, normalize_daily_weather
 from weather_kg.open_meteo import CollectionError, collect_open_meteo
 from weather_kg.pipeline import PipelineError, run_pipeline
+from weather_kg.query_service import (
+    QueryServiceError,
+    build_graph_indexes,
+    load_graph,
+    query_climate_indicator_trends,
+    query_cooccurring_patterns,
+    query_cross_border_patterns,
+    query_highest_rainfall,
+    query_multi_event_locations,
+    query_weather_exposure,
+)
 from weather_kg.validation import validate_submission
+from weather_kg.visualization import VisualizationError, export_visualizations
 
 
 LOGGER = logging.getLogger(__name__)
@@ -135,6 +147,11 @@ def build_parser() -> argparse.ArgumentParser:
         help="Path to graph summary JSON",
     )
     analyze_parser.add_argument(
+        "--graphml",
+        default="data/graph/weather_knowledge_graph.graphml",
+        help="Path to full GraphML knowledge graph",
+    )
+    analyze_parser.add_argument(
         "--rules",
         default="config/analysis_rules.yaml",
         help="Path to analysis rules YAML",
@@ -145,6 +162,66 @@ def build_parser() -> argparse.ArgumentParser:
         help="Directory for analysis outputs",
     )
     analyze_parser.set_defaults(func=_analyze_command)
+
+    query_parser = subparsers.add_parser(
+        "query-graph",
+        help="Run practical graph-backed analytical queries.",
+        description="Run parameterized queries against data/graph/weather_knowledge_graph.graphml.",
+    )
+    query_parser.add_argument("--graphml", default="data/graph/weather_knowledge_graph.graphml", help="Path to full GraphML knowledge graph")
+    query_subparsers = query_parser.add_subparsers(dest="query_name")
+    _add_query_output_args(query_parser)
+
+    rainfall_parser = query_subparsers.add_parser("highest-rainfall", help="Rank Rainfall Event nodes by maximum daily rainfall")
+    _add_query_output_args(rainfall_parser)
+    rainfall_parser.add_argument("--country")
+    rainfall_parser.add_argument("--location")
+    rainfall_parser.add_argument("--year", type=int)
+    rainfall_parser.add_argument("--start-year", type=int)
+    rainfall_parser.add_argument("--end-year", type=int)
+    rainfall_parser.add_argument("--top", type=int, default=20)
+    rainfall_parser.set_defaults(func=_query_graph_command, query_kind="highest-rainfall")
+
+    multi_parser = query_subparsers.add_parser("multi-event-locations", help="Rank configured locations by multiple event types")
+    _add_query_output_args(multi_parser)
+    multi_parser.add_argument("--country")
+    multi_parser.add_argument("--start-year", type=int)
+    multi_parser.add_argument("--end-year", type=int)
+    multi_parser.add_argument("--top", type=int)
+    multi_parser.set_defaults(func=_query_graph_command, query_kind="multi-event-locations")
+
+    co_parser = query_subparsers.add_parser("cooccurring-patterns", help="Find unordered event-type pairs at the same location")
+    _add_query_output_args(co_parser)
+    co_parser.add_argument("--country")
+    co_parser.add_argument("--location")
+    co_parser.add_argument("--start-year", type=int)
+    co_parser.add_argument("--end-year", type=int)
+    co_parser.add_argument("--max-gap-days", type=int, default=2)
+    co_parser.set_defaults(func=_query_graph_command, query_kind="cooccurring-patterns")
+
+    climate_parser = query_subparsers.add_parser("climate-trends", help="Calculate annual Climate Indicator trends")
+    _add_query_output_args(climate_parser)
+    climate_parser.add_argument("--location")
+    climate_parser.add_argument("--country")
+    climate_parser.add_argument("--indicator", dest="indicator_type")
+    climate_parser.add_argument("--minimum-years", type=int, default=4)
+    climate_parser.set_defaults(func=_query_graph_command, query_kind="climate-trends")
+
+    exposure_parser = query_subparsers.add_parser("exposure", help="Calculate weather-event exposure scores")
+    _add_query_output_args(exposure_parser)
+    exposure_parser.add_argument("--country")
+    exposure_parser.set_defaults(func=_query_graph_command, query_kind="exposure")
+
+    cross_parser = query_subparsers.add_parser("cross-border-patterns", help="Inspect UPSTREAM_OF candidate precursor links")
+    _add_query_output_args(cross_parser)
+    cross_parser.add_argument("--source-country")
+    cross_parser.add_argument("--source-location")
+    cross_parser.add_argument("--target-location")
+    cross_parser.add_argument("--event-type-mapping")
+    cross_parser.add_argument("--minimum-lag", type=int)
+    cross_parser.add_argument("--maximum-lag", type=int)
+    cross_parser.add_argument("--top", type=int)
+    cross_parser.set_defaults(func=_query_graph_command, query_kind="cross-border-patterns")
 
     validate_parser = subparsers.add_parser(
         "validate-config",
@@ -171,6 +248,18 @@ def build_parser() -> argparse.ArgumentParser:
         help="Directory for JSON and Markdown validation reports",
     )
     submission_parser.set_defaults(func=_validate_submission_command)
+
+    visualization_parser = subparsers.add_parser(
+        "export-visualizations",
+        help="Export saved map, graph, figures, and visualization metadata.",
+        description="Generate reviewer-ready HTML and PNG artifacts from existing verified local outputs.",
+    )
+    visualization_parser.add_argument("--data-dir", default="data", help="Directory containing graph and analysis outputs")
+    visualization_parser.add_argument("--config-dir", default="config", help="Directory containing the location registry")
+    visualization_parser.add_argument("--output-dir", default="outputs", help="Destination for visualization artifacts")
+    visualization_parser.add_argument("--max-graph-nodes", type=int, default=250, help="Maximum nodes in representative PyVis export")
+    visualization_parser.add_argument("--max-graph-edges", type=int, default=1200, help="Maximum edges in representative PyVis export")
+    visualization_parser.set_defaults(func=_export_visualizations_command)
 
     return parser
 
@@ -315,6 +404,7 @@ def _analyze_command(args: argparse.Namespace) -> int:
         result = run_analysis(
             nodes_csv=Path(args.nodes),
             relationships_csv=Path(args.relationships),
+            graphml_path=Path(args.graphml),
             graph_summary_json=Path(args.graph_summary),
             rules_path=Path(args.rules),
             output_dir=Path(args.output_dir),
@@ -329,6 +419,117 @@ def _analyze_command(args: argparse.Namespace) -> int:
         print(f"{key}: {count}")
     print(f"Analysis summary: {result.summary_json}")
     return 0
+
+
+def _query_graph_command(args: argparse.Namespace) -> int:
+    try:
+        graph = load_graph(Path(args.graphml))
+        indexes = build_graph_indexes(graph)
+        result = _run_graph_query(args, graph, indexes)
+    except QueryServiceError as exc:
+        LOGGER.error("%s", exc)
+        print(f"Graph query failed: {exc}")
+        return 1
+
+    frame = result.frame
+    if args.output:
+        output_path = Path(args.output)
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        _write_query_output(frame, output_path, args.format)
+        print(f"Query output written: {output_path}")
+        print(f"Rows: {len(frame)}")
+        print(f"Graph checksum: {result.provenance.graph_checksum}")
+        return 0
+
+    if args.format == "json":
+        print(json.dumps({"provenance": result.provenance.to_dict(), "rows": frame.to_dict(orient="records")}, indent=2, default=str))
+    elif args.format == "csv":
+        print(frame.to_csv(index=False), end="")
+    else:
+        print(_table_text(frame))
+        print()
+        print(f"Rows: {len(frame)}")
+        print(f"Graph: {result.provenance.graph_source_path}")
+        print(f"Checksum: {result.provenance.graph_checksum}")
+        print(f"Duration: {result.provenance.execution_duration_seconds:.6f}s")
+        print(f"Caveat: {result.provenance.caveat}")
+    return 0
+
+
+def _run_graph_query(args: argparse.Namespace, graph, indexes):
+    if args.query_kind == "highest-rainfall":
+        year = getattr(args, "year", None)
+        return query_highest_rainfall(
+            graph,
+            indexes,
+            top_n=args.top,
+            country=args.country,
+            location=args.location,
+            start_year=year if year is not None else args.start_year,
+            end_year=year if year is not None else args.end_year,
+        )
+    if args.query_kind == "multi-event-locations":
+        return query_multi_event_locations(graph, indexes, top_n=args.top, country=args.country, start_year=args.start_year, end_year=args.end_year)
+    if args.query_kind == "cooccurring-patterns":
+        return query_cooccurring_patterns(graph, indexes, max_gap_days=args.max_gap_days, country=args.country, location=args.location, start_year=args.start_year, end_year=args.end_year)
+    if args.query_kind == "climate-trends":
+        return query_climate_indicator_trends(graph, indexes, location=args.location, country=args.country, indicator_type=args.indicator_type, minimum_years=args.minimum_years)
+    if args.query_kind == "exposure":
+        return query_weather_exposure(graph, indexes, country=args.country)
+    if args.query_kind == "cross-border-patterns":
+        return query_cross_border_patterns(
+            graph,
+            indexes,
+            top_n=args.top,
+            source_country=args.source_country,
+            source_location=args.source_location,
+            target_location=args.target_location,
+            event_type_mapping=args.event_type_mapping,
+            minimum_lag=args.minimum_lag,
+            maximum_lag=args.maximum_lag,
+        )
+    raise QueryServiceError(f"Unsupported graph query: {args.query_kind}")
+
+
+def _write_query_output(frame, output_path: Path, output_format: str) -> None:
+    if output_format == "json":
+        output_path.write_text(json.dumps(frame.to_dict(orient="records"), indent=2, default=str) + "\n", encoding="utf-8")
+    else:
+        frame.to_csv(output_path, index=False)
+
+
+def _table_text(frame, limit: int = 20) -> str:
+    if frame.empty:
+        return "No rows matched the query."
+    display = frame.head(limit).copy()
+    preferred = [
+        column
+        for column in [
+            "rank",
+            "overall_rank",
+            "pakistan_rank",
+            "location_name",
+            "country",
+            "event_type_pair",
+            "event_type",
+            "source_country",
+            "source_location",
+            "target_pakistani_location",
+            "event_type_mapping",
+            "start_date",
+            "end_date",
+            "maximum_daily_precipitation_mm",
+            "total_event_count",
+            "exposure_score",
+            "linear_slope",
+            "direction",
+            "lag_days",
+        ]
+        if column in display.columns
+    ]
+    if preferred:
+        display = display[preferred]
+    return display.to_string(index=False)
 
 
 def _validate_config_command(args: argparse.Namespace) -> int:
@@ -368,10 +569,37 @@ def _validate_submission_command(args: argparse.Namespace) -> int:
     return 0 if report.passed else 1
 
 
+def _export_visualizations_command(args: argparse.Namespace) -> int:
+    try:
+        result = export_visualizations(
+            data_dir=Path(args.data_dir),
+            config_dir=Path(args.config_dir),
+            output_dir=Path(args.output_dir),
+            max_graph_nodes=args.max_graph_nodes,
+            max_graph_edges=args.max_graph_edges,
+        )
+    except VisualizationError as exc:
+        LOGGER.error("%s", exc)
+        print(f"Visualization export failed: {exc}")
+        return 1
+    print("Visualization export complete.")
+    print(f"Map: {result.map_html} ({result.map_location_count} locations, {result.map_country_count} countries)")
+    print(f"Graph: {result.graph_html} ({result.graph_node_count} nodes, {result.graph_edge_count} edges)")
+    for path in result.figure_paths:
+        print(f"Figure: {path}")
+    print(f"Manifest: {result.manifest_json}")
+    return 0
+
+
 def _add_date_location_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--start-date", help="Override configured start date, ISO format YYYY-MM-DD")
     parser.add_argument("--end-date", help="Override configured end date, ISO format YYYY-MM-DD")
     parser.add_argument("--limit-locations", type=int, help="Process only the first N configured locations")
+
+
+def _add_query_output_args(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument("--format", choices=["table", "json", "csv"], default="table", help="Output format")
+    parser.add_argument("--output", help="Optional path for machine-readable query output")
 
 
 if __name__ == "__main__":

@@ -1,0 +1,65 @@
+{
+  "counts_by_country": {
+    "Afghanistan": 1185,
+    "China": 840,
+    "India": 1277,
+    "Iran": 838,
+    "Pakistan": 2553
+  },
+  "counts_by_event_type": {
+    "Drought": 226,
+    "Flood": 306,
+    "Heatwave": 382,
+    "Rainfall": 722,
+    "Storm": 166,
+    "Temperature": 3147,
+    "Wind": 1744
+  },
+  "counts_by_location": {
+    "af_herat": 319,
+    "af_jalalabad": 303,
+    "af_kabul": 269,
+    "af_kandahar": 294,
+    "cn_hotan": 275,
+    "cn_kashgar": 279,
+    "cn_urumqi": 286,
+    "in_amritsar": 335,
+    "in_jaipur": 292,
+    "in_new_delhi": 312,
+    "in_srinagar": 338,
+    "ir_kerman": 277,
+    "ir_mashhad": 288,
+    "ir_zahedan": 273,
+    "pk_gilgit": 346,
+    "pk_islamabad": 358,
+    "pk_karachi": 285,
+    "pk_lahore": 339,
+    "pk_multan": 303,
+    "pk_peshawar": 332,
+    "pk_quetta": 298,
+    "pk_sukkur": 292
+  },
+  "fallback_decisions": [],
+  "generation_timestamp": "2026-06-30T16:30:06Z",
+  "input_date_range": {
+    "end_date": "2025-12-31",
+    "start_date": "2021-01-01"
+  },
+  "input_row_count": 40172,
+  "missing_value_handling": {
+    "missing_counts": {
+      "precipitation_mm": 0,
+      "temperature_max_c": 0,
+      "temperature_min_c": 0,
+      "weather_code": 0,
+      "wind_gusts_max_kmh": 0,
+      "wind_speed_max_kmh": 0
+    },
+    "rule": "Missing weather observations are left missing and excluded from percentile calculations; missing values are not replaced with zero."
+  },
+  "skipped_threshold_group_details": [],
+  "skipped_threshold_groups": 0,
+  "skipped_threshold_reasons": {},
+  "thresholds_calculated": 1848,
+  "total_event_count": 6693
+}

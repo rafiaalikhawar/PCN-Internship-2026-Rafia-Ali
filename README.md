@@ -10,11 +10,11 @@ This repository is intentionally scoped to Task 2 only. Task 1 and Task 3 are no
 
 ## Current Implementation Status
 
-The collection, normalization, event detection, knowledge graph, analytical queries, offline validation, and local research dashboard are implemented.
+The collection, normalization, event detection, knowledge graph, analytical queries, offline validation, saved visualizations, and local research dashboard are implemented.
 
 Implemented:
 
-- Python package skeleton under `src/weather_kg/`
+- Python package under `src/weather_kg/`
 - command-line interface
 - configuration files
 - representative location registry across Pakistan, India, Afghanistan, Iran, and China/Xinjiang
@@ -30,22 +30,48 @@ Implemented:
 - six required analytical query outputs generated from the graph exports
 - local Streamlit dashboard over generated outputs
 - Folium map of the 22 configured locations
-- bounded PyVis knowledge-graph explorer
-- mocked unit tests for collection, cache, and normalization behavior
-- documentation skeletons
+- representative PyVis knowledge-graph artifact and bounded graph explorer
+- automated submission validation report
+- unit and integration-style tests
 
-Not implemented yet:
+Final deliverable still completed outside this repository:
 
-- final report findings and demo-video link
+- recorded demo video link
 
-No final report conclusions or demo-video link are included at this stage.
+The repository includes the final technical report source and demo recording instructions. The recorded video URL should be added after the video is uploaded.
+
+## Verified Generated Outputs
+
+Current generated outputs report:
+
+| Output | Value | Source |
+|---|---:|---|
+| Normalized daily records | 40,172 | `data/processed/data_coverage.json` |
+| Duplicate location-date records | 0 | `data/processed/data_coverage.json` |
+| Configured locations | 22 | `data/processed/data_coverage.json` |
+| Countries represented | 5 | `data/graph/graph_summary.json` |
+| Detected weather events | 6,693 | `data/processed/event_detection_summary.json` |
+| Graph nodes | 12,503 | `data/graph/graph_summary.json` |
+| Graph relationships | 45,187 | `data/graph/graph_summary.json` |
+| Representative PyVis graph | 214 nodes, 413 relationships | `outputs/visualization_manifest.json` |
+| Saved Folium map | 22 locations, 5 countries | `outputs/visualization_manifest.json` |
+| Validation checks | 100 passed, 0 failed | `outputs/validation/validation_report.json` |
+
+These values are generated from local output files. Refresh them by rerunning the pipeline and validation if inputs or code change.
 
 ## Architecture
 
 ```text
-config -> Open-Meteo collection/cache -> daily normalization -> event detection
-       -> NetworkX knowledge graph -> analytical queries -> exports/visualizations
-       -> validation/tests
+Open-Meteo Historical API
+-> raw JSON cache
+-> normalized daily observations
+-> statistical event detection
+-> weather-event entities
+-> NetworkX MultiDiGraph
+-> graph-backed analytical query service
+-> CSV/JSON/GraphML exports
+-> Streamlit, Folium, PyVis, figures
+-> validation report
 ```
 
 The implementation uses Open-Meteo historical weather data, local raw-response caching, pandas/numpy processing, NetworkX graph construction, PyVis graph exploration, Folium mapping, and pytest validation.
@@ -78,8 +104,10 @@ python -m weather_kg normalize --help
 python -m weather_kg detect-events --help
 python -m weather_kg build-graph --help
 python -m weather_kg analyze --help
+python -m weather_kg query-graph --help
 python -m weather_kg validate-config
 python -m weather_kg validate-submission
+python -m weather_kg export-visualizations
 pytest -q
 ```
 
@@ -91,6 +119,7 @@ make install
 make pipeline
 make pipeline-cached
 make validate
+make visualizations
 make validate-config
 make test
 make build-graph
@@ -276,7 +305,7 @@ Entity resolution uses stable IDs: event nodes keep the original `event_id`, loc
 
 ## Analytical Queries
 
-Run the six required analytical queries from the generated graph exports with:
+Run the six required analytical queries from the full GraphML knowledge graph with:
 
 ```bash
 python -m weather_kg analyze
@@ -285,9 +314,7 @@ python -m weather_kg analyze
 The command reads:
 
 ```text
-data/graph/nodes.csv
-data/graph/relationships.csv
-data/graph/graph_summary.json
+data/graph/weather_knowledge_graph.graphml
 config/analysis_rules.yaml
 ```
 
@@ -308,6 +335,19 @@ data/analysis/analysis_summary.json
 
 The analysis uses graph-derived event nodes, `OCCURRED_IN` location links, Climate Indicator nodes, and existing `UPSTREAM_OF` relationships. Co-occurrence and cross-border outputs are candidate temporal/geographic associations only and do not prove causation or provide forecasts. The exposure ranking is a transparent weather-event exposure score, not an official vulnerability index.
 
+Run practical graph-backed queries without regenerating exports:
+
+```bash
+python -m weather_kg query-graph highest-rainfall --country Pakistan --year 2022 --top 10
+python -m weather_kg query-graph multi-event-locations --country Pakistan
+python -m weather_kg query-graph cooccurring-patterns --max-gap-days 2
+python -m weather_kg query-graph climate-trends --location pk_gilgit --indicator Wind
+python -m weather_kg query-graph exposure --country Pakistan
+python -m weather_kg query-graph cross-border-patterns --source-country Afghanistan
+```
+
+Use `--format table`, `--format json`, or `--format csv`; add `--output path/to/result.csv` to save the current query result.
+
 ## Streamlit Research Dashboard
 
 Launch the local dashboard with:
@@ -322,7 +362,7 @@ or:
 make dashboard
 ```
 
-The dashboard reads existing generated outputs only. It does not call external APIs, use a database, require Docker, or require authentication.
+The dashboard reads existing generated outputs and uses the full GraphML graph as the analytical backend for query pages. It does not call external APIs, use a database, require Docker, or require authentication.
 
 Dashboard sections:
 
@@ -336,13 +376,29 @@ Dashboard sections:
 - Folium map of all 22 configured locations
 - bounded PyVis graph explorer with node and relationship controls
 
-Screenshot placeholders for final documentation:
+Generate saved visualization artifacts without launching Streamlit:
+
+```bash
+python -m weather_kg export-visualizations
+```
+
+Generated report figures:
 
 ```text
-outputs/figures/dashboard_overview_placeholder.png
-outputs/figures/dashboard_map_placeholder.png
-outputs/figures/dashboard_graph_explorer_placeholder.png
+outputs/figures/top_daily_rainfall.png
+outputs/figures/multi_event_locations.png
+outputs/figures/cooccurring_event_patterns.png
+outputs/figures/climate_indicator_trends.png
+outputs/figures/weather_exposure_ranking.png
+outputs/figures/cross_border_lag_patterns.png
 ```
+
+Saved interactive outputs:
+
+- [Folium configured-location map](outputs/maps/weather_locations.html)
+- [Representative PyVis knowledge graph](outputs/graph/weather_knowledge_graph.html)
+
+The PyVis artifact is a deterministic representative view derived from the complete graph: it includes all Country and Location nodes, the highest-severity event for each location/event type, one strongest Climate Indicator per location, and real endpoints for a deterministic example of every relationship type. Selection details and counts are saved in `outputs/visualization_manifest.json`.
 
 The dashboard preserves the same caveats as the generated outputs. Cross-border views are labelled candidate temporal/geographic associations, not proven causation and not forecasts. The exposure page uses the phrase "weather-event exposure score" and does not present the ranking as an official vulnerability index.
 
@@ -385,18 +441,20 @@ The default test suite does not require internet access; API behavior is mocked 
 |-- .gitignore
 |-- Makefile
 |-- config/
+|   |-- analysis_rules.yaml
+|   |-- event_thresholds.yaml
+|   |-- graph_rules.yaml
 |   |-- locations.yaml
-|   |-- pipeline.yaml
-|   `-- event_thresholds.yaml
+|   `-- pipeline.yaml
 |-- data/
+|   |-- analysis/
 |   |-- cache/
-|   |-- interim/
+|   |-- graph/
 |   `-- processed/
 |-- outputs/
 |   |-- figures/
 |   |-- graph/
 |   |-- maps/
-|   |-- queries/
 |   `-- validation/
 |-- reports/
 |   |-- technical_report.md
@@ -407,15 +465,21 @@ The default test suite does not require internet access; API behavior is mocked 
 |-- src/weather_kg/
 |   |-- __init__.py
 |   |-- __main__.py
+|   |-- analysis.py
 |   |-- cache.py
 |   |-- config.py
+|   |-- dashboard.py
 |   |-- events.py
+|   |-- graph.py
 |   |-- logging_config.py
 |   |-- main.py
 |   |-- models.py
 |   |-- normalize.py
 |   |-- open_meteo.py
-|   `-- pipeline.py
+|   |-- pipeline.py
+|   |-- query_service.py
+|   |-- validation.py
+|   `-- visualization.py
 |-- tests/
 `-- demo_video/
     `-- README.md
@@ -439,4 +503,6 @@ Configured daily Open-Meteo variables currently include maximum, minimum, and me
 
 ## Demo Video Link
 
-Not available yet. The demo video will be recorded after later pipeline phases are implemented and validated.
+The demo video should be recorded from the completed local pipeline and dashboard. Add the final unlisted YouTube, Google Drive, or Loom link here after upload.
+
+Video link: `TO_BE_ADDED_AFTER_RECORDING`

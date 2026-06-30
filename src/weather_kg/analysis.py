@@ -10,12 +10,24 @@ from typing import Any
 
 import numpy as np
 import pandas as pd
+import networkx as nx
 
 from weather_kg.config import ConfigError, load_yaml
+from weather_kg.query_service import (
+    build_graph_indexes,
+    load_graph,
+    query_climate_indicator_trends,
+    query_cooccurring_patterns,
+    query_cross_border_patterns,
+    query_highest_rainfall,
+    query_multi_event_locations,
+    query_weather_exposure,
+)
 
 
 DEFAULT_NODES_CSV = Path("data/graph/nodes.csv")
 DEFAULT_RELATIONSHIPS_CSV = Path("data/graph/relationships.csv")
+DEFAULT_GRAPHML = Path("data/graph/weather_knowledge_graph.graphml")
 DEFAULT_GRAPH_SUMMARY = Path("data/graph/graph_summary.json")
 DEFAULT_RULES = Path("config/analysis_rules.yaml")
 DEFAULT_OUTPUT_DIR = Path("data/analysis")
@@ -42,6 +54,136 @@ QUERY_OUTPUTS = {
     "cross_border_lag_summary": "cross_border_lag_summary.csv",
 }
 
+EXPORT_COLUMNS = {
+    "highest_rainfall": [
+        "rank",
+        "event_id",
+        "location_id",
+        "location_name",
+        "country",
+        "start_date",
+        "end_date",
+        "maximum_daily_precipitation_mm",
+        "total_precipitation_mm",
+        "percentile_threshold",
+        "severity_percentile",
+        "status",
+        "caveat",
+    ],
+    "multi_event_locations": [
+        "location_id",
+        "location_name",
+        "location_kind",
+        "country",
+        "distinct_event_type_count",
+        "event_types",
+        "total_event_count",
+        "events_by_type",
+        "years_with_detected_events",
+        "mean_severity_percentile",
+        "maximum_severity_percentile",
+    ],
+    "cooccurring_patterns": [
+        "event_type_pair",
+        "total_pair_count",
+        "distinct_location_count",
+        "distinct_country_count",
+        "median_gap_days",
+        "algorithmically_related_pair_count",
+        "example_event_ids",
+        "includes_algorithmic_derivation",
+        "caveat",
+    ],
+    "climate_indicator_trends": [
+        "location_id",
+        "country",
+        "event_type",
+        "indicator_name",
+        "available_years",
+        "first_year",
+        "first_year_value",
+        "final_year",
+        "final_year_value",
+        "absolute_change",
+        "linear_slope",
+        "direction",
+        "caveat",
+    ],
+    "climate_indicator_annual_values": [
+        "location_id",
+        "country",
+        "event_type",
+        "indicator_name",
+        "year",
+        "annual_value",
+        "value_source",
+        "caveat",
+    ],
+    "weather_exposure_ranking": [
+        "overall_rank",
+        "location_id",
+        "location_name",
+        "country",
+        "total_events",
+        "distinct_event_types",
+        "event_types",
+        "active_years",
+        "active_year_list",
+        "frequency_component",
+        "diversity_component",
+        "severity_component",
+        "recurrence_component",
+        "exposure_score",
+        "methodology_caveat",
+    ],
+    "pakistan_weather_exposure_ranking": [
+        "pakistan_rank",
+        "overall_rank",
+        "location_id",
+        "location_name",
+        "country",
+        "total_events",
+        "distinct_event_types",
+        "event_types",
+        "active_years",
+        "active_year_list",
+        "frequency_component",
+        "diversity_component",
+        "severity_component",
+        "recurrence_component",
+        "exposure_score",
+        "methodology_caveat",
+    ],
+    "cross_border_precursor_edges": [
+        "source_event_id",
+        "target_event_id",
+        "source_country",
+        "source_location",
+        "target_pakistani_location",
+        "event_type_mapping",
+        "lag_days",
+        "confidence",
+        "inference_status",
+        "evidence_type",
+        "method",
+        "caveat",
+    ],
+    "cross_border_lag_summary": [
+        "source_country",
+        "source_location",
+        "target_pakistani_location",
+        "event_type_mapping",
+        "relationship_count",
+        "minimum_lag_days",
+        "maximum_lag_days",
+        "mean_lag_days",
+        "median_lag_days",
+        "earliest_example",
+        "latest_example",
+        "caveat",
+    ],
+}
+
 CAUSATION_WORDS = ("caused by", "causes", "forecast", "proven causation", "confirmed impact")
 
 
@@ -62,40 +204,62 @@ class AnalysisResult:
 def run_analysis(
     nodes_csv: Path | str = DEFAULT_NODES_CSV,
     relationships_csv: Path | str = DEFAULT_RELATIONSHIPS_CSV,
+    graphml_path: Path | str = DEFAULT_GRAPHML,
     graph_summary_json: Path | str = DEFAULT_GRAPH_SUMMARY,
     rules_path: Path | str = DEFAULT_RULES,
     output_dir: Path | str = DEFAULT_OUTPUT_DIR,
 ) -> AnalysisResult:
-    """Run all six required analytical queries and write deterministic outputs."""
+    """Run all six required analytical queries through the graph-query service."""
 
     nodes_path = Path(nodes_csv)
     relationships_path = Path(relationships_csv)
+    graphml = Path(graphml_path)
     summary_path = Path(graph_summary_json)
     output_path = Path(output_dir)
-    if not nodes_path.exists():
-        raise AnalysisError(f"Graph nodes CSV not found: {nodes_path}")
-    if not relationships_path.exists():
-        raise AnalysisError(f"Graph relationships CSV not found: {relationships_path}")
 
     rules = load_analysis_rules(rules_path)
-    nodes = _read_csv(nodes_path)
-    relationships = _read_csv(relationships_path)
+    use_graphml = graphml.exists() and nodes_path == DEFAULT_NODES_CSV and relationships_path == DEFAULT_RELATIONSHIPS_CSV
+    if use_graphml:
+        graph = load_graph(graphml)
+    else:
+        if not nodes_path.exists():
+            raise AnalysisError(f"GraphML file not found and graph nodes CSV not found: {graphml}; {nodes_path}")
+        if not relationships_path.exists():
+            raise AnalysisError(f"GraphML file not found and graph relationships CSV not found: {graphml}; {relationships_path}")
+        graph = _graph_from_csv(_read_csv(nodes_path), _read_csv(relationships_path), source_path=graphml)
+    indexes = build_graph_indexes(graph)
     graph_summary = _read_json(summary_path) if summary_path.exists() else {}
     output_path.mkdir(parents=True, exist_ok=True)
 
-    trends, annual_values = climate_indicator_trends(nodes, rules)
-    exposure, pakistan_exposure = weather_exposure_ranking(nodes, relationships, rules)
-    cross_border_edges = cross_border_precursor_edges(relationships)
+    trends_result = query_climate_indicator_trends(
+        graph,
+        indexes,
+        minimum_years=int(rules["climate_indicator_trends"]["minimum_years"]),
+        start_year=int(rules["climate_indicator_trends"]["start_year"]),
+        end_year=int(rules["climate_indicator_trends"]["end_year"]),
+        flat_slope_tolerance=float(rules["climate_indicator_trends"]["flat_slope_tolerance"]),
+    )
+    exposure_result = query_weather_exposure(graph, indexes, weights={key: float(value) for key, value in rules["exposure_score"]["weights"].items()})
+    pakistan_exposure_result = query_weather_exposure(
+        graph,
+        indexes,
+        country="Pakistan",
+        weights={key: float(value) for key, value in rules["exposure_score"]["weights"].items()},
+    )
+    cross_border_result = query_cross_border_patterns(graph, indexes)
     outputs = {
-        "highest_rainfall": highest_rainfall(nodes),
-        "multi_event_locations": multi_event_locations(nodes, relationships),
-        "cooccurring_patterns": cooccurring_patterns(nodes, relationships, rules),
-        "climate_indicator_trends": trends,
-        "climate_indicator_annual_values": annual_values,
-        "weather_exposure_ranking": exposure,
-        "pakistan_weather_exposure_ranking": pakistan_exposure,
-        "cross_border_precursor_edges": cross_border_edges,
-        "cross_border_lag_summary": cross_border_lag_summary(cross_border_edges),
+        "highest_rainfall": _export_frame(query_highest_rainfall(graph, indexes).frame, "highest_rainfall"),
+        "multi_event_locations": _export_frame(query_multi_event_locations(graph, indexes).frame, "multi_event_locations"),
+        "cooccurring_patterns": _export_frame(
+            query_cooccurring_patterns(graph, indexes, max_gap_days=int(rules["cooccurrence"]["maximum_gap_days"])).frame,
+            "cooccurring_patterns",
+        ),
+        "climate_indicator_trends": _export_frame(trends_result.frame, "climate_indicator_trends"),
+        "climate_indicator_annual_values": _export_frame(trends_result.secondary_frames["annual_values"], "climate_indicator_annual_values"),
+        "weather_exposure_ranking": _export_frame(exposure_result.frame, "weather_exposure_ranking"),
+        "pakistan_weather_exposure_ranking": _export_frame(pakistan_exposure_result.frame, "pakistan_weather_exposure_ranking"),
+        "cross_border_precursor_edges": _export_frame(cross_border_result.frame, "cross_border_precursor_edges"),
+        "cross_border_lag_summary": _export_frame(cross_border_result.secondary_frames["lag_summary"], "cross_border_lag_summary"),
     }
 
     for key, frame in outputs.items():
@@ -104,7 +268,7 @@ def run_analysis(
     row_counts = {key: int(len(frame)) for key, frame in outputs.items()}
     summary = build_analysis_summary(
         graph_summary=graph_summary,
-        graph_path=str(nodes_path.parent / "weather_knowledge_graph.graphml"),
+        graph_path=str(graphml),
         outputs=outputs,
         row_counts=row_counts,
         rules=rules,
@@ -522,6 +686,41 @@ def _read_csv(path: Path) -> pd.DataFrame:
 
 def _read_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _export_frame(frame: pd.DataFrame, key: str) -> pd.DataFrame:
+    output = frame.copy()
+    for column in EXPORT_COLUMNS[key]:
+        if column not in output.columns:
+            output[column] = pd.NA
+    return output[EXPORT_COLUMNS[key]]
+
+
+def _graph_from_csv(nodes: pd.DataFrame, relationships: pd.DataFrame, source_path: Path) -> nx.MultiDiGraph:
+    graph = nx.MultiDiGraph()
+    graph.graph["source_path"] = str(source_path)
+    graph.graph["checksum"] = "in-memory-from-csv"
+    for row in nodes.to_dict(orient="records"):
+        node_id = str(row.get("node_id"))
+        attrs = {key: _clean_for_graph(value) for key, value in row.items() if pd.notna(value)}
+        attrs["node_id"] = node_id
+        graph.add_node(node_id, **attrs)
+    for row in relationships.to_dict(orient="records"):
+        source = str(row.get("source_id"))
+        target = str(row.get("target_id"))
+        relationship_id = str(row.get("relationship_id") or f"{source}_{row.get('relationship_type')}_{target}")
+        attrs = {key: _clean_for_graph(value) for key, value in row.items() if pd.notna(value)}
+        attrs["relationship_id"] = relationship_id
+        attrs["source_id"] = source
+        attrs["target_id"] = target
+        graph.add_edge(source, target, key=relationship_id, **attrs)
+    return graph
+
+
+def _clean_for_graph(value: Any) -> Any:
+    if hasattr(value, "item"):
+        return value.item()
+    return value
 
 
 def _event_nodes(nodes: pd.DataFrame, node_type: str | None = None) -> pd.DataFrame:

@@ -1,0 +1,141 @@
+{
+  "cached_locations": 22,
+  "failed_locations": 0,
+  "requested_locations": 22,
+  "results": [
+    {
+      "cache_file": "data/cache/open_meteo/pk_islamabad__2021-01-01__2025-12-31.json",
+      "error": null,
+      "location_id": "pk_islamabad",
+      "status": "cached"
+    },
+    {
+      "cache_file": "data/cache/open_meteo/pk_lahore__2021-01-01__2025-12-31.json",
+      "error": null,
+      "location_id": "pk_lahore",
+      "status": "cached"
+    },
+    {
+      "cache_file": "data/cache/open_meteo/pk_karachi__2021-01-01__2025-12-31.json",
+      "error": null,
+      "location_id": "pk_karachi",
+      "status": "cached"
+    },
+    {
+      "cache_file": "data/cache/open_meteo/pk_peshawar__2021-01-01__2025-12-31.json",
+      "error": null,
+      "location_id": "pk_peshawar",
+      "status": "cached"
+    },
+    {
+      "cache_file": "data/cache/open_meteo/pk_quetta__2021-01-01__2025-12-31.json",
+      "error": null,
+      "location_id": "pk_quetta",
+      "status": "cached"
+    },
+    {
+      "cache_file": "data/cache/open_meteo/pk_multan__2021-01-01__2025-12-31.json",
+      "error": null,
+      "location_id": "pk_multan",
+      "status": "cached"
+    },
+    {
+      "cache_file": "data/cache/open_meteo/pk_gilgit__2021-01-01__2025-12-31.json",
+      "error": null,
+      "location_id": "pk_gilgit",
+      "status": "cached"
+    },
+    {
+      "cache_file": "data/cache/open_meteo/pk_sukkur__2021-01-01__2025-12-31.json",
+      "error": null,
+      "location_id": "pk_sukkur",
+      "status": "cached"
+    },
+    {
+      "cache_file": "data/cache/open_meteo/in_srinagar__2021-01-01__2025-12-31.json",
+      "error": null,
+      "location_id": "in_srinagar",
+      "status": "cached"
+    },
+    {
+      "cache_file": "data/cache/open_meteo/in_amritsar__2021-01-01__2025-12-31.json",
+      "error": null,
+      "location_id": "in_amritsar",
+      "status": "cached"
+    },
+    {
+      "cache_file": "data/cache/open_meteo/in_new_delhi__2021-01-01__2025-12-31.json",
+      "error": null,
+      "location_id": "in_new_delhi",
+      "status": "cached"
+    },
+    {
+      "cache_file": "data/cache/open_meteo/in_jaipur__2021-01-01__2025-12-31.json",
+      "error": null,
+      "location_id": "in_jaipur",
+      "status": "cached"
+    },
+    {
+      "cache_file": "data/cache/open_meteo/af_kabul__2021-01-01__2025-12-31.json",
+      "error": null,
+      "location_id": "af_kabul",
+      "status": "cached"
+    },
+    {
+      "cache_file": "data/cache/open_meteo/af_herat__2021-01-01__2025-12-31.json",
+      "error": null,
+      "location_id": "af_herat",
+      "status": "cached"
+    },
+    {
+      "cache_file": "data/cache/open_meteo/af_kandahar__2021-01-01__2025-12-31.json",
+      "error": null,
+      "location_id": "af_kandahar",
+      "status": "cached"
+    },
+    {
+      "cache_file": "data/cache/open_meteo/af_jalalabad__2021-01-01__2025-12-31.json",
+      "error": null,
+      "location_id": "af_jalalabad",
+      "status": "cached"
+    },
+    {
+      "cache_file": "data/cache/open_meteo/ir_zahedan__2021-01-01__2025-12-31.json",
+      "error": null,
+      "location_id": "ir_zahedan",
+      "status": "cached"
+    },
+    {
+      "cache_file": "data/cache/open_meteo/ir_mashhad__2021-01-01__2025-12-31.json",
+      "error": null,
+      "location_id": "ir_mashhad",
+      "status": "cached"
+    },
+    {
+      "cache_file": "data/cache/open_meteo/ir_kerman__2021-01-01__2025-12-31.json",
+      "error": null,
+      "location_id": "ir_kerman",
+      "status": "cached"
+    },
+    {
+      "cache_file": "data/cache/open_meteo/cn_kashgar__2021-01-01__2025-12-31.json",
+      "error": null,
+      "location_id": "cn_kashgar",
+      "status": "cached"
+    },
+    {
+      "cache_file": "data/cache/open_meteo/cn_hotan__2021-01-01__2025-12-31.json",
+      "error": null,
+      "location_id": "cn_hotan",
+      "status": "cached"
+    },
+    {
+      "cache_file": "data/cache/open_meteo/cn_urumqi__2021-01-01__2025-12-31.json",
+      "error": null,
+      "location_id": "cn_urumqi",
+      "status": "cached"
+    }
+  ],
+  "skipped_locations": 0,
+  "successful_locations": 0
+}

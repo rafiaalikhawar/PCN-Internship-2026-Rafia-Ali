@@ -65,3 +65,27 @@ This document records LLM assistance for the PCN Research Internship Assessment 
 - How used: Codex inspected the existing stage APIs and generated schemas, then implemented orchestration by calling the existing collection, normalization, event detection, graph construction, and analysis functions in order. It also implemented offline checks for coverage, events, graph integrity, analytical outputs, dashboard imports, and required repository deliverables.
 - Purpose: replace stale scaffold behavior with reproducible commands and produce a machine-readable and reviewer-readable validation result.
 - Extent of reliance: implementation and test assistance only. Event methodology, thresholds, graph relationship rules, exposure weights, rankings, analytical findings, graph nodes, graph relationships, and query outputs were not changed.
+
+## Finalization Batch 2 - Saved Visualizations and Report Figures
+
+- Tool used: OpenAI Codex.
+- Where used: offline visualization export module, CLI and Makefile command, saved Folium map, representative PyVis graph, six report figures, visualization manifest, tests, and focused README links.
+- How used: Codex implemented deterministic rendering from existing location, graph, and analytical files. The representative PyVis view uses only verified node and relationship IDs and records its selection rule and source/full counts in the manifest.
+- Purpose: create reviewer-ready HTML and PNG artifacts without launching Streamlit or calling external APIs.
+- Extent of reliance: visualization implementation and test assistance only. Collection, normalization, event detection, thresholds, graph construction rules, analysis formulas, exposure weights, rankings, and generated findings were not changed.
+
+## Graph-Backed Query Interface Refactor
+
+- Tool used: OpenAI Codex.
+- Where used: shared graph-query service, analysis export command, query CLI, dashboard analytical pages, README command notes, and offline tests.
+- How used: Codex refactored query execution so the dashboard, CLI, and regenerated analysis CSVs call the same full-GraphML query functions.
+- Purpose: make the constructed knowledge graph the practical analytical backend while preserving existing formulas, rankings, caveats, and output schemas.
+- Extent of reliance: implementation and test assistance only. Data collection, normalization, event detection, thresholds, graph construction, relationship semantics, analytical formulas, exposure weights, and verified findings were not changed.
+
+## Final Submission Cleanup and Documentation
+
+- Tool used: OpenAI Codex.
+- Where used: README, technical report source, demo-video instructions, environment template, repository ignore rules, implementation trace, and small non-behavioral wording cleanup.
+- How used: Codex inspected generated outputs and documentation, then updated stale scaffold wording and final-facing instructions using current repository evidence.
+- Purpose: prepare the repository for final assessment review while preserving the implemented pipeline, generated findings, graph semantics, dashboard behavior, and methodology.
+- Extent of reliance: documentation and repository-presentation assistance only. No weather data, event thresholds, graph construction rules, analytical formulas, rankings, or verified findings were changed.

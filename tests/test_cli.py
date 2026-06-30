@@ -47,6 +47,36 @@ def test_validate_submission_help(capsys) -> None:
     assert "offline coverage, event, graph, analysis" in captured.out
 
 
+def test_export_visualizations_help(capsys) -> None:
+    with pytest.raises(SystemExit) as exc_info:
+        main(["export-visualizations", "--help"])
+    captured = capsys.readouterr()
+
+    assert exc_info.value.code == 0
+    assert "reviewer-ready HTML and PNG artifacts" in captured.out
+
+
+def test_query_graph_help(capsys) -> None:
+    with pytest.raises(SystemExit) as exc_info:
+        main(["query-graph", "--help"])
+    captured = capsys.readouterr()
+
+    assert exc_info.value.code == 0
+    assert "Run parameterized queries" in captured.out
+    assert "highest-rainfall" in captured.out
+
+
+def test_query_graph_csv_output_file(tmp_path: Path, capsys) -> None:
+    output = tmp_path / "rainfall.csv"
+    exit_code = main(["query-graph", "highest-rainfall", "--country", "Pakistan", "--year", "2022", "--top", "2", "--format", "csv", "--output", str(output)])
+    captured = capsys.readouterr()
+
+    assert exit_code == 0
+    assert "Query output written" in captured.out
+    assert output.exists()
+    assert "maximum_daily_precipitation_mm" in output.read_text(encoding="utf-8")
+
+
 def test_validate_submission_command_returns_nonzero_on_failure(capsys, monkeypatch) -> None:
     report = SubmissionValidationReport(
         validation_timestamp="2026-06-30T00:00:00Z",
@@ -69,6 +99,7 @@ def test_makefile_exposes_canonical_commands() -> None:
     assert "pipeline:\n\tpython3 -m weather_kg run" in text
     assert "pipeline-cached:\n\tpython3 -m weather_kg run --cache-only" in text
     assert "validate:\n\tpython3 -m weather_kg validate-submission" in text
+    assert "visualizations:\n\tpython3 -m weather_kg export-visualizations" in text
     assert "test:\n\tpytest -q" in text
     assert "dashboard:\n\tstreamlit run app.py" in text
 
