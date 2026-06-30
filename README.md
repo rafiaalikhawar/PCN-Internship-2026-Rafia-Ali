@@ -17,8 +17,8 @@ The project is deployed on Streamlit: [View the live application](https://weathe
 The collection, normalization, event detection, knowledge graph, analytical queries, offline validation, saved visualizations, and local research dashboard are implemented.
 
 ## demo video:
-- recorded demo video link
-
+[- recorded demo video link
+](https://drive.google.com/file/d/1Wc9W143pAg7HIeSaaawPQCyyGdq1IJj6/view?usp=sharing)
 The repository includes the final technical report source.
 
 ## Verified Generated Outputs
