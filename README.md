@@ -482,3 +482,18 @@ Configuration validation checks:
 
 Configured daily Open-Meteo variables currently include maximum, minimum, and mean temperature, precipitation, rain, precipitation hours, maximum wind speed, maximum wind gusts, and weather code.
 
+## Academic Integrity
+I certify that this submission is my own work.
+
+I have disclosed all use of:
+
+ChatGPT: Yes
+Claude: No
+Gemini: No
+Copilot: No
+Other LLMs: OpenAI Codex
+
+I understand that plagiarism may result in disqualification.
+
+Name: Rafia Ali
+Date: 30 June 2026
