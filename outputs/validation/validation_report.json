@@ -444,7 +444,7 @@
       "category": "graph",
       "message": "Check passed.",
       "name": "graph_json_exists",
-      "observed": 54407947,
+      "observed": 54407615,
       "passed": true,
       "path": "data/graph/weather_knowledge_graph.json",
       "required": "> 0 bytes",
@@ -454,7 +454,7 @@
       "category": "graph",
       "message": "Check passed.",
       "name": "graphml_exists",
-      "observed": 38366951,
+      "observed": 38366649,
       "passed": true,
       "path": "data/graph/weather_knowledge_graph.graphml",
       "required": "> 0 bytes",
@@ -1377,7 +1377,7 @@
       "category": "deliverables",
       "message": "Check passed.",
       "name": "readme_exists",
-      "observed": 17181,
+      "observed": 15865,
       "passed": true,
       "path": "README.md",
       "required": "> 0 bytes",
@@ -1387,29 +1387,9 @@
       "category": "deliverables",
       "message": "Check passed.",
       "name": "technical_report_source_exists",
-      "observed": 8165,
+      "observed": 7860,
       "passed": true,
       "path": "reports/technical_report.md",
-      "required": "> 0 bytes",
-      "status": "pass"
-    },
-    {
-      "category": "deliverables",
-      "message": "Check passed.",
-      "name": "llm_disclosure_exists",
-      "observed": 9256,
-      "passed": true,
-      "path": "reports/llm_usage.md",
-      "required": "> 0 bytes",
-      "status": "pass"
-    },
-    {
-      "category": "deliverables",
-      "message": "Check passed.",
-      "name": "demo_instructions_exist",
-      "observed": 2164,
-      "passed": true,
-      "path": "demo_video/README.md",
       "required": "> 0 bytes",
       "status": "pass"
     },
@@ -1516,14 +1496,12 @@
   ],
   "determinism_note": "The validation timestamp changes between runs; compare check results semantically.",
   "overall_status": "pass",
-  "remaining_deliverable_warnings": [
-    "Demo video link should be added after the final recording is uploaded."
-  ],
+  "remaining_deliverable_warnings": [],
   "summary": {
     "failed_checks": 0,
-    "passed_checks": 100,
-    "total_checks": 100,
-    "warning_count": 1
+    "passed_checks": 98,
+    "total_checks": 98,
+    "warning_count": 0
   },
-  "validation_timestamp": "2026-06-30T16:28:33Z"
+  "validation_timestamp": "2026-06-30T21:31:34Z"
 }

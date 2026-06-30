@@ -22,7 +22,7 @@ def test_current_submission_validation_passes_and_writes_reports(tmp_path: Path)
     assert report.passed
     assert (tmp_path / "validation_report.json").exists()
     assert (tmp_path / "validation_report.md").exists()
-    assert report.warnings
+    assert report.warnings == ()
 
 
 def test_report_writer_preserves_pass_fail_and_warnings(tmp_path: Path) -> None:

@@ -1,8 +1,8 @@
 # Submission Validation Report
 
 - Overall status: **PASS**
-- Validation timestamp: `2026-06-30T16:28:33Z`
-- Checks: 100/100 passed
+- Validation timestamp: `2026-06-30T21:31:34Z`
+- Checks: 98/98 passed
 - Determinism note: the timestamp changes between runs; compare check results semantically.
 
 ## Checks
@@ -36,8 +36,8 @@
 | graph | graph_nodes_exist | PASS | 12503 | > 0 rows | `data/graph/nodes.csv` | Check passed. |
 | graph | graph_relationships_exist | PASS | 45187 | > 0 rows | `data/graph/relationships.csv` | Check passed. |
 | graph | graph_summary_exists | PASS | dict | non-empty JSON object | `data/graph/graph_summary.json` | Check passed. |
-| graph | graph_json_exists | PASS | 54407947 | > 0 bytes | `data/graph/weather_knowledge_graph.json` | Check passed. |
-| graph | graphml_exists | PASS | 38366951 | > 0 bytes | `data/graph/weather_knowledge_graph.graphml` | Check passed. |
+| graph | graph_json_exists | PASS | 54407615 | > 0 bytes | `data/graph/weather_knowledge_graph.json` | Check passed. |
+| graph | graphml_exists | PASS | 38366649 | > 0 bytes | `data/graph/weather_knowledge_graph.graphml` | Check passed. |
 | graph | graph_node_schema | PASS | ["absolute_threshold", "admin_region", "caveat", "corridor", "country", "country_code", "critical_rolling_precipitation_mm", "critical_window_end", "critical_window_start", "date", "derivation_method", "duration_days", "end_date", "event_count", "event_id", "event_subtype", "event_type", "indicator_name", "inferred", "label", "latitude", "location_id", "location_kind", "location_name", "longitude", "lookback_days", "maximum_daily_precipitation_mm", "maximum_severity_percentile", "maximum_temperature_c", "maximum_wind_gusts_kmh", "maximum_wind_speed_kmh", "mean_severity_percentile", "method", "minimum_temperature_c", "node_id", "node_type", "percentile_threshold", "provenance", "related_rainfall_event_id", "related_wind_event_id", "severity_percentile", "severity_score_raw", "source", "source_dataset", "start_date", "status", "total_precipitation_mm", "year"] | ["country", "event_id", "node_id", "node_type"] | `data/graph/nodes.csv` | Check passed. |
 | graph | graph_relationship_schema | PASS | ["caveat", "confidence", "event_type_mapping", "evidence_type", "inference_status", "lag_days", "method", "provenance", "relationship_id", "relationship_type", "source_country", "source_event_id", "source_id", "source_location", "target_country", "target_event_id", "target_id", "target_location"] | ["relationship_id", "relationship_type", "source_id", "target_id"] | `data/graph/relationships.csv` | Check passed. |
 | graph | graph_node_minimum | PASS | 12503 | 200 | `data/graph/nodes.csv` | Check passed. |
@@ -95,10 +95,8 @@
 | deliverables | dashboard_app_exists | PASS | 70906 | > 0 bytes | `app.py` | Check passed. |
 | deliverables | dashboard_helper_exists | PASS | 15513 | > 0 bytes | `src/weather_kg/dashboard.py` | Check passed. |
 | deliverables | dashboard_tests_exist | PASS | 14586 | > 0 bytes | `tests/test_dashboard.py` | Check passed. |
-| deliverables | readme_exists | PASS | 17181 | > 0 bytes | `README.md` | Check passed. |
-| deliverables | technical_report_source_exists | PASS | 8165 | > 0 bytes | `reports/technical_report.md` | Check passed. |
-| deliverables | llm_disclosure_exists | PASS | 9256 | > 0 bytes | `reports/llm_usage.md` | Check passed. |
-| deliverables | demo_instructions_exist | PASS | 2164 | > 0 bytes | `demo_video/README.md` | Check passed. |
+| deliverables | readme_exists | PASS | 15865 | > 0 bytes | `README.md` | Check passed. |
+| deliverables | technical_report_source_exists | PASS | 7860 | > 0 bytes | `reports/technical_report.md` | Check passed. |
 | deliverables | saved_folium_map_exists | PASS | 36162 | > 0 bytes | `outputs/maps/weather_locations.html` | Check passed. |
 | deliverables | saved_pyvis_graph_exists | PASS | 959130 | > 0 bytes | `outputs/graph/weather_knowledge_graph.html` | Check passed. |
 | deliverables | visualization_manifest_exists | PASS | 4355 | > 0 bytes | `outputs/visualization_manifest.json` | Check passed. |
@@ -112,4 +110,3 @@
 
 ## Remaining Deliverable Warnings
 
-- Demo video link should be added after the final recording is uploaded.

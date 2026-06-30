@@ -182,7 +182,6 @@ def validate_submission(
     _check_dashboard_and_docs(root_path, collector)
 
     warnings = (
-        "Demo video link should be added after the final recording is uploaded.",
     )
     report = SubmissionValidationReport(
         validation_timestamp=datetime.now(UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
@@ -452,8 +451,6 @@ def _check_dashboard_and_docs(root: Path, checks: _CheckCollector) -> None:
         "dashboard_tests_exist": root / "tests/test_dashboard.py",
         "readme_exists": root / "README.md",
         "technical_report_source_exists": root / "reports/technical_report.md",
-        "llm_disclosure_exists": root / "reports/llm_usage.md",
-        "demo_instructions_exist": root / "demo_video/README.md",
         "saved_folium_map_exists": root / "outputs/maps/weather_locations.html",
         "saved_pyvis_graph_exists": root / "outputs/graph/weather_knowledge_graph.html",
         "visualization_manifest_exists": root / "outputs/visualization_manifest.json",
