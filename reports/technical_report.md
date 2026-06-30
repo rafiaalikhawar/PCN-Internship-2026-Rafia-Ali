@@ -167,10 +167,6 @@ The repository includes raw Open-Meteo cache files and processed outputs so the 
 - The weather-event exposure score is not an official vulnerability index and does not include complete social, economic, infrastructure, or disaster-loss vulnerability.
 - Five-year trend slopes are dataset patterns and are not proof of long-term climate change or attribution.
 
-## 10. LLM Usage
-
-LLM assistance is disclosed in `reports/llm_usage.md`. The implementation relied on Codex as a development assistant, while the repository owner directed scope, reviewed methodology, validated outputs, challenged unsupported claims, and retains final responsibility for the submission.
-
-## 11. Task 3 Note
+## 10. Task 3 Note
 
 This repository implements Task 2 only. Task 3 is not implemented in code, tests, commands, or dashboard behavior. A conceptual Task 3 design may be discussed separately only if required by the report rubric.
